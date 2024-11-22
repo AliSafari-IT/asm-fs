@@ -1,0 +1,46 @@
+{
+  "folders": [
+    {
+      "path": ".",
+      "name":"ASM-FS"
+    },
+    {
+      "path": "./apps/backends/ASafariM.Server",
+      "name": "ASafariM.Server"
+    },
+    {
+      "path": "./apps/frontends/asafarim-client",
+      "name": "ASafariM.Client"
+    },
+    {
+      "path": "./libs",
+      "name": "Library"
+    },
+    {
+      "path": "./docs",
+      "name": "Docs"
+    },
+    {
+      "path": "./scripts",
+      "name": "Scripts"
+    }
+  ],
+  "settings": {
+    "sqltools.connections": [
+      {
+        "mysqlOptions": {
+          "authProtocol": "default",
+          "enableSsl": "Disabled"
+        },
+        "previewLimit": 50,
+        "server": "localhost",
+        "port": 3306,
+        "driver": "MySQL",
+        "name": "ASM",
+        "database": "asmdb",
+        "username": "ali",
+        "password": "Ali+123456/"
+      }
+    ]
+  }
+}

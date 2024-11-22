@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+      "rootDir": ".",
+      "baseUrl": ".",
+      "paths": {
+        "*": ["node_modules/*"]
+      }
+    }
+  }
+  
