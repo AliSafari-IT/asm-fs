@@ -1,157 +1,240 @@
-# README.md
+# ASafariM.Project/TaskManager
 
-## Fullstack ASM NX Workspace
+ASafariM.TaskManager is a fullstack task management application designed for efficient project and task handling. It features role-based permissions, task privacy controls, timeline tracking, and a responsive design. Built using an NX workspace, the project integrates a robust backend with .NET Core and a dynamic React frontend.
 
-This project is a fullstack application built using NX Workspace, .NET 8, and various frontend frameworks including Angular, React, and Vue. The backend is developed with Clean Architecture principles using ASP.NET Core Identity for authentication. The default database is MySQL.
+---
 
-### Table of Contents
+## Features
 
-- [Project Overview](#project-overview)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Backend Setup](#backend-setup)
-  - [Frontend Setup](#frontend-setup)
-- [Deployment](#deployment)
-- [Future Enhancements](#future-enhancements)
-- [Database Configuration](#database-configuration)
-- [License](#license)
+### General Features
 
-## Project Overview
+- **Responsive Design**: Mobile-first, supports light/dark themes.
+- **Role-Based Permissions**: Admins, Managers, and Users with specific access levels.
+- **Real-Time Notifications**: Updates for tasks, projects, and announcements.
+- **Task Privacy**: Toggle task visibility (public/private).
+- **Timeline**: Track activity logs for tasks, projects, and comments.
+- **Audit Logs**: Maintain accountability with action tracking.
 
-The workspace includes:
+### Pages
 
-- **Backends**:
-  - `Asm.Auth`: .NET 8 application with Clean Architecture and ASP.NET Core Identity.
-  - `Asm.NextJS`: Next.js application for creating blog and article posts.
-  - `Asm.Laravel`: Placeholder for future Laravel application.
-- **Frontends**:
-  - `angular-app`: Angular application.
-  - `react-app`: React application.
-  - `vue-app`: Vue.js application.
-- **Dist Folder**: Contains build outputs ready for deployment.
+1. **GuestHomePage**: Public landing page with announcements and call-to-action buttons.
+2. **UserHomePage**: Personalized dashboard for logged-in users.
+3. **ContactPage**: Contact form for user queries.
+4. **PrivacyPage**: Privacy policy and terms of service.
+5. **AnnouncementPage**: View public announcements.
+6. **TasksPage**: CRUD tasks, manage dependencies, and privacy.
+7. **ProjectsPage**: Manage projects, tasks, and tech stacks.
+8. **AccountPage**:
+   - Register, Login, and Profile Management.
+   - Notification and theme preferences.
+9. **TimelinePage**: View activity logs.
+10. **SettingsPage**: Update user-specific settings.
+11. **AdminDashboardPage**: Manage users, roles, tasks, and projects.
+
+---
+
+## Tech Stack
+
+### Backend
+
+- **Framework**: ASP.NET Core 8
+- **Database**: MySQL (via EF Core)
+- **Authentication**: JWT-based authentication
+- **API Documentation**: Swagger/OpenAPI
+- **Testing**: xUnit + Moq
+
+### Frontend
+
+- **Framework**: React with TypeScript
+- **Styling**: TailwindCSS and Fluent UI
+- **State Management**: Redux Toolkit (planned)
+- **Testing**: Vitest + React Testing Library
+
+### DevOps
+
+- **Workspace Management**: NX Workspace
+- **Version Control**: GitHub
+- **CI/CD**: GitHub Actions
+- **Deployment**: NGINX (Frontend & Backend)
+
+---
+
+## Workspace Structure
+
+### Applications
+
+- `apps/backends/ASafariM.Server`: .NET backend for APIs and business logic.
+- `apps/frontends/asafarim-client`: React frontend for UI.
+
+### Libraries
+
+- `libs/Domain`: Core domain models and business logic.
+- `libs/Infrastructure`: Shared infrastructure code (e.g., data access, email services).
+
+### Testing
+
+- `tests/UnitTests`: Backend unit tests.
+- `tests/IntegrationTests`: Integration tests for API and services.
+
+---
+
+## Prerequisites
+
+Ensure the following tools are installed:
+
+- **Node.js** (v16+)
+- **Yarn** (v4.5.1)
+- **.NET SDK** (v8.0+)
+- **MySQL** (v8.0+)
+
+---
 
 ## Getting Started
 
-### Prerequisites
+### Installation
 
-- **Node.js** (Latest LTS version)
-- **.NET 8 SDK**
-- **MySQL Server**
-- **NX CLI** (optional, for managing the workspace)
+#### Clone the Repository
 
-### Backend Setup
+```bash
+git clone https://github.com/asm-fs/asm-fs.git
+cd asm-fs
+```
 
-1. **Clone the Repository**
+#### Install Dependencies
+
+```bash
+yarn install
+```
+
+#### Setup Backend
+
+1. Navigate to the backend:
 
    ```bash
-   git clone https://github.com/yourusername/fullstack-asm-nx.git
+   cd apps/backends/ASafariM.Server
    ```
 
-2. **Navigate to the Backend Directory**
-
-   ```bash
-   cd fullstack-asm-nx/backends/Asm.Auth
-   ```
-
-3. **Update Database Connection**
-
-   Modify the `DefaultConnection` string in `appsettings.json`:
-
-   ```json
-   "ConnectionStrings": {
-     "DefaultConnection": "Server=localhost;Database=asmDB;User=ali;Password=Ali+123456/;"
-   }
-   ```
-
-4. **Apply Migrations**
+2. Apply database migrations:
 
    ```bash
    dotnet ef database update
    ```
 
-5. **Run the Backend API**
+3. Run the backend:
 
    ```bash
    dotnet run
    ```
 
-### Frontend Setup
+#### Setup Frontend
 
-#### Angular App
-
-1. **Navigate to the Angular App**
+1. Navigate to the frontend:
 
    ```bash
-   cd fullstack-asm-nx/frontends/angular-app
+   cd apps/frontends/asafarim-client
    ```
 
-2. **Install Dependencies**
+2. Start the development server:
 
    ```bash
-   npm install
+   yarn dev
    ```
 
-3. **Run the Application**
+---
+
+## Usage
+
+### User Roles
+
+- **Admin**: Full access to manage tasks, projects, and user roles.
+- **Manager**: Limited to managing tasks and projects.
+- **User**: Restricted to tasks and projects they own or are assigned to.
+
+### Key Features
+
+- **Task Management**: Add, edit, delete, and toggle privacy for tasks.
+- **Project Management**: Handle projects with associated tasks and tags.
+- **Timeline View**: Track activities like task updates and comments.
+
+---
+
+## Workspace Scripts
+
+### Development
+
+```bash
+# Start backend
+yarn dev:backend
+
+# Start frontend
+yarn dev:frontend
+```
+
+### Build
+
+```bash
+# Build backend
+yarn build:backend
+
+# Build frontend
+yarn build:frontend
+```
+
+### Testing
+
+```bash
+# Run unit tests
+yarn test:unit
+
+# Run integration tests
+yarn test:integration
+```
+
+### Formatting and Linting
+
+```bash
+yarn format
+yarn lint
+```
+
+---
+
+## Contributing
+
+Contributions are welcome! Follow these steps:
+
+1. Fork the repository.
+2. Create a feature branch:
 
    ```bash
-   ng serve
+   git checkout -b feature-name
    ```
 
-#### React App
+3. Commit our changes and push to our fork.
+4. Open a pull request.
 
-1. **Navigate to the React App**
-
-   ```bash
-   cd fullstack-asm-nx/frontends/react-app
-   ```
-
-2. **Install Dependencies**
-
-   ```bash
-   npm install
-   ```
-
-3. **Run the Application**
-
-   ```bash
-   npm start
-   ```
-
-#### Vue App
-
-1. **Navigate to the Vue App**
-
-   ```bash
-   cd fullstack-asm-nx/frontends/vue-app
-   ```
-
-2. **Install Dependencies**
-
-   ```bash
-   npm install
-   ```
-
-3. **Run the Application**
-
-   ```bash
-   npm run serve
-   ```
+---
 
 ## Deployment
 
-- Build all applications and place the outputs in the `dist/` directory.
-- Deploy the contents of the `dist/` folder to your VPS domain `asafarim.com`.
+1. Build the frontend:
 
-## Future Enhancements
+   ```bash
+   yarn build:frontend
+   ```
 
-- Integration with the upcoming `Asm.Laravel` application.
-- Enhanced authentication features across all frontend applications.
-- Additional services in the backend to support new functionalities.
+2. Publish the backend:
 
-## Database Configuration
+   ```bash
+   dotnet publish -c Release -o ./publish
+   ```
 
-Ensure your MySQL server is running and accessible with the provided credentials. Update the connection string if necessary.
+3. Deploy both to a server (e.g., NGINX or Docker).
+
+---
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the [MIT License](LICENSE).
+
+---
