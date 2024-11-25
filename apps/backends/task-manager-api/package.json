@@ -1,0 +1,10 @@
+{
+  "name": "@asm-fs/task-manager-api",
+  "packageManager": "yarn@4.5.1",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "dotnet run --project E:/asm-fs/apps/backends/task-manager-api/TaskManagerApi.csproj",
+    "build": "dotnet build E:/asm-fs/apps/backends/task-manager-api/TaskManagerApi.csproj",
+    "test": "dotnet test E:/asm-fs/apps/backends/task-manager-api/TaskManagerApi.Tests.csproj"
+  }
+}

@@ -5,8 +5,8 @@
       "name":"ASM-FS"
     },
     {
-      "path": "./apps/backends/ASafariM.Server",
-      "name": "ASafariM.Server"
+      "path": "./apps/backends/TaskManagerApi",
+      "name": "TaskManagerApi"
     },
     {
       "path": "./apps/frontends/asafarim-client",
