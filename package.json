@@ -1,9 +1,9 @@
 {
-  "name": "@asm-fs/root",
+  "name": "@asm-fs/asafarim",
   "packageManager": "yarn@4.5.1",
   "version": "0.0.1",
   "description": "Fullstack ASM-Project/Task Manager Application using NX Workspace",
-  "repository": "https://github.com/asm-fs/asm-fs",
+  "repository": "https://github.com/AliSafari-IT/asm-fs",
   "author": "Ali Safari",
   "nxVersion": "18.3.5",
   "devDependencies": {
@@ -16,11 +16,11 @@
   "scripts": {
     "clean": "rm -rf node_modules && rm -rf .yarn/cache",
     "reset:yarn": "rm -rf .yarn && rm -rf node_modules && rm -rf yarn.lock && yarn install",
-    "dev:backend": "yarn workspace @asm-fs/task-manager-api start",
+    "dev:backend": "yarn workspace @asm-fs/asafarim-server start",
     "dev:frontend": "yarn workspace @asm-fs/asafarim-client dev",
-    "build:backend": "yarn workspace @asm-fs/task-manager-api build",
+    "build:backend": "yarn workspace @asm-fs/asafarim-server build",
     "build:frontend": "yarn workspace @asm-fs/asafarim-client build",
-    "test:backend": "yarn workspace @asm-fs/task-manager-api test",
+    "test:backend": "yarn workspace @asm-fs/asafarim-server test",
     "test:frontend": "yarn workspace @asm-fs/asafarim-client test",
     "test": "yarn test:backend && yarn test:frontend",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
@@ -39,7 +39,7 @@
     "node": ">=16.14.0"
   },
   "workspaces": [
-    "apps/backends/task-manager-api",
+    "apps/backends/ASafariM.Server",
     "apps/frontends/asafarim-client"
   ]
 }

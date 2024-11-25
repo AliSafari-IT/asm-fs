@@ -1,0 +1,6 @@
+@ASafariM.Server_HostAddress = http://localhost:5296
+
+GET {{ASafariM.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

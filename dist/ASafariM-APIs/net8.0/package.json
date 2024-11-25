@@ -1,0 +1,13 @@
+{
+  "name": "@asm-fs/asafarim-server",
+  "packageManager": "yarn@4.5.1",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "clean": "rm -rf node_modules && rm -rf .yarn/cache",
+    "reset": "rm -rf .yarn && rm -rf node_modules && rm -rf yarn.lock && yarn install",
+    "start": "dotnet run --project ./apps/backends/ASafariM.Server/ASafariM.Server.csproj",
+    "build": "dotnet build --project ./apps/backends/ASafariM.Server/ASafariM.Server.csproj",
+    "test": "dotnet test --project ./apps/backends/ASafariM.Server/ASafariM.Server.csproj"
+  }
+}

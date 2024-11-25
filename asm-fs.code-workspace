@@ -2,11 +2,11 @@
   "folders": [
     {
       "path": ".",
-      "name":"ASM-FS"
+      "name":"ASafariM"
     },
     {
-      "path": "./apps/backends/TaskManagerApi",
-      "name": "TaskManagerApi"
+      "path": "./apps/backends/ASafariM.Server",
+      "name": "ASafariM.Server"
     },
     {
       "path": "./apps/frontends/asafarim-client",

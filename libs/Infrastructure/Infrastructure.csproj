@@ -21,4 +21,9 @@
     <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="libs\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>
