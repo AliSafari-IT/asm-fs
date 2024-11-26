@@ -20,9 +20,11 @@ import EditCard from "./components/Containers/Card/EditCard";
 import AddForm from "./components/crud/AddForm";
 import ProjectHome from "./pages/Project/Index";
 import PostDetail from "./pages/Post/PostDetail";
-import LoginPage from "./pages/Userpage/LoginPage";
+// import LoginPage from "./pages/Userpage/LoginPage";
 import LogoutPage from "./pages/Userpage/LogoutPage";
 import Contact from "./pages/AboutMe/Contact";
+import Login from "./pages/Userpage/Login";
+import Register from "./pages/Userpage/Register";
 function App() {
   const [theme] = useState(useTheme().theme);
 
@@ -63,7 +65,9 @@ function App() {
         }
       />
 
-      <Route path="/login" element={<LoginPage />} />
+<Route path="/login" element={<Login />} />
+<Route path="/register" element={<Register />} />
+
       <Route
         path="/logout"
         element={
