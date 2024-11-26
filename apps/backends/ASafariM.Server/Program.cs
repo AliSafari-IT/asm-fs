@@ -38,7 +38,7 @@ builder.Services.AddAuthorization();
 // Add CORS policy
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowLocalhost3000", builder => builder.WithOrigins("http://localhost:3000")
+    options.AddPolicy("MyLocalHosts", builder => builder.WithOrigins("http://localhost:5173", "http://localhost:3000")
     .AllowAnyHeader()
     .AllowAnyMethod());
 });
@@ -54,7 +54,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseCors("AllowLocalhost3000");
+app.UseCors("MyLocalHosts");
 
 
 app.UseAuthentication();
@@ -63,7 +63,3 @@ app.MapControllers();
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

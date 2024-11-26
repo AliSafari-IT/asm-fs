@@ -11,7 +11,7 @@ namespace ASafariM.Server.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class AuthController : ControllerBase
-{
+{ 
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IConfiguration _configuration;
@@ -42,7 +42,17 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginModel model)
     {
-        var user = await _userManager.FindByEmailAsync(model.Email);
+        ApplicationUser user = null;
+
+        if (model.UsernameOrEmail.Contains("@"))
+        {
+            user = await _userManager.FindByEmailAsync(model.UsernameOrEmail);
+        }
+        else
+        {
+            user = await _userManager.FindByNameAsync(model.UsernameOrEmail);
+        }
+
         if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password))
         {
             return Unauthorized("Invalid credentials.");
@@ -50,6 +60,65 @@ public class AuthController : ControllerBase
 
         var token = GenerateJwtToken(user);
         return Ok(new { Token = token, User = user });
+    }
+
+    [HttpPost("update-email")]
+    public async Task<IActionResult> UpdateEmail([FromBody] UpdateEmailModel model)
+    {
+        var user = await _userManager.FindByIdAsync(model.UserId);
+        if (user == null)
+        {
+            return NotFound("User not found.");
+        }
+
+        var token = await _userManager.GenerateChangeEmailTokenAsync(user, model.NewEmail);
+        var result = await _userManager.ChangeEmailAsync(user, model.NewEmail, token);
+
+        if (result.Succeeded)
+        {
+            return Ok(new { Message = "Email updated successfully" });
+        }
+
+        return BadRequest(result.Errors);
+    }
+
+    [HttpPost("update-username")]
+    public async Task<IActionResult> UpdateUsername([FromBody] UpdateUsernameModel model)
+    {
+        var user = await _userManager.FindByIdAsync(model.UserId);
+        if (user == null)
+        {
+            return NotFound("User not found.");
+        }
+
+        user.UserName = model.NewUsername;
+        var result = await _userManager.UpdateAsync(user);
+
+        if (result.Succeeded)
+        {
+            return Ok(new { Message = "Username updated successfully" });
+        }
+
+        return BadRequest(result.Errors);
+    }
+
+    [HttpPost("update-password")]
+    public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordModel model)
+    {
+        var user = await _userManager.FindByIdAsync(model.UserId);
+        if (user == null)
+        {
+            return NotFound("User not found.");
+        }
+
+        var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+
+        if (result.Succeeded)
+        {
+            return Ok(new { Message = "Password updated successfully" });
+        }
+
+        return BadRequest(result.Errors);
     }
 
     private string GenerateJwtToken(ApplicationUser user)
@@ -82,6 +151,25 @@ public class RegisterModel
 
 public class LoginModel
 {
-    public string Email { get; set; } = string.Empty;
+    public string UsernameOrEmail { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
+}
+
+public class UpdateEmailModel
+{
+    public string UserId { get; set; } = string.Empty;
+    public string NewEmail { get; set; } = string.Empty;
+}
+
+public class UpdateUsernameModel
+{
+    public string UserId { get; set; } = string.Empty;
+    public string NewUsername { get; set; } = string.Empty;
+}
+
+public class UpdatePasswordModel
+{
+    public string UserId { get; set; } = string.Empty;
+    public string CurrentPassword { get; set; } = string.Empty;
+    public string NewPassword { get; set; } = string.Empty;
 }

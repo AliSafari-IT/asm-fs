@@ -1,44 +1,57 @@
-import API_URL from "./getApiUrls";
+import axios, { AxiosError } from 'axios';
+const API_URL = 'http://localhost:5000/api/Auth'; // Replace with your actual API URL
 
-const login = async (usernameOrEmail: string, password: string) => {
-  console.debug('API_URL in authService: ' + API_URL);
+
+export interface UpdateEmailModel {
+  userId: string;
+  newEmail: string;
+}
+
+export interface UpdateUsernameModel {
+  userId: string;
+  newUsername: string;
+}
+
+export interface UpdatePasswordModel {
+  userId: string;
+  currentPassword: string;
+  newPassword: string;
+}
+
+export const updateEmail = async (model: UpdateEmailModel) => {
   try {
-    const response = await fetch(`${API_URL}/Auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify({ usernameOrEmail, password }),
-    });
-
-    if (!response.ok) {
-      let errorMessage = 'Login failed';
-      try {
-        // Attempt to extract the error message from JSON response
-        const errorData = await response.json();
-        if (errorData.message) {
-          errorMessage = `Login failed: ${errorData.message}`;
-        }
-      } catch (err) {
-        // Handle parsing error
-        console.error('Error parsing JSON response:', err);
-        errorMessage = 'Login failed: ' + response.statusText + ' (' + response.status + '). Please try again.';
-      }
-
-      throw new Error(errorMessage);
-    }
-
-    const data = await response.json();
-    if (data.token) {
-      localStorage.setItem('user', JSON.stringify(data));
-    }
-
-    return data;
-  } catch (error) {
-    console.error('Login failed', error);
-    throw error;
+    const response = await axios.post(`${API_URL}/update-email`, model);
+    return response.data;
+  }catch (error) {
+    const err = error as AxiosError;
+    const message = err.response?.data as { message: string };
+    console.log("Error message when updating email:", message);
+    return message;
   }
 };
 
-export default { login };
+export const updateUsername = async (model: UpdateUsernameModel) => {
+  try {
+    const response = await axios.post(`${API_URL}/update-username`, model);
+    return response.data;
+  }catch (error) {
+    const err = error as AxiosError;
+    const message = err.response?.data as { message: string };
+    console.log("Error message when updating username:", message);
+    return message;
+  }
+};
+
+export const updatePassword = async (model: UpdatePasswordModel) => {
+  try {
+    const response = await axios.post(`${API_URL}/update-password`, model);
+    return response.data;
+  } catch (error) {
+    const err = error as AxiosError;
+    const message = err.response?.data as { message: string };
+    console.log("Error message when updating password:", message);
+    return message;
+  }
+};
+
+export default { updateEmail, updateUsername, updatePassword };
