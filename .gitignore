@@ -3,7 +3,7 @@ node_modules/
 
 # Ignore build output for React
 build/
-
+dist/
 # Ignore .env files
 .env
 .env.local
@@ -28,7 +28,7 @@ coverage/
 # Ignore .NET build output
 bin/
 obj/
-
+net8.0/
 # Ignore user-specific files
 *.user
 *.suo
@@ -78,3 +78,7 @@ Scaffolding/
 *.log
 *.gz
 usersecrets/secrets.json
+dist/ASafariM-APIs/net8.0/ASafariM.Server.dll
+dist/ASafariM-APIs/net8.0/ASafariM.Server.exe
+dist/ASafariM-APIs/net8.0/SecureCore.dll
+dist/ASafariM-APIs/net8.0/SecureCore.dll
