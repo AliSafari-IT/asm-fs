@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { register, RegisterModel } from '../../api/authapi';
+import { AxiosError } from 'axios';
 
 const Register: React.FC = () => {
   const [model, setModel] = useState<RegisterModel>({ email: '', password: '' });
@@ -11,11 +12,14 @@ const Register: React.FC = () => {
       const data = await register(model);
       console.log('Registration successful:', data);
       // Handle successful registration (e.g., redirect to login)
-    } catch (err: any) {
-        console.error('Registration failed:', err);
-        setError(err?.message);
-      }
-    };
+    } catch (error) {
+      const err = error as AxiosError;
+      const errObj = err.response?.data as { message: string };
+      console.log("Registration failed:", errObj);
+      setError(`Registration failed: ${errObj.message}`);
+      return errObj;
+    }
+  };
 
   return (
     <div>

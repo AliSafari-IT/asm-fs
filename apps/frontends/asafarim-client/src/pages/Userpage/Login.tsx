@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { login, LoginModel } from '../../api/authapi';
+import { AxiosError } from 'axios';
 
 const Login: React.FC = () => {
   const [model, setModel] = useState<LoginModel>({ email: '', password: '' });
@@ -10,10 +11,14 @@ const Login: React.FC = () => {
     try {
       const data = await login(model);
       console.log('Login successful:', data);
+      setError(null);
       // Handle successful login (e.g., store token, redirect)
-    } catch (err: any) {
-      console.error('Login failed:', err);
-      setError(err?.message);
+    }catch (error) {
+      const err = error as AxiosError;
+      const errObj = err.response?.data as { message: string };
+      console.log("Login failed:", errObj);
+      setError(`Login failed: ${errObj.message}`);
+      return errObj;
     }
   };
 

@@ -1,18 +1,17 @@
 import API_URL from "./getApiUrls";
 
-const login = async (username: string, password: string) => {
+const login = async (usernameOrEmail: string, password: string) => {
   console.debug('API_URL in authService: ' + API_URL);
   try {
-    const response = await fetch(`${API_URL}/auth/login`, {
+    const response = await fetch(`${API_URL}/Auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ usernameOrEmail, password }),
     });
 
-   
     if (!response.ok) {
       let errorMessage = 'Login failed';
       try {
@@ -22,8 +21,9 @@ const login = async (username: string, password: string) => {
           errorMessage = `Login failed: ${errorData.message}`;
         }
       } catch (err) {
-        // JSON parsing failed, maybe HTML response (e.g., a server error page)
-        errorMessage = `Login failed with status: ${response.status}`;
+        // Handle parsing error
+        console.error('Error parsing JSON response:', err);
+        errorMessage = 'Login failed: ' + response.statusText + ' (' + response.status + '). Please try again.';
       }
 
       throw new Error(errorMessage);
@@ -42,4 +42,3 @@ const login = async (username: string, password: string) => {
 };
 
 export default { login };
-
