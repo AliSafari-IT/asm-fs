@@ -6,8 +6,9 @@
   "scripts": {
     "clean": "rm -rf node_modules && rm -rf .yarn/cache",
     "reset": "rm -rf .yarn && rm -rf node_modules && rm -rf yarn.lock && yarn install",
-    "start": "dotnet run --project ./apps/backends/ASafariM.Server/ASafariM.Server.csproj",
-    "build": "dotnet build --project ./apps/backends/ASafariM.Server/ASafariM.Server.csproj",
-    "test": "dotnet test --project ./apps/backends/ASafariM.Server/ASafariM.Server.csproj"
+    "watch": "dotnet watch --project ./ASafariM.Server.csproj",
+    "start": "dotnet run --project ./ASafariM.Server.csproj",
+    "build": "dotnet clean && dotnet restore && dotnet build ./ASafariM.Server.csproj",
+    "test": "dotnet test --project ./ASafariM.Server.csproj"
   }
 }

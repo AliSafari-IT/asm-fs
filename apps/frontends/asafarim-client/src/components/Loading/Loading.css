@@ -1,0 +1,21 @@
+/* src/components/Loading/Loading.css */
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .loading-icon {
+    animation: rotate 1s linear infinite;
+  }
+  
+  @keyframes rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
