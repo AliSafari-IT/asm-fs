@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AlertContainer from '../../components/AlertContainer';
-import { AxiosError } from 'axios';
 import authService from '../../api/authService';
 
 const UserProfile: React.FC = () => {
@@ -12,6 +11,17 @@ const UserProfile: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [activeTab, setActiveTab] = useState('email');
 
+    // Fetch user data from localStorage
+    useEffect(() => {
+        const userData = localStorage.getItem('user');
+        if (userData) {
+            const user = JSON.parse(userData).user;
+            //console.log(user);
+            setEmail(user.email);  // Assuming user object contains 'email'
+            setUsername(user.userName);  // Assuming user object contains 'username'
+        }
+    }, []); // Empty dependency array ensures it only runs once when the component is mounted.
+
     const handleUpdateEmail = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -20,14 +30,14 @@ const UserProfile: React.FC = () => {
         try {
             const userData = localStorage.getItem('user');
             const userId = userData ? JSON.parse(userData).user.id : null;
-            await authService.updateEmail({ userId, newEmail: email });
+            const result = await authService.updateEmail({ userId, newEmail: email });
             console.log('Email updated successfully!');
-            setError(null);
+            if (result.message) {
+                setError(result.message); // Handle error if exists
+            }
         } catch (error) {
-            const err = error as AxiosError;
-            const errObj = err.response?.data as { message: string };
-            console.log("Update email failed:", errObj);
-            setError(`Update email failed: ${errObj.message}`);
+            console.error('Error updating email:', error);
+            setError(error as string || 'Failed to update email: (Error 500: Internal Server Error)');
         } finally {
             setLoading(false);
         }
@@ -41,14 +51,14 @@ const UserProfile: React.FC = () => {
         try {
             const userData = localStorage.getItem('user');
             const userId = userData ? JSON.parse(userData).user.id : null;
-            await authService.updateUsername({ userId, newUsername: username });
+            const result = await authService.updateUsername({ userId, newUsername: username , email});
             console.log('Username updated successfully!');
-            setError(null);
+            if (result.message) {
+                setError(result.message); // Handle error if exists
+            }
         } catch (error) {
-            const err = error as AxiosError;
-            const errObj = err.response?.data as { message: string };
-            console.log("Update username failed:", errObj);
-            setError(`Update username failed: ${errObj.message}`);
+            console.error('Error updating username:', error);
+            setError(error as string || 'Failed to update username');
         } finally {
             setLoading(false);
         }
@@ -62,14 +72,13 @@ const UserProfile: React.FC = () => {
         try {
             const userData = localStorage.getItem('user');
             const userId = userData ? JSON.parse(userData).user.id : null;
-            await authService.updatePassword({ userId, currentPassword, newPassword });
+            const result = await authService.updatePassword({ userId, currentPassword, newPassword });
             console.log('Password updated successfully!');
-            setError(null);
+            if (result.message) {
+                setError(result.message); // Handle error if exists
+            }
         } catch (error) {
-            const err = error as AxiosError;
-            const errObj = err.response?.data as { message: string };
-            console.log("Update password failed:", errObj);
-            setError(`Update password failed: ${errObj.message}`);
+            setError(error as string || 'Failed to update password');
         } finally {
             setLoading(false);
         }
@@ -86,7 +95,7 @@ const UserProfile: React.FC = () => {
             {activeTab === 'email' && (
                 <form onSubmit={handleUpdateEmail} className="flex flex-col items-center justify-center space-y-4">
                     <div className="w-full max-w-xs">
-                        <label htmlFor="email" className="block mb-2 font-bold">New Email:</label>
+                        <label htmlFor="email" className="block mb-2 font-bold text-indigo-400">Current Email:</label>
                         <input
                             type="email"
                             value={email}
@@ -105,7 +114,7 @@ const UserProfile: React.FC = () => {
             {activeTab === 'username' && (
                 <form onSubmit={handleUpdateUsername} className="flex flex-col items-center justify-center space-y-4">
                     <div className="w-full max-w-xs">
-                        <label htmlFor="username" className="block mb-2 font-bold">New Username:</label>
+                        <label htmlFor="username" className="block mb-2 font-bold text-indigo-400">Current Username:</label>
                         <input
                             type="text"
                             value={username}

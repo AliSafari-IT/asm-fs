@@ -11,7 +11,7 @@ namespace ASafariM.Server.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class AuthController : ControllerBase
-{ 
+{
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IConfiguration _configuration;
@@ -96,9 +96,9 @@ public class AuthController : ControllerBase
 
         if (result.Succeeded)
         {
-            return Ok(new { Message = "Username updated successfully" });
+            return Ok(new { Message = "Username updated successfully!" });
         }
-
+       // throw new Exception("Failed to update username.");
         return BadRequest(result.Errors);
     }
 
@@ -165,6 +165,8 @@ public class UpdateUsernameModel
 {
     public string UserId { get; set; } = string.Empty;
     public string NewUsername { get; set; } = string.Empty;
+    public string CurrentEmail { get; set; } = string.Empty;
+
 }
 
 public class UpdatePasswordModel
