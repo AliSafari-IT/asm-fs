@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { login, register, LoginModel, RegisterModel } from '../../api/authapi';
+import { login, register } from '../../api/authapi';
 import Wrapper from '../../layout/Wrapper/Wrapper';
 import AlertContainer from '../../components/AlertContainer';
 import { useNavigate } from 'react-router-dom';
+import { ILoginModel } from '../../interfaces/ILoginModel';
+import { IRegisterModel } from '../../interfaces/IRegisterModel';
 
 const AuthPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const [loginModel, setLoginModel] = useState<LoginModel>({ usernameOrEmail: '', password: '' });
-  const [registerModel, setRegisterModel] = useState<RegisterModel>({ email: '', password: '' });
+  const [loginModel, setLoginModel] = useState<ILoginModel>({ usernameOrEmail: '', password: '' });
+  const [registerModel, setRegisterModel] = useState<IRegisterModel>({ email: '', password: '' });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate(); // use for redirection after login or registration
