@@ -1,20 +1,11 @@
 // apps/frontends/asafarim-client/src/api/authapi.ts
 // 
 import axios, { AxiosError } from 'axios';
+import { ILoginModel } from '../interfaces/ILoginModel';
+import { IRegisterModel } from '../interfaces/IRegisterModel';
 
 const API_URL = 'http://localhost:5000/api/Auth'; // Replace with your actual API URL
-
-export interface RegisterModel {
-  email: string;
-  password: string;
-}
-
-export interface LoginModel {
-  usernameOrEmail: string;
-  password: string;
-}
-
-export const register = async (model: RegisterModel) => {
+export const register = async (model: IRegisterModel) => {
   try {
     const response = await axios.post(`${API_URL}/register`, model);
     return response.data;
@@ -26,7 +17,7 @@ export const register = async (model: RegisterModel) => {
   }
 };
 
-export const login = async (model: LoginModel) => {
+export const login = async (model: ILoginModel) => {
   try {
     const response = await axios.post(`${API_URL}/login`, model);
     return response.data;

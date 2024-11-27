@@ -1,17 +1,17 @@
 import { useState } from 'react';
-import authService from '../../api/authService';
-
 import Wrapper from '../../layout/Wrapper/Wrapper';
 import { useNavigate } from 'react-router-dom';
 import AlertContainer from '../../components/AlertContainer';
 import { AxiosError } from 'axios';
+import { login } from '../../api/authapi';
 
 const LoginPage = () => {
   const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null); // Success message state
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate(); // use for redirection after login
+  const navigate = useNavigate(); // for redirection after login
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent the default form submission behavior
@@ -22,16 +22,19 @@ const LoginPage = () => {
     }
 
     setLoading(true);
-    setError(null);
+    setError(null); // Reset error message
+    setSuccessMessage(null); // Reset success message
 
     try {
-      const user = await authService.login(usernameOrEmail, password);
+      const user = await login({ usernameOrEmail, password });
       if (user.token) {
-        // Save token to localStorage
-        localStorage.setItem('token', user.token);
+          // Save token to localStorage
+      localStorage.setItem('user', JSON.stringify(user));
         console.log('Logged in successfully, token saved');
+        // Set success message
+        setSuccessMessage('Login successful!');
         // Optionally redirect to a dashboard or home page after login
-        navigate('/dashboard');
+        navigate('/');
       }
     } catch (error) {
       const err = error as AxiosError;
@@ -53,7 +56,7 @@ const LoginPage = () => {
     <Wrapper header={<div className="w-full text-center py-8 text-2xl border z-10">Login</div>}>
       <AlertContainer theme="info" className="w-1/2 mx-auto my-10 px-4 py-3 rounded relative">
         <form onSubmit={handleLogin} className="flex flex-col items-center justify-center space-y-4">
-          
+
           {/* Input for username or email */}
           <div className="w-full max-w-xs">
             <label htmlFor="usernameOrEmail" className="block mb-2 font-bold">Username or Email:</label>
@@ -88,6 +91,13 @@ const LoginPage = () => {
             </div>
           )}
 
+          {/* Display success message */}
+          {successMessage && (
+            <div className="max-w-xs w-full p-4 mb-2 success border border-green-200 rounded-lg shadow text-center">
+              <p className="text-sm font-medium">{successMessage}</p>
+            </div>
+          )}
+
           {/* Login button */}
           <button
             type="submit" // Change to type="submit" to trigger form submission
@@ -97,6 +107,16 @@ const LoginPage = () => {
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
+
+        {/* Redirect to Register page button */}
+        <div className="mt-4 text-center">
+          <button
+            onClick={() => navigate('/register')}
+            className="text-blue-500 hover:underline"
+          >
+            Don't have an account? Register here
+          </button>
+        </div>
       </AlertContainer>
     </Wrapper>
   );

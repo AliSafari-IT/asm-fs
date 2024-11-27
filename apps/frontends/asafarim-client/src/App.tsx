@@ -14,7 +14,7 @@ import Home from "./pages/Home/HomePage";
 import AkkodisTargetedResume from "./pages/AboutMe/TailoredCV/Akkodis";
 import './styles/custom.scss';
 import { useEffect, useState } from "react";
- import { useTheme } from "./hooks/useTheme";
+import { useTheme } from "./hooks/useTheme";
 import DelCard from "./components/Containers/Card/DelCard";
 import EditCard from "./components/Containers/Card/EditCard";
 import AddForm from "./components/crud/AddForm";
@@ -23,8 +23,8 @@ import PostDetail from "./pages/Post/PostDetail";
 // import LoginPage from "./pages/Userpage/LoginPage";
 import LogoutPage from "./pages/Userpage/LogoutPage";
 import Contact from "./pages/AboutMe/Contact";
-import Login from "./pages/Userpage/Login";
 import Register from "./pages/Userpage/Register";
+import LoginPage from "./pages/Userpage/LoginPage";
 function App() {
   const [theme] = useState(useTheme().theme);
 
@@ -32,10 +32,10 @@ function App() {
     document.body.setAttribute('data-theme', theme); // Apply the theme
     localStorage.setItem('theme', theme);
   }, [theme]);
-  
+
   // const { theme } = useTheme();
   useEffect(() => {
-    document.body.setAttribute('data-theme', theme); 
+    document.body.setAttribute('data-theme', theme);
   }, [theme]);
 
   return (
@@ -44,18 +44,18 @@ function App() {
       <Route path="/posts/:slug" element={<PostDetail />} />
 
       <Route path="/:model/add" element={<AddForm />} />
-      <Route path={"/:model/delete/:id"} element={<DelCard />}/>
+      <Route path={"/:model/delete/:id"} element={<DelCard />} />
       <Route path="/:model/edit/:id" element={<EditCard />} />
 
       <Route path="/dashboard" element={<PrivateRoute ><Dashboard /></PrivateRoute>} />
-      <Route path="/projects" element={<ProjectHome key={Math.random()}/>} />
+      <Route path="/projects" element={<ProjectHome key={Math.random()} />} />
       {/* Add routes for CRUD operations about projects here */}
-      <Route path="/projects/:id" element={<ProjectHome key={Math.random()}/>} />
+      <Route path="/projects/:id" element={<ProjectHome key={Math.random()} />} />
 
       <Route path="/about" element={<About />} />
       <Route path="/about/akkodis-targeted-resume" element={<AkkodisTargetedResume />} />
       <Route path="/contact" element={<Contact />} />
-      
+
       <Route
         path="/manage-sitemap-content"
         element={
@@ -64,9 +64,8 @@ function App() {
           </PrivateRoute>
         }
       />
-
-<Route path="/login" element={<Login />} />
-<Route path="/register" element={<Register />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<Register />} />
 
       <Route
         path="/logout"
