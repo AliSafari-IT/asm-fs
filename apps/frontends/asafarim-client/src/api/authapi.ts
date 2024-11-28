@@ -3,16 +3,19 @@
 import axios, { AxiosError } from 'axios';
 import { ILoginModel } from '../interfaces/ILoginModel';
 import { IRegisterModel } from '../interfaces/IRegisterModel';
+const isDevelopment = import.meta.env.VITE_ENVIRONMENT === 'development';
 
-const API_URL = 'http://localhost:5000/api/Auth'; // Replace with your actual API URL
+
+const API_URL = isDevelopment ? 'https://localhost:5001/api/Auth' : 'https://asafarim.com/api/auth';
+
 export const register = async (model: IRegisterModel) => {
   try {
-    const response = await axios.post(`${API_URL}/register`, model);
+    const fetchUrl = `${API_URL}/register`;
+    console.log("fetchUrl is:", fetchUrl);
+    const response = await axios.post(fetchUrl, model);
     return response.data;
   } catch (error) {
     const err = error as AxiosError;
-    const message = err.response?.data as { message?: string } ?? { message: 'Registration failed! Please check your details.' };
-    console.log("Error message when registering:", message);
     throw err.response?.data as { message?: string };
   }
 };

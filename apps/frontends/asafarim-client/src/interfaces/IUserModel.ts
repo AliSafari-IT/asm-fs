@@ -1,5 +1,4 @@
-export interface IUser {
-    id: string;
+export interface IUserModel {
     isAdmin: boolean;
     email: string;
     fullName: string;

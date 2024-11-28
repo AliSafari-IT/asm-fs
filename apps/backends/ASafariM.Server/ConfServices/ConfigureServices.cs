@@ -1,18 +1,26 @@
-﻿namespace ASafariM.Server.ConfServices
+﻿using Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
+using SecureCore.Data;
+
+namespace ASafariM.Server.ConfServices
 {
     public class ConfServices
     {
-        public void ConfigureServices(IServiceCollection services)
+        public static void ConfigureServices(IServiceCollection services)
         {
-            services.AddSwaggerGen();
-        }
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
+            // Add Identity services and configure them to use your custom ApplicationUser
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            });
+                // Identity configuration (optional)
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequiredUniqueChars = 1;
+            })
+            .AddEntityFrameworkStores<ApplicationDbContext>() // Your DbContext
+            .AddDefaultTokenProviders();
+
         }
 
     }

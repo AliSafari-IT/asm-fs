@@ -1,4 +1,5 @@
 using Application.Interfaces;
+using ASafariM.Server.ConfServices;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -16,7 +17,7 @@ builder.Logging.AddConsole();
 // Add services to the container.
 var conn = builder.Configuration.GetConnectionString("DefaultConnection");
 var sv = ServerVersion.AutoDetect(conn);
-builder.Services.AddDbContext<ApplicationDbContext>(options =>options.UseMySql(conn, sv));
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(conn, sv));
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -26,6 +27,8 @@ builder.Services.AddScoped<ITaskItemService, TaskItemService>();
 builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
+// ConfServices.ConfigureServices(builder.Services);
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {

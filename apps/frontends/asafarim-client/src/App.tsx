@@ -26,6 +26,11 @@ import Contact from "./pages/AboutMe/Contact";
 import Register from "./pages/Accountpage/Register";
 import LoginPage from "./pages/Accountpage/LoginPage";
 import UsersList from "./pages/User/UsersList";
+import CreateUser from "./pages/User/CreateUser";
+import EditUser from "./pages/User/EditUser";
+import Wrapper from "./layout/Wrapper/Wrapper";
+import Navbar from "./layout/Navbar/Navbar";
+import DefaultFooter from "./layout/DefaultFooter/DefaultFooter";
 function App() {
   const [theme] = useState(useTheme().theme);
 
@@ -76,7 +81,42 @@ function App() {
         }
       />
 
-      <Route path="/users" element={<UsersList />} />
+      <Route
+        path="/users"
+        element={
+          <Wrapper
+            header={''}
+            navbar={<Navbar />}
+            footer={<DefaultFooter />}
+            pageTitle="User Management"
+            pageDescription="Manage users in your application"
+          >
+            <UsersList /> {/* User List page content */}
+          </Wrapper>
+        }
+      />
+      <Route path="/users/create" element={
+        <Wrapper
+          navbar={<Navbar />}
+          header={''}
+          footer={<DefaultFooter />}
+          pageTitle="Create User"
+          pageDescription="Create a new user"
+        >
+          <CreateUser /> {/* Create User page content */}
+        </Wrapper>
+      } />
+      <Route path="/users/edit/:id" element={
+        <Wrapper
+          navbar={<Navbar />}
+          header={''}
+          footer={<DefaultFooter />}
+          pageTitle="Edit User"
+          pageDescription="Edit an existing user"
+        >
+          <EditUser /> {/* Edit User page content */}
+        </Wrapper>
+      } />
 
       <Route
         path="/health-ui"

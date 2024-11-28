@@ -26,9 +26,16 @@ const Register: React.FC = () => {
       }, 2000); // Redirect after 2 seconds
     } catch (error) {
       const errObj = error as { code: string, description: string }[];
-      const errMsg = errObj[0].code + ': ' +  errObj[0].description;
+      const errMsg = errObj[0].code + ': ' + errObj[0].description;
       console.log("Registration failed:", errMsg);
-      setError(errMsg);
+
+      // Check for duplicate email error (this depends on how your backend sends errors)
+      if (errMsg.includes('already')) {
+        setError('This email is already associated with an account. Please <a href="/login">log in</a> or use a different email.');
+      } else {
+        console.log("Registration failed:", errMsg);
+        setError(errMsg);
+      }
     } finally {
       setLoading(false);
     }
@@ -69,7 +76,7 @@ const Register: React.FC = () => {
           {/* Display error message */}
           {error && (
             <div className="max-w-xs w-full p-4 mb-2 danger border border-red-200 rounded-lg shadow text-center">
-              <p className="text-sm font-medium">{error}</p>
+              <p className="text-sm font-medium" dangerouslySetInnerHTML={{ __html: error }} />
             </div>
           )}
 

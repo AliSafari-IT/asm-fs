@@ -5,14 +5,17 @@
       "name":"ASafariM"
     },
     {
+      "path": "./apps/frontends/asafarim-client",
+      "name": "ASafariM.Client"
+    },    {
       "path": "./apps/backends/ASafariM.Server",
       "name": "ASafariM.Server"
     },
+
     {
-      "path": "./apps/frontends/asafarim-client",
-      "name": "ASafariM.Client"
-    },
-    {
+      "path": "./libs/SecureCore",
+      "name": "Library → SecureCore"
+    },    {
       "path": "./libs/Infrastructure",
       "name": "Library → Infrastructure"
     },
