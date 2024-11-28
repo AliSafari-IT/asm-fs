@@ -10,9 +10,12 @@ namespace Application.Interfaces
         Task<IEnumerable<User>> GetAllUsersAsync();
         Task<User> GetUserByIdAsync(Guid id);
         Task<User> CreateUserAsync(User user);
-        Task UpdateUserAsync(User user);
+
+
+        Task<User>  UpdateUserAsync(User user);
         Task DeleteUserAsync(Guid id);
         Task<User> AssignTaskToUserAsync(Guid userId, TaskItem task);
         Task<IEnumerable<TaskItem>> GetUserTasksAsync(Guid userId);
+        Task<IEnumerable<User>> GetUsersAsync();
     }
 }

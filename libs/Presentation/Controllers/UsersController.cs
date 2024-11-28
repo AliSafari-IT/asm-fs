@@ -1,32 +1,33 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Application.Interfaces;
 using Domain.Entities;
-using Microsoft.AspNetCore.Authorization;
-using SecureCore.Data;
-
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
-    public class UsersController : ControllerBase
+        public class UsersController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IUserService _userService;
 
-        public UsersController(ApplicationDbContext context)
+        public UsersController(IUserService userService)
         {
-            _context = context;
+            _userService = userService;
         }
 
         // GET: api/users
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
-            var users = await _context.Users
-                .Include(u => u.UserRoles)
-                .Where(u => !u.IsDeleted)
-                .ToListAsync();
+            var users = await _userService.GetUsersAsync(); // Retrieve all users
+            if (users == null || !users.Any())
+            {
+                return NotFound("No users found.");
+            }
 
             return Ok(users);
         }
@@ -35,16 +36,11 @@ namespace Presentation.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(Guid id)
         {
-            var user = await _context.Users
-                .Include(u => u.UserRoles)
-                .Where(u => u.Id == id && !u.IsDeleted)
-                .FirstOrDefaultAsync();
-
+            var user = await _userService.GetUserByIdAsync(id); // Get user by Id
             if (user == null)
             {
                 return NotFound("User not found.");
             }
-
             return Ok(user);
         }
 
@@ -57,14 +53,13 @@ namespace Presentation.Controllers
                 return BadRequest("User data is required.");
             }
 
-            user.Id = Guid.NewGuid();
             user.CreatedAt = DateTime.UtcNow;
             user.UpdatedAt = DateTime.UtcNow;
 
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            var createdUser = await _userService.CreateUserAsync(user);
 
-            return CreatedAtAction(nameof(GetUserById), new { id = user.Id }, user);
+            // Return the response and use GetUserById to generate the location header
+            return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Id }, createdUser);
         }
 
         // PUT: api/users/{id}
@@ -76,19 +71,12 @@ namespace Presentation.Controllers
                 return BadRequest("User data is required.");
             }
 
-            var user = await _context.Users.FindAsync(id);
+            var user = await _userService.UpdateUserAsync(updatedUser);
 
-            if (user == null || user.IsDeleted)
+            if (user == null)
             {
                 return NotFound("User not found.");
             }
-
-            user.FullName = updatedUser.FullName;
-            user.IsAdmin = updatedUser.IsAdmin;
-            user.UpdatedAt = DateTime.UtcNow;
-
-            _context.Users.Update(user);
-            await _context.SaveChangesAsync();
 
             return Ok(user);
         }
@@ -97,17 +85,17 @@ namespace Presentation.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(Guid id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _userService.GetUserByIdAsync(id);
 
-            if (user == null || user.IsDeleted)
+            if (user == null)
             {
                 return NotFound("User not found.");
             }
 
-            user.MarkAsDeleted(User.Identity.Name);  // Mark as deleted with current user as updater
-            await _context.SaveChangesAsync();
+            await _userService.DeleteUserAsync(id);
 
             return NoContent();
         }
     }
+
 }
