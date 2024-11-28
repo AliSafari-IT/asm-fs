@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities
 {
@@ -9,32 +8,42 @@ namespace Domain.Entities
 
         public bool IsDeleted { get; set; } = false;
         public DateTime? DeletedAt { get; set; }
-        public string CreatedBy { get; set; } = string.Empty;
-        public string UpdatedBy { get; set; } = string.Empty;
+        public Guid? CreatedBy { get; set; } // Changed to Guid to store user ID
+        public Guid? UpdatedBy { get; set; } // Changed to Guid to store user ID
+        public Guid? DeletedBy { get; set; } // Changed to Guid to store user ID
 
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-
-        public void MarkAsDeleted(string user)
+        // Mark entity as deleted
+        public void MarkAsDeleted(Guid userId)
         {
             IsDeleted = true;
             DeletedAt = DateTime.UtcNow;
-            UpdatedBy = user;
+            DeletedBy = userId;
+            UpdatedBy = userId;
         }
 
+        // Restore entity from deleted state
         public void Restore()
         {
             IsDeleted = false;
             DeletedAt = null;
+            DeletedBy = null;
         }
 
-        public void SetCreatedBy(string user)
+        // Set CreatedBy to the current user ID and set CreatedAt
+        public void SetCreatedBy(Guid userId)
         {
-            CreatedBy = user;
+            CreatedBy = userId;
+            CreatedAt = DateTime.UtcNow;  // Automatically set CreatedAt when a new entity is created
         }
 
-        public void SetUpdatedBy(string user)
+        // Set UpdatedBy to the current user ID and set UpdatedAt
+        public void SetUpdatedBy(Guid userId)
         {
-            UpdatedBy = user;
+            UpdatedBy = userId;
+            UpdatedAt = DateTime.UtcNow;  // Automatically set UpdatedAt when the entity is updated
         }
     }
 }
