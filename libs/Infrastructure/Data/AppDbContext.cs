@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
 using Task = Domain.Entities.Task; // Import the Task entity from the Domain.Entities namespace
 
@@ -7,7 +7,8 @@ namespace Infrastructure.Data
     public class AppDbContext : DbContext
     {
         public DbSet<Task> Tasks { get; set; }
-
+        public DbSet<User> Users { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseMySql("server=localhost;database=asmDB;user=ali;password=Ali+123456/", 
@@ -25,7 +26,8 @@ namespace Infrastructure.Data
                 entity.Property(e => e.Title).IsRequired().HasMaxLength(100);
                 entity.Property(e => e.Description).HasMaxLength(500);
                 entity.Property(e => e.IsCompleted).IsRequired();
-                entity.Property(e => e.UserId).IsRequired();
+                entity.Property(e => e.DueDate).IsRequired();
+
             });
         }
     }
