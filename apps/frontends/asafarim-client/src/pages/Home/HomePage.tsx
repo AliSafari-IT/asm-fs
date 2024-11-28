@@ -2,7 +2,7 @@ import Wrapper from "../../layout/Wrapper/Wrapper";
 import { HomeHeaderBlock } from "./HomeHeaderBlock";
 import NotAuthenticated from "../../components/NotAuthenticated";
 import API_URL from "../../api/getApiUrls";
-import UserProfile from "../Userpage/UserProfile";
+import UserProfile from "../Accountpage/UserProfile";
 
 const Home = () => {
   console.log("API_URL", API_URL);

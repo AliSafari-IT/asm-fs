@@ -12,6 +12,6 @@
         // Navigation property for the roles this user belongs to
         public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
 
-        public virtual ICollection<Task> UserTasks { get; set; } = new List<Task>();
+        public virtual ICollection<TaskItem> UserTasks { get; set; } = new List<TaskItem>();
     }
 }

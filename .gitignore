@@ -78,7 +78,7 @@ Scaffolding/
 *.log
 *.gz
 usersecrets/secrets.json
-dist/ASafariM-APIs/net8.0/ASafariM.Server.dll
-dist/ASafariM-APIs/net8.0/ASafariM.Server.exe
-dist/ASafariM-APIs/net8.0/SecureCore.dll
-dist/ASafariM-APIs/net8.0/SecureCore.dll
+*.dll
+*.exe
+*.pdb
+

@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using SecureCore.Models;
 using Domain.Entities;
-using Task = Domain.Entities.Task;
 
 namespace SecureCore.Data
 {
@@ -20,13 +19,13 @@ namespace SecureCore.Data
 
                 optionsBuilder
                     .UseMySql("DefaultConnection",sv,
-                        options => options.MigrationsAssembly("SecureCore") // Set migrations assembly explicitly
+                        options => options.MigrationsAssembly("SecureCore") 
                     );
             }
         }
 
         public DbSet<User> Users { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
-        public DbSet<Task> Tasks { get; set; }
+        public DbSet<TaskItem> TaskItems { get; set; }
     }
 }

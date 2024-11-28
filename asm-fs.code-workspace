@@ -13,8 +13,28 @@
       "name": "ASafariM.Client"
     },
     {
-      "path": "./libs",
-      "name": "Library"
+      "path": "./libs/Infrastructure",
+      "name": "Library → Infrastructure"
+    },
+    {
+      "path": "./libs/Domain",
+      "name": "Library → Domain"
+    },
+    {
+      "path": "./libs/Presentation",
+      "name": "Library → Presentation"
+    },
+    {
+      "path": "./libs/Application",
+      "name": "Library → Application"
+    },
+    {
+      "path": "./tests/UnitTests",
+      "name": "Tests → Unit"
+    },
+    {
+      "path": "./tests/IntegrationTests",
+      "name": "Tests → Integration"
     },
     {
       "path": "./docs",

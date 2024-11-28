@@ -21,10 +21,11 @@ import AddForm from "./components/crud/AddForm";
 import ProjectHome from "./pages/Project/Index";
 import PostDetail from "./pages/Post/PostDetail";
 // import LoginPage from "./pages/Userpage/LoginPage";
-import LogoutPage from "./pages/Userpage/LogoutPage";
+import LogoutPage from "./pages/Accountpage/LogoutPage";
 import Contact from "./pages/AboutMe/Contact";
-import Register from "./pages/Userpage/Register";
-import LoginPage from "./pages/Userpage/LoginPage";
+import Register from "./pages/Accountpage/Register";
+import LoginPage from "./pages/Accountpage/LoginPage";
+import UsersList from "./pages/User/UsersList";
 function App() {
   const [theme] = useState(useTheme().theme);
 
@@ -66,7 +67,6 @@ function App() {
       />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<Register />} />
-
       <Route
         path="/logout"
         element={
@@ -75,6 +75,8 @@ function App() {
           </PrivateRoute>
         }
       />
+
+      <Route path="/users" element={<UsersList />} />
 
       <Route
         path="/health-ui"
