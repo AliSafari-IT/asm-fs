@@ -82,3 +82,6 @@ usersecrets/secrets.json
 *.exe
 *.pdb
 
+dist/ASafariM-APIs/net8.0/ASafariM.Server.dll
+dist/ASafariM-APIs/net8.0/ASafariM.Server.exe
+dist/ASafariM-APIs/net8.0/SecureCore.dll
