@@ -2,7 +2,7 @@ import Wrapper from "../../layout/Wrapper/Wrapper";
 import { HomeHeaderBlock } from "./HomeHeaderBlock";
 import NotAuthenticated from "../../components/NotAuthenticated";
 import API_URL from "../../api/getApiUrls";
-import UserProfile from "../Accountpage/UserProfile";
+import AccountSettings from "../Accountpage/AccountSettings";
 
 const Home = () => {
   console.log("API_URL", API_URL);
@@ -26,7 +26,7 @@ const Home = () => {
   return (
     <Wrapper pageTitle="Home" pageDescription="Home Page" header={<div className="w-full text-center py-8 text-2xl border z-10">User Profile</div>}>
       <HomeHeaderBlock />
-      <UserProfile />
+      <AccountSettings />
     </Wrapper>
   );
 

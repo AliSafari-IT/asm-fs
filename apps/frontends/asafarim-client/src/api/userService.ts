@@ -5,8 +5,6 @@ import { IUserModel } from '../interfaces/IUserModel';
 // in development mode use https://localhost:5001/api/Users
 // in production mode use https://asafarim.com/api/users
 const isDevelopment = import.meta.env.VITE_ENVIRONMENT === 'development';
-
-
 const API_URL = isDevelopment ? 'https://localhost:5001/api/Users' : 'https://asafarim.com/api/users';
 
 // Get all users

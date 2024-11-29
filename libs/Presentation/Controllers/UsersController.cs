@@ -7,6 +7,10 @@ using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Identity;
+using SecureCore.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Presentation.Controllers
 {
@@ -15,13 +19,18 @@ namespace Presentation.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly IHttpContextAccessor _accessor;
-
-        public UsersController(IUserService userService, IHttpContextAccessor accessor)
+        // private readonly IHttpContextAccessor _accessor;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILogger<UsersController> _logger;
+        private readonly IUserRepository _userRepository;
+        public UsersController(IUserService userService, UserManager<ApplicationUser> userManager, IUserRepository userRepository, ILogger<UsersController> logger)
         {
             _userService = userService;
-            _accessor = accessor;
+            _userManager = userManager;
+            _userRepository = userRepository;
+            _logger = logger;
         }
+
 
         // GET: api/users
         [HttpGet]
@@ -89,9 +98,10 @@ namespace Presentation.Controllers
             {
                 return BadRequest("User data is required.");
             }
+            var userIdentity = User.Identity;
 
             // Get the logged-in user's ID for UpdatedBy, otherwise set to null if not authenticated
-            var updatedByString = User.Identity.IsAuthenticated
+            var updatedByString = userIdentity.IsAuthenticated
                 ? User.FindFirst(ClaimTypes.NameIdentifier)?.Value
                 : null;
 
@@ -102,8 +112,9 @@ namespace Presentation.Controllers
             }
             else
             {
-                updatedUser.UpdatedBy = null; // Set to null if the GUID cannot be parsed
+                // Set to null if the GUID cannot be parsed
             }
+            updatedUser.UpdatedBy = null;
 
             updatedUser.UpdatedAt = DateTime.UtcNow;
 
@@ -149,5 +160,44 @@ namespace Presentation.Controllers
 
             return NoContent();
         }
+
+        // GET: api/users/full-info/{email}
+        [HttpGet("full-info/{email}")]
+        public async Task<IActionResult> GetUserFullInfostring(string email)
+        {
+            _logger.LogInformation($"Fetching full info for user with email: {email}");
+
+            var aspNetUser = await _userManager.FindByEmailAsync(email);
+            if (aspNetUser == null)
+            {
+                _logger.LogWarning($"User not found in AspNetUsers with email: {email}");
+                return NotFound($"User not found in AspNetUsers with email {email}.");
+            }
+
+            var userInfo = await _userRepository.GetUserByEmailAsync(email);
+            if (userInfo == null)
+            {
+                _logger.LogWarning($"User not found in Users table with email: {email}");
+                return NotFound($"User not found in Users table with email {email}.");
+            }
+
+            var userFullInfo = new
+            {
+                UserId = aspNetUser.Id,
+                aspNetUser.UserName,
+                aspNetUser.Email,
+                aspNetUser.NormalizedUserName,
+                userInfo.FullName,
+                userInfo.CreatedAt,
+                userInfo.UpdatedAt,
+                userInfo.IsAdmin,
+                userInfo.IsDeleted,
+                userInfo.DeletedAt
+            };
+
+            return Ok(userFullInfo);
+        }
+
+
     }
 }

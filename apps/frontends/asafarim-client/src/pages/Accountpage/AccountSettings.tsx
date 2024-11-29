@@ -3,7 +3,7 @@ import { FaUndo } from 'react-icons/fa';  // Import the reset icon from react-ic
 import AlertContainer from '../../components/AlertContainer';
 import authService from '../../api/authService';
 
-const UserProfile: React.FC = () => {
+const AccountSettings: React.FC = () => {
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [currentPassword, setCurrentPassword] = useState('');
@@ -184,4 +184,4 @@ const UserProfile: React.FC = () => {
     );
 };
 
-export default UserProfile;
+export default AccountSettings;

@@ -1,5 +1,6 @@
 using Application.Interfaces;
 using ASafariM.Server.ConfServices;
+using Infrastructure.Repositories;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -26,7 +27,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 builder.Services.AddScoped<ITaskItemService, TaskItemService>();
 builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 builder.Services.AddScoped<IUserService, UserService>();
-
+ // Register the UserRepository with the DI container
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 // ConfServices.ConfigureServices(builder.Services);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

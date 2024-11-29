@@ -31,6 +31,8 @@ import EditUser from "./pages/User/EditUser";
 import Wrapper from "./layout/Wrapper/Wrapper";
 import Navbar from "./layout/Navbar/Navbar";
 import DefaultFooter from "./layout/DefaultFooter/DefaultFooter";
+import AccountSettings from "./pages/Accountpage/AccountSettings";
+import UserProfile from "./pages/User/UserProfile";
 function App() {
   const [theme] = useState(useTheme().theme);
 
@@ -61,6 +63,25 @@ function App() {
       <Route path="/about" element={<About />} />
       <Route path="/about/akkodis-targeted-resume" element={<AkkodisTargetedResume />} />
       <Route path="/contact" element={<Contact />} />
+
+      <Route path="/user-account-settings" element={<Wrapper
+            header={''}
+            navbar={<Navbar />}
+            footer={<DefaultFooter />}
+            pageTitle="Account Settings"
+            pageDescription="Update your account settings"
+          >
+            <AccountSettings /> {/* User List page content */}
+          </Wrapper>} />
+          <Route path="/user-profile" element={<Wrapper
+            header={''}
+            navbar={<Navbar />}
+            footer={<DefaultFooter />}
+            pageTitle="User Profile"
+            pageDescription="Display user profile"
+          >
+            <UserProfile userId={""} /> {/* User List page content */}
+          </Wrapper>} />
 
       <Route
         path="/manage-sitemap-content"

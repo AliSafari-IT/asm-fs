@@ -70,9 +70,15 @@ function Navbar({ className }: NavbarProps) {
         </a>
 
         {user && (
-          <a href="/user-account" className={navLinkClass('/user-account')}>
-            User Profile
+          <div>
+            <a href="/user-account-settings" className={navLinkClass('/user-account-settings')}>
+            Settings 
           </a>
+          <a href="/user-profile" className={navLinkClass('/user-account-settings')}>
+            User Profile 
+          </a>
+          </div>
+
         )}
         <AccountComponent className="-mb-2" />
         <ToggleTheme className="pr-2" />
