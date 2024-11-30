@@ -198,6 +198,6 @@ namespace Presentation.Controllers
             return Ok(userFullInfo);
         }
 
-
+        // GET: api/users/{id}/user-account-settings
     }
 }

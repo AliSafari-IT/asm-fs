@@ -4,10 +4,11 @@ import { Stack } from '@fluentui/react/lib/Stack';
 import { mergeStyles } from '@fluentui/react/lib/Styling';
 import { Panel, PanelType } from '@fluentui/react/lib/Panel';
 import { IconButton } from '@fluentui/react/lib/Button';
-import DefaultFooter from '../DefaultFooter/DefaultFooter';
+import Footer from '../Footer/Footer';
 import DefaultHeader from '../DefaultHeader/DefaultHeader';
 import Navbar from '../Navbar/Navbar';
-import { useTheme } from '../../hooks/useTheme'; // Assuming the useTheme hook is in hooks
+// import { useTheme } from '../../hooks/useTheme'; // Assuming the useTheme hook is in hooks
+import './Wrapper.scss';
 
 interface LayoutProps {
   header?: React.ReactNode;
@@ -47,25 +48,13 @@ const Wrapper: React.FC<LayoutProps> = ({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Get the current theme (light or dark) using the useTheme hook
-  const { theme } = useTheme();
+  // const { theme } = useTheme();
 
   // Dynamic styles based on theme
   const sidebarStyles = mergeStyles({
     width: 250,
-    backgroundColor: theme === 'dark' ? '#333333' : '#f3f2f1', // Adjust based on theme
+    // backgroundColor: theme === 'dark' ? '#333333' : '#f3f2f1', // Adjust based on theme
     overflowY: 'auto',
-  });
-
-  const contentStyles = mergeStyles({
-    flexGrow: 1,
-    padding: 20,
-    backgroundColor: theme === 'dark' ? '#1a1a1a' : '#ffffff', // Adjust based on theme
-    color: theme === 'dark' ? '#ffffff' : '#000000', // Text color based on theme
-  });
-
-  const layoutContainerStyles = mergeStyles({
-    minHeight: '100vh',
-    backgroundColor: theme === 'dark' ? '#000000' : '#ffffff', // Adjust background color
   });
 
   const navbarStyles = mergeStyles({
@@ -75,13 +64,14 @@ const Wrapper: React.FC<LayoutProps> = ({
   // Detect screen size and update isMobile state
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768); // You can adjust the breakpoint as needed
+      // You can adjust the breakpoint as needed
+      setIsMobile(window.innerWidth <= 361);
     };
     handleResize(); // Set the initial state
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-
+ 
   // Default header, footer, and navbar
   const sidebarBlock = sidebar ?? (
     <div className={sidebarStyles} style={sidebarStyle}>
@@ -89,7 +79,7 @@ const Wrapper: React.FC<LayoutProps> = ({
     </div>
   );
   const headerBlock = header ?? <DefaultHeader />;
-  const footerBlock = footer ?? <DefaultFooter />;
+  const footerBlock = footer ?? <Footer />;
 
   // Modify navbar to include a menu button in mobile view
   const navbarBlock = navbar ?? (
@@ -116,14 +106,13 @@ const Wrapper: React.FC<LayoutProps> = ({
   }, [title, description]);
 
   return (
-    <div className={`${layoutContainerStyles} ${className}`} style={style}>
+    <div className={`wrapper ${className}`} style={style}>
       {/* Navbar */}
-      <div className={navbarStyles}>
-        {navbarBlock}
-      </div>
+      {navbarBlock}
 
       {/* Main Content Area */}
-      <Stack horizontal={!isMobile} tokens={{ childrenGap: 0 }} style={{ flexGrow: 1 }}>
+      <Stack horizontal={!isMobile} tokens={{ childrenGap: 0 }} style={{ flexGrow: 1 }}> {/* Make content area take all available space */}
+
         {/* Sidebar */}
         {!isMobile && sidebar && (
           <Stack.Item disableShrink className={sidebarClassName}>
@@ -132,11 +121,13 @@ const Wrapper: React.FC<LayoutProps> = ({
         )}
 
         {/* Content Area */}
-        <Stack.Item grow className={contentStyles}>
+        <Stack.Item grow className={''}>
           {/* Header */}
           {headerBlock}
           {/* Main Content */}
-          {content ?? children}
+          <main className={`main-content`}>
+            {content ?? children}
+          </main>
           {/* Footer */}
           {footerBlock}
         </Stack.Item>

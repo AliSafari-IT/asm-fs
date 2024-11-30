@@ -1,11 +1,12 @@
-export function DefaultFooter() {
+import './Footer.scss';
+export function Footer() {
   return (
-    <footer className="bg-gray-800 text-white py-4 text-center">
+    <footer>
       <p className="text-sm">
         &copy; {new Date().getFullYear()}{' '}
         <a
           href="https://asafarim.com"
-          className="text-blue-400 hover:text-blue-500 hover:underline"
+          className="footer__links hover:underline"
         >
           ASafariM
         </a>
@@ -15,4 +16,4 @@ export function DefaultFooter() {
   );
 }
 
-export default DefaultFooter;
+export default Footer;

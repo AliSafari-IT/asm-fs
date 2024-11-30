@@ -12,7 +12,6 @@ import SitemapPage from "./pages/Sitemap/SitemapPage";
 import NotFound from "./components/NotFound";
 import Home from "./pages/Home/HomePage";
 import AkkodisTargetedResume from "./pages/AboutMe/TailoredCV/Akkodis";
-import './styles/custom.scss';
 import { useEffect, useState } from "react";
 import { useTheme } from "./hooks/useTheme";
 import DelCard from "./components/Containers/Card/DelCard";
@@ -29,14 +28,17 @@ import UsersList from "./pages/User/UsersList";
 import CreateUser from "./pages/User/CreateUser";
 import EditUser from "./pages/User/EditUser";
 import Wrapper from "./layout/Wrapper/Wrapper";
-import Navbar from "./layout/Navbar/Navbar";
-import DefaultFooter from "./layout/DefaultFooter/DefaultFooter";
+import Footer from "./layout/Footer/Footer";
 import AccountSettings from "./pages/Accountpage/AccountSettings";
 import UserProfile from "./pages/User/UserProfile";
+
+
 function App() {
   const [theme] = useState(useTheme().theme);
+  const userData = localStorage.getItem('user');
+      const user =  userData && JSON.parse(userData).user;
 
-  useEffect(() => {
+      useEffect(() => {
     document.body.setAttribute('data-theme', theme); // Apply the theme
     localStorage.setItem('theme', theme);
   }, [theme]);
@@ -47,7 +49,7 @@ function App() {
   }, [theme]);
 
   return (
-    <Routes>
+    <Routes >
       <Route path="/" element={<Home />} />
       <Route path="/posts/:slug" element={<PostDetail />} />
 
@@ -65,23 +67,17 @@ function App() {
       <Route path="/contact" element={<Contact />} />
 
       <Route path="/user-account-settings" element={<Wrapper
-            header={''}
-            navbar={<Navbar />}
-            footer={<DefaultFooter />}
-            pageTitle="Account Settings"
-            pageDescription="Update your account settings"
-          >
-            <AccountSettings /> {/* User List page content */}
-          </Wrapper>} />
-          <Route path="/user-profile" element={<Wrapper
-            header={''}
-            navbar={<Navbar />}
-            footer={<DefaultFooter />}
-            pageTitle="User Profile"
-            pageDescription="Display user profile"
-          >
-            <UserProfile userId={""} /> {/* User List page content */}
-          </Wrapper>} />
+        header={''}
+        footer={<Footer />}
+      >
+        <AccountSettings /> {/* User List page content */}
+      </Wrapper>} />
+      <Route path="/user-profile" element={<Wrapper
+        header={''}
+        footer={<Footer />}
+      >
+         <PrivateRoute>{<UserProfile email={user.email}  />}</PrivateRoute>
+      </Wrapper>} />
 
       <Route
         path="/manage-sitemap-content"
@@ -107,10 +103,7 @@ function App() {
         element={
           <Wrapper
             header={''}
-            navbar={<Navbar />}
-            footer={<DefaultFooter />}
-            pageTitle="User Management"
-            pageDescription="Manage users in your application"
+            footer={<Footer />}
           >
             <UsersList /> {/* User List page content */}
           </Wrapper>
@@ -118,22 +111,16 @@ function App() {
       />
       <Route path="/users/create" element={
         <Wrapper
-          navbar={<Navbar />}
           header={''}
-          footer={<DefaultFooter />}
-          pageTitle="Create User"
-          pageDescription="Create a new user"
+          footer={<Footer />}
         >
           <CreateUser /> {/* Create User page content */}
         </Wrapper>
       } />
       <Route path="/users/edit/:id" element={
         <Wrapper
-          navbar={<Navbar />}
           header={''}
-          footer={<DefaultFooter />}
-          pageTitle="Edit User"
-          pageDescription="Edit an existing user"
+          footer={<Footer />}
         >
           <EditUser /> {/* Edit User page content */}
         </Wrapper>

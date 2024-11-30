@@ -8,11 +8,11 @@ export default {
   ],
   theme: {
     screens: {
-      'sm': '480px',
-      'md': '768px',
-      'lg': '976px',
-      'xl': '1440px',
-      '2xl': '1600px',      
+      'sm': '360px',
+      'md': '480px',
+      'lg': '768px',
+      'xl': '9600px',
+      '2xl': '1220px',      
       // other breakpoints...
     },
     extend: {},

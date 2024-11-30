@@ -1,0 +1,33 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensure the full height */
+  }
+  
+  .content {
+    flex-grow: 1; /* Make content area take all available space */
+  }
+
+  .sidebar {
+    background-color: var(--bg-primary);
+    border-right: 1px solid var(--color-primary);
+    transition: background-color var(--transition-speed),
+      color var(--transition-speed), border-color var(--transition-speed);
+  }
+
+  .main-content {
+    flex-grow: 1; /* Make content area take all available space */
+    padding: 1rem; /* Add some padding for spacing */
+  }
+  
+  /* Optional: You can also add custom height for the footer if needed */
+  footer {
+    @apply p-3 text-center;
+    width: 100%;
+    background-color: var(--bg-primary);
+    text-align: center;
+    border-top: 1px solid var(--color-primary);
+    transition: background-color var(--transition-speed),
+      color var(--transition-speed), border-color var(--transition-speed);
+  }
+   

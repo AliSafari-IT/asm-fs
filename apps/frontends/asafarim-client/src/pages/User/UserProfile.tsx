@@ -3,23 +3,35 @@ import { getUserFullInfo } from '../../utils/userUtils'; // Import the utility f
 import UserInfo from '../../interfaces/IUserInfo';
 
 
-const UserProfile: React.FC<{ userId: string }> = ({ userId }) => {
+const UserProfile: React.FC<{ email: string }> = ({ email}) => {
     const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+    const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
+      if (!email) {
+        setError('User ID is not provided.');
+        return;
+      }
       try {
-        const data = await getUserFullInfo(userId);
-        setUserInfo(data); // Set the user info in the state
+        const data = await getUserFullInfo(email);
+        setUserInfo(data);
+        setLoading(false);
       } catch (err) {
+        setError('Failed to fetch user information.');
+        setUserInfo(null);
+        setLoading(false);
+
         console.error('Failed to fetch user information:', err);
         setError('Failed to fetch user information.');
       }
     };
 
     fetchUserInfo();
-  }, [userId]);
+  }, [email]);
+
+  if (loading) return <div>Loading...</div>;
 
   if (error) return <div>{error}</div>;
 

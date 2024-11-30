@@ -1,39 +1,94 @@
-import React, { useState, useEffect } from 'react';
+// E:\asm-fs\apps\frontends\asafarim-client\src\pages\User\UsersList.tsx
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { IUser } from '../../interfaces/IUser';
 import { deleteUser, getUsers } from '../../api/userService';
 import { getUserFullInfo } from '../../utils/userUtils'; // Import getUserFullInfo
 import UserInfo from '../../interfaces/IUserInfo';
+import { register } from '../../api/authapi';
+import { IRegisterModel } from '../../interfaces/IRegisterModel';
 
 const UsersList: React.FC = () => {
   const [users, setUsers] = useState<IUser[]>([]);
+  const [account, setAccount] = useState<IRegisterModel>();
   const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
-  const [userInfo, setUserInfo] = useState<UserInfo>(); // To store full user info
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null); // To store full user info
   const [error, setError] = useState<string | null>(null); // Error state
+  const [successMessage, setSuccessMessage] = useState<string | null>(null); // Success message state
+  const [loading, setLoading] = useState(false);
 
+  // Fetch users only once on mount
   useEffect(() => {
     const fetchUsers = async () => {
-      const users = await getUsers();
-      setUsers(users);
+      try {
+        const users = await getUsers();
+        setUsers(users);
+      } catch (err) {
+        setError('Failed to load users.');
+        console.error(err);
+      }
     };
-
     fetchUsers();
   }, []);
 
+  // Handle delete user
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
-      await deleteUser(id);
-      setUsers(users.filter(user => user.id !== id));
+      try {
+        await deleteUser(id);
+        setUsers(prevUsers => prevUsers.filter(user => user.id !== id));
+      } catch (err) {
+        setError('Failed to delete the user.');
+        console.error(err);
+      }
     }
   };
 
-  const handleUserInfo = async (email: string) => {
+  useEffect(() => {
+    if (selectedUser) {
+      setAccount({
+        email: selectedUser.email,
+        password: 'Ali+123456/'
+      });
+    }
+  }, [selectedUser]);
+
+  // Fetch selected user info
+  const handleUserInfo = useCallback(async (email: string) => {
+    setError(null);
+    setUserInfo(null); // Clear previous user info
+    setSelectedUser(users.find(user => user.email === email) || null);
+    setSuccessMessage(null);
     try {
-      const data = await getUserFullInfo(email); // Fetch full user info by email
-      setUserInfo(data); // Set the fetched data
-      setSelectedUser(users.find(user => user.email === email) || null); // Find the user info
+      const data = await getUserFullInfo(email);
+      setUserInfo(data);
     } catch (err) {
-      setError('Error fetching user info.');
+      setError('Failed to fetch user information.');
+      console.error(err);
+    }
+  }, [users]); // `users` dependency to prevent stale closures
+
+
+  // Add user to accounts
+  const addUserToAccounts = async (model: IRegisterModel) => {
+    setLoading(true);
+    if (!selectedUser) {
+      setError('Please select a user to add to accounts.');
+      setLoading(false);
+      return;
+    }
+
+    model.email = selectedUser.email;
+    model.password = 'Ali+123456/';
+
+    try {
+      await register(model);
+      setLoading(false);
+      setSuccessMessage('Registration successful!');
+      setError(null);
+    } catch (err) {
+      setError('Failed to register user.');
+      setLoading(false);
       console.error(err);
     }
   };
@@ -91,51 +146,51 @@ const UsersList: React.FC = () => {
           <h2 className="text-xl font-semibold text-gray-700 mb-4">User Information for {selectedUser.fullName}</h2>
           <table className="min-w-full bg-white shadow-md rounded-lg">
             <tbody>
-              <tr>
-                <td className="px-6 py-3 font-bold">UserId</td>
-                <td className="px-6 py-3">{userInfo.userId}</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-3 font-bold">UserName</td>
-                <td className="px-6 py-3">{userInfo.userName}</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-3 font-bold">Email</td>
-                <td className="px-6 py-3">{userInfo.email}</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-3 font-bold">Full Name</td>
-                <td className="px-6 py-3">{userInfo.fullName}</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-3 font-bold">Created At</td>
-                <td className="px-6 py-3">{userInfo.createdAt}</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-3 font-bold">Updated At</td>
-                <td className="px-6 py-3">{userInfo.updatedAt}</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-3 font-bold">Is Admin</td>
-                <td className="px-6 py-3">{userInfo.isAdmin ? 'Yes' : 'No'}</td>
-              </tr>
-              <tr>
-                <td className="px-6 py-3 font-bold">Is Deleted</td>
-                <td className="px-6 py-3">{userInfo.isDeleted ? 'Yes' : 'No'}</td>
-              </tr>
-              {userInfo.deletedAt && (
-                <tr>
-                  <td className="px-6 py-3 font-bold">Deleted At</td>
-                  <td className="px-6 py-3">{userInfo.deletedAt}</td>
+              {Object.entries(userInfo).map(([key, value]) => (
+                <tr key={key}>
+                  <td className="px-6 py-3 font-bold">{key}</td>
+                  <td className="px-6 py-3">{value}</td>
                 </tr>
-              )}
+              ))}
             </tbody>
           </table>
         </div>
       )}
-      
+
       {/* Error Message */}
-      {error && <div className="text-red-500 mt-4">{error}</div>}
+      {error && <div className="mt-4 alert alert-danger">
+        <div className="text-red-500 mt-4">{error}</div>
+        <div className="flex justify-end mt-4 space-x-6">
+          <button
+            className='subpixel-antialiased bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700'
+            onClick={() => addUserToAccounts(account!)}>Add this user to the account list</button>
+          <button onClick={() => setError('')}>Close</button>
+        </div>
+        {loading && <div>Loading...</div>}
+      </div>}
+
+       {/* Display success message */}
+       {successMessage && (
+        <div className="w-full p-4 mb-2 success border border-green-200 rounded-lg shadow text-center mt-5">
+          <p className="text-sm font-medium">{successMessage}</p>
+          <div>
+            <table className="min-w-full bg-white shadow-md rounded-lg">
+              <thead className="bg-gray-200">
+                <tr>
+                  <th className="px-6 py-3 text-left text-gray-600">Email</th>
+                  <th className="px-6 py-3 text-left text-gray-600">Password</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white">
+                <tr className="border-b border-gray-200">
+                  <td className="px-6 py-3 text-purple-950 font-mono">{account?.email}</td>
+                  <td className="px-6 py-3  font-semiboldbold text-black">{account?.password}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

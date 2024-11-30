@@ -1,0 +1,47 @@
+/** Custom styles for the HomePanels component
+    E:\asm-fs\apps\frontends\asafarim-client\src\pages\Home\home.scss
+*/
+.home-panels {
+    display: flex;
+    height: 100vh;
+    .container {
+      display: flex;
+      flex: 1;
+      justify-content: space-between;
+    }
+    .left-panel {
+      background-color: #f3f2f1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .right-panel {
+      background-color: #ffffff;
+      padding: 20px;
+      flex-grow: 1;
+      overflow-y: auto;
+    }
+    .link-item {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      cursor: pointer;
+      &.active {
+        background-color: #d3d3d3;
+      }
+    }
+    .link-contents {
+      padding: 10px;
+    }
+    .content-link {
+      background-color: #4CAF50;
+      color: white;
+      padding: 5px 10px;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      border-radius: 5px;
+      &:hover {
+        background-color: #45a049;
+      }
+    }
+  }
+  

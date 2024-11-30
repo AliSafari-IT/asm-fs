@@ -1,6 +1,6 @@
 // E:\asm\apps\dashboard-client\src\layout\Navbar\Navbar.tsx
- 
-import { useState } from 'react';
+
+import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import logo from './logoT.svg';
 import {
@@ -9,20 +9,32 @@ import {
   Teaching24Regular as IconTeaching,
   Board24Regular as IconDashboard,
   ProjectionScreenText24Regular as IconProject,
+  Settings24Regular as IconSettings
 } from '@fluentui/react-icons';
 import ToggleTheme from '../../components/theme/ToggleTheme';
 import AccountComponent from '../../components/user/AccountComponent';
+import './Navbar.scss';
 
-interface NavbarProps {
-  className?: string;
-  children?: React.ReactNode;
-}
-
-function Navbar({ className }: NavbarProps) {
+function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const user = localStorage.getItem('user');
+  const userJsonEmail = user ? JSON.parse(user).user.email : null;
   const isActive = (path: string) => location.pathname === path;
+
+  useEffect(() => {
+    console.log(window.innerWidth + 'x' + window.innerHeight);
+    const handleResize = () => {
+      if (window.innerWidth > 768) {
+        setMenuOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  });
+
 
   const navLinkClass = (path: string) =>
     `hidden sm:inline-block px-3 py-2 rounded-md ${isActive(path)
@@ -37,14 +49,17 @@ function Navbar({ className }: NavbarProps) {
     }`;
 
   return (
-    <nav className={"w-full border-b shadow-md border-gray-200 px-0 py-4 flex items-center justify-between relative " + className}>
+    <nav className={`navbar `}>
       {/* Left side */}
       <div className="flex items-center space-x-4">
         <a
           href="/"
           className="flex items-center text-blue-300 no-underline hover:text-teal-600 hover:underline"
         >
-          <img src={logo} alt="Brand Logo" className="h-8 w-8 mr-2" />
+          <div className="navbar__logo">
+            <img src={logo} alt="Brand Logo" className="inline h-8 w-8 mr-2" />
+          </div>
+
           <span className="font-semibold text-xl">ASafariM</span>
         </a>
         <a href="//techdocs.asafarim.com" className={navLinkClass('/techdocs')}>
@@ -72,11 +87,14 @@ function Navbar({ className }: NavbarProps) {
         {user && (
           <div>
             <a href="/user-account-settings" className={navLinkClass('/user-account-settings')}>
-            Settings 
-          </a>
-          <a href="/user-profile" className={navLinkClass('/user-account-settings')}>
-            User Profile 
-          </a>
+              <IconSettings className="inline-block ml-2 -mb-2" />
+            </a>
+            <a
+              href={`/user-profile?email=${encodeURIComponent(userJsonEmail)}`}
+              className={navLinkClass('/user-profile')}
+            >
+              User Profile
+            </a>
           </div>
 
         )}
