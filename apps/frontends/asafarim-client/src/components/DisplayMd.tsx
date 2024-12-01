@@ -49,14 +49,14 @@ const DisplayMd: React.FC<DisplayMdProps> = ({ markdownContent, theme, id }) => 
       <Toolbar aria-label="Markdown Toolbar" className="m-4 p-4">
         {/* Copy to Clipboard */}
         <button
-          className="px-2 py-1 rounded"
+          className="px-4 py-1 rounded"
           onClick={() => navigator.clipboard.writeText(markdownContent)}
         >
 
-          <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 48 32" height="2em" width="2em" xmlns="http://www.w3.org/2000/svg">
+          <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 50 32" height="2em" width="2em" xmlns="http://www.w3.org/2000/svg">
             <title>Copy Markdown to Clipboard</title>
             <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path>
-            <text x="25" y="24" fontSize="18px" fill="#000"> MD</text>
+            <text x="23" y="24" fontSize="18px" fill="#000"> MD</text>
           </svg>
         </button>
 
