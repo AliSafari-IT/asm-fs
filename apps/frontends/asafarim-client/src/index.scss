@@ -6,75 +6,56 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  height: 100%; /* Make sure the body and html take full height */
-  margin: 0;
-  padding: 0;
-}
+html {
+  scroll-behavior: smooth;
 
-/* The main content area should grow to fill available space */
-main {
-  flex-grow: 1; /* Allow the content area to expand */
+  @media (prefers-color-scheme: dark) {
+    color-scheme: dark;
+  }
 }
 
 /* Light theme (Teams Light) */
 :root {
-  --max-mobile-width: 480px;
-
+  /* Basic Colors */
   --background-color: #ffffff;
   --text-color: #252525;
+  --primary-color: #6264a7;
+  --secondary-color: #0063b1;
+  --error-color: #dc3545;
+  --success-color: #28a745;
+  --info-color: #17a2b8;
+  --warning-color: #ffc107;
+  --link-color: var(--primary-color);
+  --link-hover-color: var(--secondary-color);
 
-  --color-primary: #6264a7; /* Teams primary color */
-  --color-primary-light: #8e8cd8;
-  --color-primary-dark: #464775;
-
-  --color-secondary: #0063b1;
-  --color-success: #92c353; /* Fluent UI green */
-  --color-warning: #ffb900;
-  --color-danger: #d13438;
-  --color-info: #0078d4;
-
-  --bg-primary: var(--background-color);
-  --bg-secondary: #f3f2f1;
-  --bg-success: #eafbea;
-  --bg-warning: #fff4ce;
-  --bg-danger: #fde7e9;
-  --bg-info: #e1f0ff;
-
-  --navbar-bg-color: #f3f2f1;
-  --navbar-text-color: #252525;
-  --link-color: #6264a7;
-  --link-hover-color: #464775;
-
+  /* Buttons */
   --button-bg-color: #6264a7;
-  --button-text-color: #ffffff;
   --button-hover-bg-color: #464775;
-  --button-selected-bg-color: #8e8cd8;
+  --button-text-color: #ffffff;
 
-  --footer-bg-color: #f3f2f1;
-  --footer-text-color: #252525;
-
+  /* Form Inputs */
   --input-border-color: #d2d0ce;
-  --input-focus-border-color: #6264a7;
+  --input-focus-border-color: var(--primary-color);
+  --input-bg-color: #f3f2f1;
+  --input-text-color: #252525;
 
-  --font-family-body: "Noto Sans", sans-serif;
-  --font-family-heading: "Noto Sans", sans-serif;
-  --font-size-base: 14px;
-  --font-weight-normal: 400;
-  --font-weight-bold: 600;
-
-  /* Animation */
+  /* Transitions */
   --transition-speed: 0.3s ease-in-out;
 
   /* Shadows */
   --box-shadow-light: 0 2px 4px rgba(0, 0, 0, 0.1);
   --box-shadow-dark: 0 4px 8px rgba(0, 0, 0, 0.15);
 
+  /* Scrollbar */
+  --scrollbar-thumb-color: #d2d0ce;
+  --scrollbar-track-color: #f3f2f1;
+  --scrollbar-thumb-hover-color: #6264a7;
+  --scrollbar-track-hover-color: #e1e1e1;
+
   /* Markdown-specific variables based on Microsoft Teams theme */
   --md-bg-color: #ffffff; /* Light theme background */
   --md-text-color: #252525; /* Light theme text */
-  --md-heading-color: #6264a7; /* Teams primary color for headings */
+  --md-heading-color: #6063b3; /* Teams primary color for headings */
   --md-subheading-color: #5d5c61; /* Light grey for subheadings */
   --md-link-color: #0063b1; /* Teams link color */
   --md-link-hover-color: #004578; /* Darker on hover */
@@ -91,6 +72,18 @@ main {
   --md-strong-color: #0063b1; /* Teams blue for bold/strong text */
   --md-strong-hover-color: #004578; /* Darker blue on hover for bold/strong text */
 
+  --md-muted-color: #5d5c61; /* Light grey for muted text */
+  --md-info-color: #0063b1; /* Teams blue for info text */
+  --md-info-hover-color: #004578; /* Darker blue on hover for info text */
+  --md-success-color: #92c353; /* Teams green for success text */
+  --md-success-hover-color: #6f9b38; /* Darker green on hover for success text */
+  --md-warning-color: #ffb900; /* Teams yellow for warning text */
+  --md-warning-hover-color: #cc9d00; /* Darker yellow on hover for warning text */
+  --md-danger-color: #d13438; /* Teams red for danger text */
+  --md-danger-hover-color: #a61f22; /* Darker red on hover for danger text */
+  --md-primary-color: #0063b1; /* Teams blue for primary text */
+  --md-primary-hover-color: #004578; /* Darker blue on hover for primary text */
+
   --label-text-color: #ffffff;
 }
 
@@ -98,51 +91,33 @@ main {
 [data-theme="dark"] {
   --background-color: #201f1f;
   --text-color: #f3f2f1;
+  --primary-color: #8a8cff;
+  --secondary-color: #58a6ff;
+  --error-color: #f1707a;
+  --success-color: #218838;
+  --info-color: #17a2b8;
+  --warning-color: #ffb900;
+  --link-color: var(--primary-color);
+  --link-hover-color: var(--secondary-color);
 
-  --color-primary: #8a8cff; /* Fluent UI dark primary */
-  --color-primary-light: #a0a0ff;
-  --color-primary-dark: #6264a7;
+  /* Dark mode adjustments for text and background colors */
+  body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+  }
 
-  --color-secondary: #58a6ff;
-  --color-success: #92c353;
-  --color-warning: #ffb900;
-  --color-danger: #f1707a;
-  --color-info: #0078d4;
+  a {
+    color: var(--link-color);
+  }
 
-  --bg-primary: var(--background-color);
-  --bg-secondary: #292828;
-  --bg-success: #2d3b2d;
-  --bg-warning: #3b3a2b;
-  --bg-danger: #3b2a2a;
-  --bg-info: #3b3a4a;
+  a:hover {
+    color: var(--link-hover-color);
+  }
 
-  --navbar-bg-color: #292828;
-  --navbar-text-color: #f3f2f1;
-  --link-color: #8a8cff;
-  --link-hover-color: #a0a0ff;
-
-  --button-bg-color: #8a8cff;
-  --button-text-color: #1f1f1f;
-  --button-hover-bg-color: #6264a7;
-  --button-selected-bg-color: #a0a0ff;
-
-  --footer-bg-color: #292828;
-  --footer-text-color: #f3f2f1;
-
-  --navbar-bg-color: #292828;
-  --navbar-text-color: #f3f2f1;
-  --link-color: #8a8cff;
-  --link-hover-color: #a0a0ff;
-
-  --mobilview-bg-color: #292828;
-  --mobilview-text-color: #f3f2f1;
-
-  --input-border-color: #444444;
-  --input-focus-border-color: #8a8cff;
-
+  /* Markdown-specific variables based on Microsoft Teams theme */
   --md-bg-color: #1f1f1f; /* Dark theme background */
   --md-text-color: #f3f2f1; /* Light text for dark theme */
-  --md-heading-color: #8a8cff; /* Teams dark primary color for headings */
+  --md-heading-color: #8789ee; /* Teams dark primary color for headings */
   --md-subheading-color: #a0a0a0; /* Subdued grey for subheadings */
   --md-link-color: #8a8cff; /* Light blue links */
   --md-link-hover-color: #a0a0ff; /* Brighter hover state */
@@ -159,362 +134,351 @@ main {
   --md-strong-color: #8a8cff; /* Light blue for bold/strong text */
   --md-strong-hover-color: #a0a0ff; /* Brighter blue on hover for bold/strong text */
 
+  --md-warning-color: #ffb900; /* Teams yellow for warning text */
+  --md-warning-hover-color: #cc9d00; /* Darker yellow on hover for warning text */
+  --md-danger-color: #d13438; /* Teams red for danger text */
+  --md-danger-hover-color: #a61f22; /* Darker red on hover for danger text */
+  --md-primary-color: #0063b1; /* Teams blue for primary text */
+  --md-primary-hover-color: #004578; /* Darker blue on hover for primary text */
+  --md-info-color: #0078d4; /* Teams light blue for info text */
+  --md-info-hover-color: #005ea8; /* Darker light blue on hover for info text */
+
+  --md-code-bg-color: #1f1f1f; /* Dark background for code blocks */
+  --md-code-text-color: #f48fb1; /* Light pink for code text */
+
+  --md-pre-bg-color: #333333; /* Darker background for preformatted text */
+
+  --md-blockquote-border-color: #8a8cff; /* Light blue blockquote border */
+  --md-blockquote-bg-color: #292828; /* Dark grey blockquote background */
+  --md-blockquote-text-color: #f3f2f1; /* Light text for blockquotes */
+
+  --md-table-border-color: #444444; /* Dark table borders */
+  --md-table-header-bg-color: #333333; /* Dark grey for table headers */
+
+  --md-details-bg-color: #292828; /* Collapsible details background */
+
+  --md-summary-hover-color: #a0a0ff; /* Brighter hover color */
+
+  --md-strong-color: #8a8cff; /* Light blue for bold/strong text */
+  --md-strong-hover-color: #a0a0ff; /* Brighter blue on hover for bold/strong text */
+
+  --md-title-color: #8a8cff; /* Light blue for page title */
+  --md-title-hover-color: #a0a0ff; /* Brighter blue on hover for page title */
+  --md-title-bg-color: #292828; /* Dark grey background for page title */
+
   --label-text-color: #1f1f1f;
 
   --color-primary-light: #8a8cff;
   --color-primary-dark: #6264a7;
+
+  --color-secondary-light: #f48fb1;
+  --color-secondary-dark: #f48fb1;
 }
 
-/* Global elements */
+/* Global styles */
 body {
   background-color: var(--background-color);
   color: var(--text-color);
-  font-family: var(--font-family-body);
-  font-size: var(--font-size-base);
-  line-height: 1.6;
-  transition: background-color var(--transition-speed),
-    color var(--transition-speed);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  color: var(--link-color);
-  text-decoration: none;
-  transition: color var(--transition-speed);
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-a:hover {
-  color: var(--link-hover-color);
-  text-decoration: underline;
+::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb-color);
+  border-radius: 4px;
 }
 
-/* Typography */
-/* Typography adjustments */
-h1 {
-  @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl;
-}
-h2 {
-  @apply text-lg sm:text-xl md:text-2xl lg:text-3xl;
-}
-h3 {
-  @apply text-base sm:text-lg md:text-xl lg:text-2xl;
-}
-h4 {
-  @apply text-sm sm:text-base md:text-lg lg:text-xl;
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-thumb-hover-color);
 }
 
+::-webkit-scrollbar-track {
+  background-color: var(--scrollbar-track-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-track:hover {
+  background-color: var(--scrollbar-track-hover-color);
+}
+
+/* Button styles */
 button {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
-  border-radius: 4px;
-  transition: background-color var(--transition-speed),
-    box-shadow var(--transition-speed);
-  box-shadow: var(--box-shadow-light);
-
-  &:hover {
-    background-color: var(--button-hover-bg-color);
-    box-shadow: var(--box-shadow-dark);
-  }
-
-  @apply py-2 px-4 sm:py-3 sm:px-6 lg:py-4 lg:px-8; /* Increase padding on larger screens */
+  transition: background-color 0.3s ease;
 }
 
-/* Input fields */
+button:hover {
+  background-color: var(--secondary-color);
+}
+
+/* Form input styles */
 input[type="text"],
-input[type="password"],
-textarea {
+input[type="email"],
+input[type="password"] {
+  padding: 0.75rem;
   border: 1px solid var(--input-border-color);
-  padding: 8px 12px;
-  border-radius: 4px;
-  transition: border-color var(--transition-speed);
-  width: 100%;
-  font-size: var(--font-size-base);
-  @apply w-full sm:w-3/4 md:w-1/2;
-  &:focus {
-    outline: none;
-    border-color: var(--input-focus-border-color);
-    box-shadow: 0 0 5px var(--input-focus-border-color);
-  }
-}
-label {
-  color: var(--label-text-color);
-  transition: color var(--transition-speed);
+  border-radius: 5px;
+  background-color: var(--input-bg-color);
+  color: var(--input-text-color);
+  transition: border-color 0.3s ease;
 }
 
-/* Panels */
-.panel {
-  background-color: var(--bg-secondary);
-  border: 1px solid var(--color-primary-light);
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: var(--box-shadow-light);
-  transition: box-shadow var(--transition-speed);
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-color: var(--input-focus-border-color);
 }
 
-.panel:hover {
-  box-shadow: var(--box-shadow-dark);
-}
-
-/* Status badges */
-.success {
-  background-color: var(--bg-success);
-  color: var(--color-success);
-  padding: 0.5rem;
-  border-radius: 4px;
-}
-
-.warning {
-  background-color: var(--bg-warning);
-  color: var(--color-warning);
-  padding: 0.5rem;
-  border-radius: 4px;
-}
-
-.danger {
-  background-color: var(--bg-danger);
-  color: var(--color-danger);
-  padding: 0.5rem;
-  border-radius: 4px;
-}
-
-.info {
-  background-color: var(--bg-info);
-  color: var(--color-info);
-  padding: 0.5rem;
-  border-radius: 4px;
-}
-
-/* Footer */
-footer {
-  margin: 0;
-  width: 100%;
-  background-color: var(--bg-primary);
-  text-align: center;
-  border-top: 1px solid var(--color-primary);
-  transition: background-color var(--transition-speed),
-    color var(--transition-speed), border-color var(--transition-speed);
-  border-top: 1px solid var(--color-success);
-
-  footer:hover {
-    .footer__links {
-      a {
-        color: var(--bg-secondary);
-        border-color: var(--bg-secondary);
-      }
-    }
-  }
-}
-/* Animations and effects */
-.fade-in {
-  opacity: 0;
-  animation: fadeInAnimation var(--transition-speed) forwards;
-}
-
-@keyframes fadeInAnimation {
-  to {
-    opacity: 1;
-  }
-}
-
-/* Global styles for both light and dark themes */
-b,
-strong {
-  color: var(--md-strong-color);
-  font-weight: bold;
-  transition: color 0.3s ease;
-}
-
-b:hover,
-strong:hover {
-  color: var(--md-strong-hover-color);
-}
-
-/* Global styles for both light and dark themes */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  color: var(--md-heading-color);
-  font-weight: 600;
-  transition: color 0.3s ease;
-}
-
-h1:hover,
-h2:hover,
-h3:hover,
-h4:hover,
-h5:hover,
-h6:hover {
-  color: var(--md-heading-hover-color);
-}
-
-h1 {
-  @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl;
-}
-h2 {
-  @apply text-lg sm:text-xl md:text-2xl lg:text-3xl;
-}
-h3 {
-  @apply text-base  sm:text-lg md:text-xl lg:text-2xl;
-}
-h4 {
-  @apply text-sm sm:text-base md:text-lg lg:text-xl;
-}
-
-/* General Markdown styling */
+/* Markdown container styles */
 .markdown-container {
-  background-color: var(--md-bg-color);
-  color: var(--md-text-color);
-  font-family: "Noto Sans", sans-serif;
-  line-height: 1.6;
-
+  max-width: 1440px;
+  padding: 15px;
+  margin: 0 20px;  
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: var(--md-bg-color); 
+  color: var(--md-text-color); 
+  font-family: "Roboto", sans-serif;
+  font-size: medium;
+  line-height: 1.7;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  &:hover {
+    box-shadow: 0 6px 15px rgba(226, 241, 14, 0.15);
+  }
+ 
+  /* Heading styles */
   h1,
   h2,
   h3,
   h4,
   h5,
   h6 {
-    color: var(--md-heading-color);
-    margin-top: 1.5em;
+    color: var(--md-heading-color); /* Default to black */
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
     font-weight: 600;
+    line-height: 1.3;
   }
 
-  h1 {
-    font-size: 2em;
-    margin-bottom: 0.75em;
-  }
-
-  h2 {
-    font-size: 1.75em;
-    margin-bottom: 0.75em;
-  }
-
-  h3 {
-    font-size: 1.5em;
-  }
-
-  h4 {
-    font-size: 1.25em;
-  }
-
+  /* Link styles */
   a {
-    color: var(--md-link-color);
+    color: var(--md-link-color); /* Default to blue */
     text-decoration: none;
-    transition: color 0.3s ease-in-out;
+    transition: color 0.3s ease;
+    &:hover {
+      color: var(--md-link-hover-color); /* Default to light blue */
+    }
   }
 
-  a:hover {
-    color: var(--md-link-hover-color);
-    text-decoration: underline;
+  /* List styles */
+  ul,
+  ol {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding-left: 2rem;
   }
+
+  /* Paragraph styles */
+  p {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Code block styles */
 
   code {
-    background-color: var(--md-code-bg-color);
-    color: var(--md-code-text-color);
-    padding: 0.2em 0.4em;
-    border-radius: 4px;
-    font-family: "Consolas", "Courier New", monospace;
+    background-color: var(
+      --md-code-bg-color,
+      #f5f5f5
+    ); /* Default to light gray */
+    padding: 0.2rem;
+    border-radius: 5px;
+    font-family: "Courier New", monospace;
   }
-
   pre {
-    background-color: var(--md-pre-bg-color);
-    color: var(--md-code-text-color);
-    padding: 1em;
-    border-radius: 4px;
+    background-color: var(
+      --md-code-bg-color,
+      #f5f5f5
+    ); /* Default to light gray */
+    padding: 1rem;
+    border-radius: 5px;
     overflow-x: auto;
+    code {
+      color: var(--md-code-text-color); 
+      font-family: "Courier New", monospace;
+    }
   }
 
+  /* Table styles */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    th,
+    td {
+      padding: 0.5rem;
+      border: 1px solid var(--md-table-border-color);
+      text-align: left;
+    }
+  }
+
+  /* Image styles */
+  img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  /* Blockquote styles */
   blockquote {
-    border-left: 4px solid var(--md-blockquote-border-color);
-    background-color: var(--md-blockquote-bg-color);
-    padding: 0.5em 1em;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-left: 5px solid var(--md-blockquote-border-color);
+    background-color: var(
+      --md-blockquote-bg-color,
+      #f5f5f5
+    ); /* Default to light gray */
     color: var(--md-blockquote-text-color);
     font-style: italic;
   }
 
-  /* Make table responsive */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1em 0;
-    @apply w-full overflow-x-auto; /* Makes table scrollable on smaller screens */
-  }
-
-  th {
-    background-color: var(--md-table-header-bg-color);
-    color: var(--md-text-color);
-    padding: 0.75em;
-    border: 1px solid var(--md-table-border-color);
-    text-align: left;
-  }
-
-  td {
-    padding: 0.75em;
-    border: 1px solid var(--md-table-border-color);
-  }
-
+  /* Details styles */
   details {
-    background-color: var(--md-details-bg-color);
-    border-radius: 4px;
-    padding: 0.5em;
-    margin-bottom: 1em;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    summary {
+      cursor: pointer;
+      padding: 0.5rem;
+      border: 1px solid var(--md-details-border-color);
+      border-radius: 5px;
+      background-color: var(
+        --md-details-bg-color,
+        #f5f5f5
+      ); /* Default to light gray */
+      color: var(--md-details-text-color);
+    }
+    p {
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary::marker {
+      display: none;
+    }
+
+    summary::before {
+      content: "▸ ";
+      // margin-right: 0.5rem;
+    }
+
+    &[open] summary::before {
+      content: "▾ ";
+    }
+
+    &[open] summary {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+    &:not([open]) summary {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
+    &*:not(summary) {
+      margin-left: 1rem;
+    }
   }
 
-  summary {
+  /* Horizontal rule styles */
+  hr {
+    border: none;
+    border-top: 1px solid var(--md-hr-border-color);
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Figure styles */
+  figure {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    figcaption {
+      text-align: center;
+      color: var(--md-figure-caption-color);
+    }
+  }
+
+  b {
     font-weight: bold;
-    cursor: pointer;
-    transition: color 0.3s ease-in-out;
   }
 
-  summary:hover {
-    color: var(--md-summary-hover-color);
+  i {
+    font-style: italic;
+  }
+
+  u {
+    text-decoration: underline;
+  }
+
+  s {
+    text-decoration: line-through;
+  }
+
+  /* Additional styles can be added as needed */
+}
+
+/* Additional styles can be added as needed */
+@media screen and (max-width: 768px) {
+  .sidebar {
+    width: 220px;
+    font-size: medium;
+  }
+
+  .markdown-container {
+    font-size: small;
   }
 }
 
-/* General styling for non-Markdown elements */
-body {
-  background-color: var(--md-bg-color);
-  color: var(--md-text-color);
-  font-family: "Noto Sans", sans-serif;
-  line-height: 1.6;
+@media screen and (max-width: 480px) {
+  .sidebar {
+    width: 100px;
+    font-size: smaller;
+  }
 }
 
-b,
-strong {
-  color: var(--md-strong-color);
-  font-weight: bold;
-  transition: color 0.3s ease;
-}
-
-b:hover,
-strong:hover {
-  color: var(--md-strong-hover-color);
-}
-
-.bg-danger {
-  background-color: #dc3545;
-}
-
-.bg-warning {
-  background-color: #ffc107;
-}
-
-.bg-success {
-  background-color: #28a745;
-}
-
-.bg-info {
-  background-color: #17a2b8;
-}
-
-.bg-light {
-  background-color: #f8f9fa;
-}
-
-.bg-dark {
-  background-color: #343a40;
-}
-
-.container {
-  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3; /* 1 column on small, 2 columns on medium, 3 columns on large screens */
+@media screen and (max-width: 320px) {
+  .sidebar {
+    width: 80px;
+    font-size: smaller;
+  }
 }

@@ -3,4 +3,5 @@ export interface IUser {
     isAdmin: boolean;
     email: string;
     fullName: string;
+    remark?: string;
 }

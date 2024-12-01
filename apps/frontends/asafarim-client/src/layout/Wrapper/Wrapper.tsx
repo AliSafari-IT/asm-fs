@@ -3,12 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { Stack } from '@fluentui/react/lib/Stack';
 import { mergeStyles } from '@fluentui/react/lib/Styling';
 import { Panel, PanelType } from '@fluentui/react/lib/Panel';
-import { IconButton } from '@fluentui/react/lib/Button';
 import Footer from '../Footer/Footer';
 import DefaultHeader from '../DefaultHeader/DefaultHeader';
 import Navbar from '../Navbar/Navbar';
-// import { useTheme } from '../../hooks/useTheme'; // Assuming the useTheme hook is in hooks
-import './Wrapper.scss';
 
 interface LayoutProps {
   header?: React.ReactNode;
@@ -35,8 +32,6 @@ const Wrapper: React.FC<LayoutProps> = ({
   className = '',
   sidebar,
   sidebarClassName = '',
-  navbar,
-  navbarClassName = 'z-50',
   content,
   sidebarStyle = {},
   style = {},
@@ -56,11 +51,6 @@ const Wrapper: React.FC<LayoutProps> = ({
     // backgroundColor: theme === 'dark' ? '#333333' : '#f3f2f1', // Adjust based on theme
     overflowY: 'auto',
   });
-
-  const navbarStyles = mergeStyles({
-    navbarClassName,
-  });
-
   // Detect screen size and update isMobile state
   useEffect(() => {
     const handleResize = () => {
@@ -82,19 +72,6 @@ const Wrapper: React.FC<LayoutProps> = ({
   const footerBlock = footer ?? <Footer />;
 
   // Modify navbar to include a menu button in mobile view
-  const navbarBlock = navbar ?? (
-    <Navbar className={`${navbarStyles}`}>
-      {isMobile && (
-        <IconButton
-          iconProps={{ iconName: 'GlobalNavButton' }}
-          title="Open Menu"
-          ariaLabel="Open Menu"
-          onClick={() => setIsSidebarOpen(true)}
-        />
-      )}
-    </Navbar>
-  );
-
   // Page title and description
   const title = `${pageTitle ? `${pageTitle} | ` : ''}ASafariM`;
   const description = pageDescription;
@@ -108,7 +85,7 @@ const Wrapper: React.FC<LayoutProps> = ({
   return (
     <div className={`wrapper ${className}`} style={style}>
       {/* Navbar */}
-      {navbarBlock}
+      <Navbar />
 
       {/* Main Content Area */}
       <Stack horizontal={!isMobile} tokens={{ childrenGap: 0 }} style={{ flexGrow: 1 }}> {/* Make content area take all available space */}

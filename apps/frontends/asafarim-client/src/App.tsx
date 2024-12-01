@@ -36,9 +36,9 @@ import UserProfile from "./pages/User/UserProfile";
 function App() {
   const [theme] = useState(useTheme().theme);
   const userData = localStorage.getItem('user');
-      const user =  userData && JSON.parse(userData).user;
+  const user = userData && JSON.parse(userData).user;
 
-      useEffect(() => {
+  useEffect(() => {
     document.body.setAttribute('data-theme', theme); // Apply the theme
     localStorage.setItem('theme', theme);
   }, [theme]);
@@ -76,7 +76,7 @@ function App() {
         header={''}
         footer={<Footer />}
       >
-         <PrivateRoute>{<UserProfile email={user.email}  />}</PrivateRoute>
+        <PrivateRoute>{<UserProfile email={user?.email} />}</PrivateRoute>
       </Wrapper>} />
 
       <Route
@@ -98,33 +98,9 @@ function App() {
         }
       />
 
-      <Route
-        path="/users"
-        element={
-          <Wrapper
-            header={''}
-            footer={<Footer />}
-          >
-            <UsersList /> {/* User List page content */}
-          </Wrapper>
-        }
-      />
-      <Route path="/users/create" element={
-        <Wrapper
-          header={''}
-          footer={<Footer />}
-        >
-          <CreateUser /> {/* Create User page content */}
-        </Wrapper>
-      } />
-      <Route path="/users/edit/:id" element={
-        <Wrapper
-          header={''}
-          footer={<Footer />}
-        >
-          <EditUser /> {/* Edit User page content */}
-        </Wrapper>
-      } />
+      <Route path="/users" element={<UsersList />} />
+      <Route path="/users/create" element={<CreateUser />} />
+      <Route path="/users/edit/:id" element={<EditUser />} />
 
       <Route
         path="/health-ui"

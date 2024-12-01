@@ -12,7 +12,7 @@ export default function About(): JSX.Element {
   );
 
   const asideBlock = (
-    <div className="w-full text-center m-0">
+    <div className="sidebar w-full text-center m-0">
       <h1 className="text-xl font-bold">About Me 🛠️</h1> 
       <div>
         <ul className="list-none flex flex-col justify-start items-start ">
@@ -33,7 +33,7 @@ export default function About(): JSX.Element {
 
   return (
     <Wrapper header={headerBlock} footer={null} className="p-0 m-0" sidebar={asideBlock}>
-      <DisplayMd markdownContent={aboutMeMd} />
+      <DisplayMd markdownContent={aboutMeMd} id = "about-me-markdown" />
     </Wrapper>
   );
 }

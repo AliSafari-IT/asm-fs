@@ -11,7 +11,7 @@
     }
     .left-panel {
       background-color: #f3f2f1;
-      padding: 20px;
+      padding: 10px;
       overflow-y: auto;
     }
     .right-panel {
@@ -42,6 +42,14 @@
       &:hover {
         background-color: #45a049;
       }
+    }
+
+    @media screen and (max-width: 768px) {
+      .left-panel {
+        width: 100px;
+        font-size: smaller;
+      }
+      
     }
   }
   

@@ -7,6 +7,8 @@ import { getUserFullInfo } from '../../utils/userUtils'; // Import getUserFullIn
 import UserInfo from '../../interfaces/IUserInfo';
 import { register } from '../../api/authapi';
 import { IRegisterModel } from '../../interfaces/IRegisterModel';
+import Wrapper from '../../layout/Wrapper/Wrapper';
+import Footer from '../../layout/Footer/Footer';
 
 const UsersList: React.FC = () => {
   const [users, setUsers] = useState<IUser[]>([]);
@@ -94,7 +96,11 @@ const UsersList: React.FC = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+    <Wrapper
+          header={''}
+          footer={<Footer />}
+        >
+    <div className="max-w-6xl mx-auto p-6 rounded-lg shadow-lg">
       <h1 className="text-2xl font-semibold text-gray-700 mb-6">User Management</h1>
       <Link
         to="/users/create"
@@ -102,12 +108,12 @@ const UsersList: React.FC = () => {
       >
         Add New User
       </Link>
-      <table className="min-w-full bg-white shadow-md rounded-lg">
+      <table className="min-w-full shadow-md rounded-lg">
         <thead>
           <tr>
-            <th className="px-6 py-3 text-left text-gray-600">Email</th>
-            <th className="px-6 py-3 text-left text-gray-600">Full Name</th>
-            <th className="px-6 py-3 text-left text-gray-600">Actions</th>
+            <th className="px-6 py-3 text-left text-info">Email</th>
+            <th className="px-6 py-3 text-left text-info">Full Name</th>
+            <th className="px-6 py-3 text-left text-info">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -142,15 +148,15 @@ const UsersList: React.FC = () => {
 
       {/* Display the User Info */}
       {userInfo && selectedUser && (
-        <div className="mt-8 p-4 border border-gray-200 rounded-lg shadow-lg">
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">User Information for {selectedUser.fullName}</h2>
-          <table className="min-w-full bg-white shadow-md rounded-lg">
+        <div className="mt-8 p-4 border border-yellow-600 rounded-lg shadow-lg">
+          <h2 className="text-xl font-semibold mb-4">User Information for {selectedUser.fullName}</h2>
+          <table className="min-w-full shadow-md rounded-lg table-auto tabular-nums">
             <tbody>
               {Object.entries(userInfo).map(([key, value]) => (
                 <tr key={key}>
                   <td className="px-6 py-3 font-bold">{key}</td>
                   <td className="px-6 py-3">{value}</td>
-                </tr>
+                </tr> 
               ))}
             </tbody>
           </table>
@@ -192,7 +198,7 @@ const UsersList: React.FC = () => {
         </div>
       )}
     </div>
-  );
+    </Wrapper>);
 };
 
 export default UsersList;
