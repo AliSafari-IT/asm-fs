@@ -13,6 +13,7 @@ interface DisplayMdProps {
 const DisplayMd: React.FC<DisplayMdProps> = ({ markdownContent, id }) => {
   const [fontSize, setFontSize] = React.useState('16px');
   const [viewBox, setViewBox] = React.useState('0 0 24 24');
+  const [copySuccess, setCopySuccess] = React.useState(false);
   const themeContext = useTheme();
 
   useEffect(() => {
@@ -46,6 +47,12 @@ const DisplayMd: React.FC<DisplayMdProps> = ({ markdownContent, id }) => {
     }
   }, [fontSize]);
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText(markdownContent).then(() => {
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 3000);
+    });
+  };
   const saveToFile = () => {
     const blob = new Blob([markdownContent], { type: 'text/markdown' });
     const url = URL.createObjectURL(blob);
@@ -62,8 +69,10 @@ const DisplayMd: React.FC<DisplayMdProps> = ({ markdownContent, id }) => {
       <Toolbar aria-label="Markdown Toolbar" className="m-4 p-4">
         {/* Copy to Clipboard */}
         <button
-          className="px-4 py-1 rounded info"
-          onClick={() => navigator.clipboard.writeText(markdownContent)}
+          className={`px-4 py-1 rounded info ${
+            copySuccess ? 'bg-green-500 text-white' : ''
+          }`}
+          onClick={handleCopy}
         >
           <svg xmlns="http://www.w3.org/2000/svg"
             stroke="currentColor"
@@ -75,6 +84,7 @@ const DisplayMd: React.FC<DisplayMdProps> = ({ markdownContent, id }) => {
             <text x="-30" y="18" fontSize={fontSize}>MD</text>
             <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path>
           </svg>
+          <span className="primary">{copySuccess ? 'Copied to clipboard!' : ''}</span>
         </button>
 
         {/* Save to File */}
