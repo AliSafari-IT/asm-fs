@@ -14,8 +14,9 @@ import './navbar.scss';
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const user = localStorage.getItem('user');
-  const userJsonEmail = user ? JSON.parse(user).user.email : null;
+  const ls = localStorage.getItem('user');
+  const user = ls ? JSON.parse(ls).user : null;
+  const userEmail = user ? user.email : null;
 
   useEffect(() => {
     const handleResize = () => {
@@ -40,16 +41,16 @@ function Navbar() {
         <a href="//techdocs.asafarim.com" className="nav-links">Tech Docs</a>
         <a href="/projects" className="nav-links">Projects</a>
         <a href="/about" className="nav-links">About</a>
-        {user && <a href="/dashboard" className="nav-links">Dashboard</a>}
+        {ls && <a href="/dashboard" className="nav-links">Dashboard</a>}
       </div>
 
       {/* Right side */}
       <div className="hidden sm:flex items-center space-x-4">
         <a href="//techdocs.asafarim.com/Contact" className="nav-links">Contact</a>
-        {user && (
+        {ls && (
           <div>
             <a href="/user-account-settings" className="nav-links"><IconSettings className="inline-block ml-2 -mb-2" /></a>
-            <a href={`/user-profile?email=${encodeURIComponent(userJsonEmail)}`} className="nav-links">User Profile</a>
+            <a href={`/user-profile?email=${encodeURIComponent(userEmail)}`} className="nav-links">User Profile</a>
           </div>
         )}
         <AccountComponent className="-mb-2" />
@@ -78,7 +79,7 @@ function Navbar() {
           <a href="/projects" className="mobileNavLinkClass">Projects <IconProject className="inline-block ml-2 -mb-2" /></a>
           <a href="/about" className="mobileNavLinkClass">About <IconAbout className="inline-block ml-2 -mb-2" /></a>
           <a href="/contact" className="mobileNavLinkClass">Contact <IconContact className="inline-block ml-2 -mb-2" /></a>
-          {user && <a href="/dashboard" className="mobileNavLinkClass">Dashboard <IconDashboard className="inline-block ml-2 -mb-2" /></a>}
+          {ls && <a href="/dashboard" className="mobileNavLinkClass">Dashboard <IconDashboard className="inline-block ml-2 -mb-2" /></a>}
           <AccountComponent isMobile={true} className="mobileNavLinkClass" />
         </div>
       )}
