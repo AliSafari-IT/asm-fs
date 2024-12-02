@@ -37,6 +37,14 @@ html {
   --bg-warning: #fff3cd;
   --bg-danger: #f8d7da;
 
+  --bg-info-hover: #bce7fa;
+  --bg-error-hover: #f5c6cb;
+  --bg-primary-hover: #e9e9e9;
+  --bg-secondary-hover: #d9d9d9;
+  --bg-warning-hover: #ffeeba;
+  --bg-danger-hover: #f2b8b5;
+  --bg-success-hover: #bbfff6;
+
   /* Links */
   --link-color: #0055aa;
   --link-active-color: #0066cc;
@@ -106,17 +114,6 @@ html {
 
 /* Dark theme (Teams Dark) */
 [data-theme="dark"] {
-  --background-color: #201f1f;
-  --bg-primary: #292828;
-  --bg-secondary: #333333;
-  --bg-error: #4f2f2f;
-  --bg-success: #2f4f2f;
-  --bg-info: #2f4f4f;
-  --bg-warning: #4f4f2f;
-  --bg-danger: #4f2f2f;
-
-  /* Background Colors */
-  --background-color: #201f1f;
   --text-color: #f3f2f1;
   --primary-color: #8a8cff;
   --secondary-color: #58a6ff;
@@ -125,6 +122,26 @@ html {
   --info-color: #17a2b8;
   --warning-color: #ffb900;
   --danger-color: #d13438;
+
+  /* Background Colors */
+  --background-color: #201f1f;
+  --bg-primary: #292828;
+  --bg-secondary: #333333;
+  --bg-error: #4f2f2f;
+  --bg-success: #2f4f2f;
+  --bg-info: #2f4f4f;
+  --bg-warning: #4f4f2f;
+  --bg-danger: #4f2f2f;
+  
+  --bg-primary-hover: #0063b1;
+  --bg-secondary-hover: #004578;
+  --bg-info-hover: #004578;
+  --bg-error-hover: #a61f22;
+  --bg-success-hover: #6f9b38;
+  --bg-warning-hover: #cc9d00;
+  --bg-danger-hover: #a61f22;
+
+
 
   /* Buttons */
   --button-bg-color: #6264a7;
@@ -506,6 +523,9 @@ button {
 .info {
   color: var(--info-color);
   background-color: var(--bg-info);
+  &:hover {
+    background-color: var(--bg-info-hover);
+  }
 }
 
 .warning {
