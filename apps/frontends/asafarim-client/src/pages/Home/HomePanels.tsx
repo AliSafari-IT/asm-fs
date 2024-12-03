@@ -29,7 +29,7 @@ const HomePanels = () => {
   };
 
   useEffect(() => {
-    console.log('selectedLinkId:', selectedLinkId);
+    console.debug('selectedLinkId:', selectedLinkId);
   }, [selectedLinkId]);
 
   return (

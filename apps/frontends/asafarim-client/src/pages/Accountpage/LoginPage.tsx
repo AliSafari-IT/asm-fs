@@ -38,7 +38,8 @@ const LoginPage = () => {
       }
     } catch (error) {
       const err = error as AxiosError;
-      const response = err.response;
+      const response = err?.response;
+
       const status = response?.status;
 
       if (response && status === 401) {

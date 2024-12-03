@@ -7,15 +7,12 @@ export default {
     "./app/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    screens: {
-      'sm': '360px',
-      'md': '480px',
-      'lg': '768px',
-      'xl': '9600px',
-      '2xl': '1220px',      
-      // other breakpoints...
+    extend: {
+      colors: {
+        primary: 'var(--primary-color)',
+        secondary: 'var(--secondary-color)',
+      },
     },
-    extend: {},
   },
   variants: {
     extend: {},

@@ -2,18 +2,39 @@
 import axios from "axios";
 import API_URL from "./getApiUrls";
 
+const tableExistsInDb = async (tableName: string): Promise<boolean> => {
+    console.info(`Checking table existence: ${tableName} in ${API_URL}`);
+    try {
+        const response = await axios.get(`${API_URL}/${tableName}`);
+        return response.status === 200;
+    } catch {
+        return false;
+    }
+}
 // CRUD operations for entities from the API
 const fetchEntities = async (entityTableName: string) => {
+    // Todo: check if entityTableName is valid/exists
+    if (!tableExistsInDb(entityTableName + 's')) {
+        throw new Error('Entity does not exist: ' + entityTableName);
+    }
+
     const url = `${API_URL}/${entityTableName}s`;
     console.log(`fetchEntities for ${url}`); // Log the data being sent
     return axios.get(`${url}`)
         .catch(error => {
             console.error('Error fetching entities:', error);
-            throw new Error('Failed to fetch entities: ' + entityTableName + 's. ('  + error+ ')');
+            throw new Error('Failed to fetch entities: ' + entityTableName + 's. (' + error + ')');
         });
 }
 
-const fetchEntityById = async (entityTableName: string, id: string) => {
+/**
+ * Fetch a single entity by its ID from the specified table in the API.
+ * @param {string} entityTableName The name of the table in the API to fetch the entity from.
+ * @param {string} id The ID of the entity to fetch.
+ * @returns {Promise<any>} A promise that resolves to the fetched entity.
+ * @throws {Error} If the fetch operation fails, an error is thrown with a message indicating the failure.
+ */
+const fetchEntityById = async (entityTableName: string, id: string): Promise<unknown> => {
     console.log(`Fetching entity by ID from ${entityTableName}`, id);
     return axios.get(`${API_URL}/${entityTableName}/${id}`)
         .then(response => {
@@ -26,7 +47,7 @@ const fetchEntityById = async (entityTableName: string, id: string) => {
         });
 }
 
-const addEntity = async (entityTableName: string, data: any) => {
+const addEntity = async (entityTableName: string, data: unknown) => {
     console.log(`Adding entity to ${entityTableName}`, data);
     // Send a POST request to add a new entity
     return axios.post(`${API_URL}/${entityTableName}`, data)
@@ -41,7 +62,7 @@ const addEntity = async (entityTableName: string, data: any) => {
         });
 }
 
-const updateEntity = async (entityTableName: string, id: string, data: any) => {
+const updateEntity = async (entityTableName: string, id: string, data: unknown) => {
     const url = `${API_URL}/${entityTableName}/${id}`;
     console.log(`Updating entity in ${entityTableName}: ID: ${id}`, data); // Log the data being sent
 

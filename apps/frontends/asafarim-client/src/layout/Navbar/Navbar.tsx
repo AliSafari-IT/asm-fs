@@ -1,90 +1,107 @@
-import { useEffect, useState } from 'react';
+import { Disclosure, } from '@headlessui/react';
+
+import React, { useState } from 'react';
+import { navItems } from './navItems'; // Import the navItems list
+import { Link } from 'react-router-dom';
 import logo from './logoT.svg';
-import {
-  PersonCircle24Regular as IconAbout,
-  PhoneVibrate24Regular as IconContact,
-  Teaching24Regular as IconTeaching,
-  Board24Regular as IconDashboard,
-  ProjectionScreenText24Regular as IconProject,
-  Settings24Regular as IconSettings
-} from '@fluentui/react-icons';
-import ToggleTheme from '../../components/theme/ToggleTheme';
-import AccountComponent from '../../components/user/AccountComponent';
-import './navbar.scss';
 
-function Navbar() {
+const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const ls = localStorage.getItem('user');
-  const user = ls ? JSON.parse(ls).user : null;
-  const userEmail = user ? user.email : null;
+  const [openDropdowns, setOpenDropdowns] = useState<{ [key: string]: boolean }>({});
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth > 768) {
-        setMenuOpen(false);
-      }
-    };
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  const handleDropdownToggle = (parentId: string) => {
+    setOpenDropdowns((prev) => ({
+      ...prev,
+      [parentId]: !prev[parentId],
+    }));
+  };
+
+  const renderNavItems = (aligned: 'left' | 'right') => {
+    return navItems
+      .filter((item) => item.aligned === aligned)
+      .map((item) => {
+        const childItems = navItems.filter((child) => child.parentId === item.id);
+        const hasChildren = childItems.length > 0;
+
+        return (
+          <div key={item.id} className="relative group">
+            {/* Render parent link */}
+            <Link
+              to={item.to || '#'}
+              className="nav-link flex items-center gap-2 px-4 py-2 hover:bg-[var(--bg-primary-hover)]"
+              onClick={() => hasChildren && handleDropdownToggle(item.id)}
+            >
+              {item.icon && <span className="icon">{item.icon}</span>}
+              {item.title}
+              {hasChildren && <span className="dropdown-icon">▼</span>}
+            </Link>
+
+            {/* Render child items in a dropdown */}
+            {hasChildren && openDropdowns[item.id] && (
+              <div className="dropdown-menu absolute left-0 mt-1 w-full bg-[var(--bg-primary)] shadow-[var(--box-shadow-light)] rounded-lg">
+                {childItems.map((child) => (
+                  <Link
+                    key={child.id}
+                    to={child.to || '#'}
+                    className="dropdown-item block px-4 py-2 hover:bg-[var(--bg-primary-hover)]"
+                  >
+                    {child.icon && <span className="icon">{child.icon}</span>}
+                    {child.title}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      });
+  };
 
   return (
-    <nav className="nav-container">
-      {/* Left side */}
-      <div className="flex items-center space-x-4">
-        <a href="/" className="flex items-center no-underline">
-          <img src={logo} alt="logo" className="inline h-8 w-8 mr-1" />
-          <span className="brand font-semibold text-xl">ASafariM</span>
-        </a>
-        <a href="//techdocs.asafarim.com" className="nav-links">Tech Docs</a>
-        <a href="/projects" className="nav-links">Projects</a>
-        <a href="/about" className="nav-links">About</a>
-        {ls && <a href="/dashboard" className="nav-links">Dashboard</a>}
+    <Disclosure as="nav"  className="navbar bg-[var(--background-color)] p-4 shadow-[var(--box-shadow-light)] text-[var(--text-color)]">
+       {/* Logo */}
+       <div className="flex items-center">
+        <img src={logo} alt="Logo" className="h-8 w-8 mr-2" />
+        <span className="text-xl font-semibold">ASafariM</span>
       </div>
 
-      {/* Right side */}
-      <div className="hidden sm:flex items-center space-x-4">
-        <a href="//techdocs.asafarim.com/Contact" className="nav-links">Contact</a>
-        {ls && (
-          <div>
-            <a href="/user-account-settings" className="nav-links"><IconSettings className="inline-block ml-2 -mb-2" /></a>
-            <a href={`/user-profile?email=${encodeURIComponent(userEmail)}`} className="nav-links">User Profile</a>
-          </div>
-        )}
-        <AccountComponent className="-mb-2" />
-        <ToggleTheme className="pr-2" />
+      {/* Desktop Navigation */}
+      <div className="hidden sm:flex gap-4">
+        <div className="nav-group-left flex gap-4">{renderNavItems('left')}</div>
+        <div className="nav-group-right flex gap-4">{renderNavItems('right')}</div>
       </div>
 
-      {/* Hamburger Icon */}
-      <div className="menu-toggle sm:hidden pr-5">
-        <button onClick={() => setMenuOpen(!menuOpen)} className="focus:outline-none">
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d={menuOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'} // X icon when menu is open, hamburger when closed
-            />
-          </svg>
-        </button>
-      </div>
+      {/* Mobile Menu Toggle */}
+      <button
+        className="sm:hidden flex items-center"
+        onClick={() => setMenuOpen((prev) => !prev)}
+        aria-expanded={menuOpen}
+        aria-label="Toggle Menu"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d={menuOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'}
+          />
+        </svg>
+      </button>
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="sm:hidden menu-open">
-          <ToggleTheme className="mb-3 absolute left-3 top-5" />
-          <a href="//techdocs.asafarim.com" className="mobileNavLinkClass">Tech Docs <IconTeaching className="inline-block ml-2 -mb-2" /></a>
-          <a href="/projects" className="mobileNavLinkClass">Projects <IconProject className="inline-block ml-2 -mb-2" /></a>
-          <a href="/about" className="mobileNavLinkClass">About <IconAbout className="inline-block ml-2 -mb-2" /></a>
-          <a href="/contact" className="mobileNavLinkClass">Contact <IconContact className="inline-block ml-2 -mb-2" /></a>
-          {ls && <a href="/dashboard" className="mobileNavLinkClass">Dashboard <IconDashboard className="inline-block ml-2 -mb-2" /></a>}
-          <AccountComponent isMobile={true} className="mobileNavLinkClass" />
+        <div className="sm:hidden flex flex-col gap-2 mt-4">
+          <div className="nav-group-left">{renderNavItems('left')}</div>
+          <div className="nav-group-right">{renderNavItems('right')}</div>
         </div>
       )}
-    </nav>
+    </Disclosure>
   );
-}
+};
 
 export default Navbar;

@@ -15,7 +15,7 @@ import { ITopic } from '../../../interfaces/ITopic';
 import { ITag } from '../../../interfaces/ITag';
 import { Add24Regular as IconAdd } from "@fluentui/react-icons";
 import { useNavigate } from 'react-router-dom';
-import dashboardServices from '../../../api/dashboardServices';
+import dashboardServices from '../../../api/entityServices';
 import Loading from '../../Loading/Loading';
 const useStyles = makeStyles({
   container: {

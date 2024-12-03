@@ -3,7 +3,7 @@ import { Button, makeStyles } from '@fluentui/react-components';
 import { useNavigate } from 'react-router-dom';
 import { TextField } from '@fluentui/react';
 import Wrapper from '../../layout/Wrapper/Wrapper';
-import dashboardServices from '../../api/dashboardServices';
+import dashboardServices from '../../api/entityServices';
 
 const useStyles = makeStyles({
     formContainer: {

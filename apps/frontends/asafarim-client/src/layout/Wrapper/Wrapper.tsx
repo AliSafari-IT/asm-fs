@@ -1,6 +1,4 @@
-// E:\asm\apps\dashboard-client\src\layout\Wrapper\Wrapper.tsx
 import React, { useEffect, useState } from 'react';
-import { Stack } from '@fluentui/react/lib/Stack';
 import { mergeStyles } from '@fluentui/react/lib/Styling';
 import { Panel, PanelType } from '@fluentui/react/lib/Panel';
 import Footer from '../Footer/Footer';
@@ -25,16 +23,15 @@ interface LayoutProps {
   children?: React.ReactNode;
 }
 
-// Wrapper component
+// function classNames(...classes) {
+//   return classes.filter(Boolean).join(' ')
+// }
+
+
 const Wrapper: React.FC<LayoutProps> = ({
   header,
-  footer,
-  className = '',
   sidebar,
-  sidebarClassName = '',
   content,
-  sidebarStyle = {},
-  style = {},
   pageTitle,
   children,
   pageDescription = 'ASafariM React .Net Core TypeScript Client',
@@ -42,76 +39,42 @@ const Wrapper: React.FC<LayoutProps> = ({
   const [isMobile, setIsMobile] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Get the current theme (light or dark) using the useTheme hook
-  // const { theme } = useTheme();
 
-  // Dynamic styles based on theme
-  const sidebarStyles = mergeStyles({
-    width: 250,
-    // backgroundColor: theme === 'dark' ? '#333333' : '#f3f2f1', // Adjust based on theme
-    overflowY: 'auto',
-  });
-  // Detect screen size and update isMobile state
   useEffect(() => {
-    const handleResize = () => {
-      // You can adjust the breakpoint as needed
-      setIsMobile(window.innerWidth <= 361);
-    };
+    const handleResize = () => setIsMobile(window.innerWidth <= 760);
     handleResize(); // Set the initial state
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
- 
-  // Default header, footer, and navbar
-  const sidebarBlock = sidebar ?? (
-    <div className={sidebarStyles} style={sidebarStyle}>
-      Sidebar
-    </div>
-  );
-  const headerBlock = header ?? <DefaultHeader />;
-  const footerBlock = footer ?? <Footer />;
 
-  // Modify navbar to include a menu button in mobile view
-  // Page title and description
-  const title = `${pageTitle ? `${pageTitle} | ` : ''}ASafariM`;
-  const description = pageDescription;
   useEffect(() => {
-    document.title = title;
+    document.title = pageTitle ? `${pageTitle} | ASafariM` : 'ASafariM';
     document
       .querySelector('meta[name="description"]')
-      ?.setAttribute('content', description);
-  }, [title, description]);
+      ?.setAttribute('content', pageDescription);
+  }, [pageTitle, pageDescription]);
+
+  const mainContentStyles = mergeStyles({
+    flexGrow: 1,
+    padding: '1rem',
+  });
 
   return (
-    <div className={`wrapper ${className}`} style={style}>
-      {/* Navbar */}
-      <Navbar />
-
-      {/* Main Content Area */}
-      <Stack horizontal={!isMobile} tokens={{ childrenGap: 0 }} style={{ flexGrow: 1 }}> {/* Make content area take all available space */}
-
-        {/* Sidebar */}
+    <>
+      <div className="min-h-full">
+        <Navbar />
+      </div>
+      <div >
         {!isMobile && sidebar && (
-          <Stack.Item disableShrink className={sidebarClassName}>
-            {sidebarBlock}
-          </Stack.Item>
+          <div >{sidebar ?? 'Sidebar'}</div>
         )}
-
-        {/* Content Area */}
-        <Stack.Item grow className={''}>
-          {/* Header */}
-          {headerBlock}
-          {/* Main Content */}
-          <main className={`main-content`}>
-            {content ?? children}
-          </main>
-          {/* Footer */}
-          {footerBlock}
-        </Stack.Item>
-      </Stack>
-
-      {/* Sidebar Panel for Mobile View */}
-      {isMobile && (
+        <div className={mainContentStyles}>
+          {header ?? <DefaultHeader />}
+          <main>{content ?? children}</main>
+        </div>
+      </div>
+      <Footer />
+      {isMobile && sidebar && (
         <Panel
           isLightDismiss
           isOpen={isSidebarOpen}
@@ -120,10 +83,10 @@ const Wrapper: React.FC<LayoutProps> = ({
           type={PanelType.smallFixedNear}
           headerText="Menu"
         >
-          {sidebarBlock}
+          {sidebar}
         </Panel>
       )}
-    </div>
+    </>
   );
 };
 
