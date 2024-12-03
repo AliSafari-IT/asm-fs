@@ -9,7 +9,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "kill": "npx kill-port 5173"
+    "stop": "npx kill-port 5173",
+    "rs": "yarn stop && yarn dev"
   },
   "dependencies": {
     "@fluentui/font-icons-mdl2": "^8.5.54",
@@ -19,6 +20,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "@headlessui/react": "^2.2.0",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.7",
     "docx": "^9.0.2",

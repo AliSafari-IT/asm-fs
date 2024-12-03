@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, FluentProvider, makeStyles } from '@fluentui/react-components';
 import { Stack, TextField, VirtualizedComboBox } from '@fluentui/react';
-import dashboardServices from '../../../api/dashboardServices';
+import dashboardServices from '../../../api/entityServices';
 import { getFluentProviderTheme } from '../../../utils/themeUtils';
 import Loading from '../../Loading/Loading';
 const currentTheme = getFluentProviderTheme();

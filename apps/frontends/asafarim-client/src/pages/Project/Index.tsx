@@ -3,7 +3,7 @@ import Wrapper from "../../layout/Wrapper/Wrapper";
 import { Button, Toolbar, Tooltip } from "@fluentui/react-components";
 import { Edit20Regular, Delete20Regular, Eye20Regular, AppsAddIn24Regular as AddNewIcon } from "@fluentui/react-icons";
 import { useNavigate } from "react-router-dom";
-import dashboardServices from "../../api/dashboardServices";
+import dashboardServices from "../../api/entityServices";
 const ProjectHome: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);

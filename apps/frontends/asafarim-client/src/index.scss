@@ -132,7 +132,7 @@ html {
   --bg-info: #2f4f4f;
   --bg-warning: #4f4f2f;
   --bg-danger: #4f2f2f;
-  
+
   --bg-primary-hover: #0063b1;
   --bg-secondary-hover: #004578;
   --bg-info-hover: #004578;
@@ -140,8 +140,6 @@ html {
   --bg-success-hover: #6f9b38;
   --bg-warning-hover: #cc9d00;
   --bg-danger-hover: #a61f22;
-
-
 
   /* Buttons */
   --button-bg-color: #6264a7;
@@ -569,28 +567,30 @@ a {
   }
 }
 
+// Pages
+// About Page
+.font-size-options {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5rem;
+}
 /* Additional styles can be added as needed */
-@media screen and (max-width: 768px) {
-  .sidebar {
-    width: 220px;
-    font-size: medium;
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: center;
   }
 
-  .markdown-container {
-    font-size: small;
+  .dropdown-menu {
+    position: static;
+    width: 100%;
+    padding: 1rem;
   }
-}
 
-@media screen and (max-width: 480px) {
-  .sidebar {
-    width: 100px;
-    font-size: smaller;
-  }
-}
-
-@media screen and (max-width: 320px) {
-  .sidebar {
-    width: 80px;
-    font-size: smaller;
+  .nav-link {
+    text-align: center;
+    width: 100%;
   }
 }

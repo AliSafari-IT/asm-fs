@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Text } from '@fluentui/react-components';
-import dashboardServices from '../../../api/dashboardServices';
+import dashboardServices from '../../../api/entityServices';
 import Wrapper from '../../../layout/Wrapper/Wrapper';
 
 const DelCard = () => {
