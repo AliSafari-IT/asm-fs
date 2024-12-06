@@ -4,10 +4,11 @@ import { Button, Toolbar, Tooltip } from "@fluentui/react-components";
 import { Edit20Regular, Delete20Regular, Eye20Regular, AppsAddIn24Regular as AddNewIcon } from "@fluentui/react-icons";
 import { useNavigate } from "react-router-dom";
 import dashboardServices from "../../api/entityServices";
+import { IProject, IProjectModel } from "../../interfaces/IProject";
 const ProjectHome: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [projects, setProjects] = useState([]);
+    const [projects, setProjects] = useState<IProject[]>([]);
 
     const navigate = useNavigate();
     const headerBlock = (
@@ -32,7 +33,7 @@ const ProjectHome: React.FC = () => {
         setLoading(true);
         try {
             const response = await dashboardServices.fetchEntities("project");
-            const daysLeft = response.data.map((project: any) => {
+            const daysLeft = response.data.map((project: IProject) => {
                 const startDate = new Date(project.startDate);
                 const today = new Date();
                 const timeDiff = Math.abs(today.getTime() - startDate.getTime());
@@ -40,12 +41,12 @@ const ProjectHome: React.FC = () => {
                 return diffDays;
             })
 
-            response.data.forEach((project: any, index: number) => {
+            response.data.forEach((project: IProjectModel, index: number) => {
                 project.daysLeft = daysLeft[index];
             });
             setProjects(response.data);
-        } catch (error: any) {
-            setError(error.message);
+        } catch (error) {
+            setError((error as { message: string }).message);
         } finally {
             setLoading(false);
         }
@@ -89,12 +90,12 @@ const ProjectHome: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {projects.map((project: any) => (
+                            {projects.map((project: IProjectModel) => (
                                 <tr key={project.id} className="border-b">
                                     <td className="p-2">{project.title}</td>
                                     <td className="p-2">{project.description}</td>
                                     <td className="p-2 text-center">{new Date(project.startDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</td>
-                                    <td className={`p-2 text-center font-bold ${project.daysLeft < 0 ? "bg-danger" : project.daysLeft < 30 ? "bg-warning" : "bg-info"}`} >{project.daysLeft}</td>
+                                    <td className={`p-2 text-center font-bold ${(project && project.daysLeft !== undefined && project.daysLeft < 0) ? "bg-danger" : project.daysLeft !== undefined && project.daysLeft < 30 ? "bg-warning" : "bg-info"}`} >{project.daysLeft !== undefined ? project.daysLeft : '-'}</td>
                                     <td className="p-2 text-center space-x-2">
                                         <Tooltip content="View" relationship={"description"}>
                                             <Button

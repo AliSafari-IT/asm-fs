@@ -19,3 +19,9 @@ export interface IProject {
     markAsCompleted: () => void;
     updateProjectDetails: (title: string, description: string, clientId: string,ownerId: string, endDate?: Date, budget?: number) => void;
 }
+
+export interface IProjectModel extends IProject {
+    daysLeft?: number
+}
+
+export default IProject;

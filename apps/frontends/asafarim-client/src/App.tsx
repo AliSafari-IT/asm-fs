@@ -29,6 +29,7 @@ import UserProfile from "./pages/User/UserProfile";
 import useAuth from "./hooks/useAuth"; // Custom hook for user state
 import { Suspense, useEffect } from "react";
 import Layout from "./layout/Layout";
+import RTNav from "./pages/Project/projects/react/tailwind/navbar/RTNav";
 
 const App = () => {
   const { theme } = useTheme();
@@ -55,16 +56,17 @@ const App = () => {
       />
       <Route path="/projects" element={<ProjectHome key={Math.random()} />} />
       <Route path="/projects/:id" element={<ProjectHome key={Math.random()} />} />
-      <Route path="/about" element={<About />} />
+      <Route path= "/projects/react/tailwind/navbar-with-dynamic-nav-items" element={<RTNav />} />
+      <Route path="/[...notfound]" element={<NotFound />} /> <Route path="/about-asafarim" element={<About />} />
       <Route path="/about/akkodis-targeted-resume" element={<AkkodisTargetedResume />} />
-      <Route path="/contact" element={<Contact />} />
+      <Route path="/contact-asafarim" element={<Contact />} />
       <Route
         path="/user-account-settings"
         element={
           <Layout header={<div className="w-full text-center mx-auto m-0 border-b-2 border-green-200">
             <h1>Account Settings</h1>
             <p>{"Hi, " + user?.userName + ""}</p>
-          </div>} footer={<Footer />}>
+          </div>} footer={<Footer children={undefined} />}>
             <AccountSettings />
           </Layout>
         }
@@ -72,7 +74,7 @@ const App = () => {
       <Route
         path="/user-profile"
         element={
-          <Layout header={""} footer={<Footer />}>
+          <Layout header={""} footer={<Footer children={undefined} />}>
             <PrivateRoute>
               <UserProfile email={user?.email} />
             </PrivateRoute>

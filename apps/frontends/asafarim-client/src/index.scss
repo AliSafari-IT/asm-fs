@@ -26,6 +26,13 @@ html {
   --info-color: #17a2b8;
   --warning-color: #ffc107;
   --danger-color: #dc3545;
+  --color-primary: var (--primary-color);
+  --color-secondary: var (--secondary-color);
+  --color-error: var (--error-color);
+  --color-success: var (--success-color);
+  --color-info: var (--info-color);
+  --color-warning: var (--warning-color);
+  --color-danger: var (--danger-color);
 
   /* Background Colors */
   --background-color: #ffffff;
@@ -48,7 +55,7 @@ html {
   /* Links */
   --link-color: #0055aa;
   --link-active-color: #0066cc;
-  --link-visited-color: #663399;
+  --link-visited-color: #2e1844;
   --link-hover-color: #1e90ff;
 
   /* Buttons */
@@ -270,6 +277,39 @@ button {
 
 button:hover {
   background-color: var(--secondary-color);
+}
+
+/* Text colors */
+.text-primary {
+  color: var(--primary-color);
+}
+
+.text-secondary {
+  color: var(--secondary-color);
+}
+
+.text-error {
+  color: var(--error-color);
+}
+
+.text-warning {
+  color: var(--warning-color);
+}
+
+.text-info {
+  color: var(--info-color);
+}
+
+.text-success {
+  color: var(--success-color);
+}
+
+.text-muted {
+  color: var(--md-muted-color);
+}
+
+.text-danger {
+  color: var(--danger-color);
 }
 
 /* Form input styles */
@@ -517,6 +557,53 @@ button {
   }
 }
 
+/* Header styles */
+header {
+  background-color: var(--header-bg-color);
+  color: var(--header-text-color);
+  padding: 0;
+
+  .nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background-color: #ffffff; // Adjust based on theme
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .nav-links {
+    color: #333;
+    text-decoration: none;
+    margin-right: 1rem;
+    &:hover {
+      color: #0078d4;
+    }
+  }
+
+  .menu-open {
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f9f9;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 75%;
+    height: 100vh;
+    z-index: 10;
+    padding: 1rem;
+  }
+
+  .mobileNavLinkClass {
+    color: #333;
+    text-decoration: none;
+    margin-bottom: 1rem;
+    display: block;
+    &:hover {
+      color: #0078d4;
+    }
+  }
+}
 /* info, warning, success, danger, primary and secondary styles */
 .info {
   color: var(--info-color);
@@ -551,6 +638,8 @@ button {
   background-color: var(--bg-secondary);
 }
 
+/* Table styles */
+
 /* Link styles */
 a {
   color: var(--link-color);
@@ -568,6 +657,34 @@ a {
 }
 
 // Pages
+
+/** Navbar */
+.navbar {
+  /* Dropdown Menu */
+  .dropdown-menu {
+    transition: all 0.3s ease;
+    //display: none;
+  }
+
+  .group:hover .dropdown-menu {
+    display: block;
+  }
+
+  /* Dropdown Item */
+  .dropdown-item {
+    display: block;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+  }
+
+  .dropdown-item:hover {
+    background-color: #374151; /* Dark hover */
+    color: #fff;
+  }
+}
+
+// Home Page
 // About Page
 .font-size-options {
   display: flex;
@@ -576,21 +693,48 @@ a {
   align-items: center;
   gap: 0.5rem;
 }
+
+svg {
+  .svglogo {
+    fill: var(--md-title-color);
+  }
+}
+
+// NotFound Page
+.not-found {
+  /* Add this to your global CSS or a relevant CSS file */
+  @keyframes parallax {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+
+  .animate-parallax {
+    animation: parallax 5s ease-in-out infinite;
+  }
+}
+
 /* Additional styles can be added as needed */
-@media (max-width: 768px) {
-  .navbar {
-    flex-direction: column;
-    align-items: center;
+@media screen and (max-width: 768px) {
+  * {
+    font-size: 0.9rem;
   }
+}
 
-  .dropdown-menu {
-    position: static;
-    width: 100%;
-    padding: 1rem;
+@media screen and (max-width: 480px) {
+  * {
+    font-size: 0.7rem;
   }
+}
 
-  .nav-link {
-    text-align: center;
-    width: 100%;
+@media screen and (max-width: 375px) {
+  * {
+    font-size: 0.6rem;
   }
 }

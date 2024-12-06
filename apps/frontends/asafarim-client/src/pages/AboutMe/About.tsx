@@ -29,9 +29,7 @@ export default function About(): JSX.Element {
   );
 
   return (
-    <Wrapper header={headerBlock} footer={null} 
-    className="w-full p-0 m-0 " 
-    sidebar={asideBlock}>
+    <Wrapper header={headerBlock} footer={null} sidebar={asideBlock}>
       <DisplayMd markdownContent={aboutMeMd} id="about-me-markdown" />
     </Wrapper>
   );

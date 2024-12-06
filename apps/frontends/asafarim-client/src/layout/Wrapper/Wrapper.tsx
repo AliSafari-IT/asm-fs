@@ -1,43 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { mergeStyles } from '@fluentui/react/lib/Styling';
 import { Panel, PanelType } from '@fluentui/react/lib/Panel';
 import Footer from '../Footer/Footer';
-import DefaultHeader from '../DefaultHeader/DefaultHeader';
+import Header from '../Header/Header';
 import Navbar from '../Navbar/Navbar';
 
 interface LayoutProps {
-  header?: React.ReactNode;
-  footer?: React.ReactNode;
-  className?: string;
-  sidebar?: React.ReactNode;
-  sidebarClassName?: string;
-  navbar?: React.ReactNode;
-  navbarClassName?: string;
-  contentClassName?: string;
-  content?: React.ReactNode;
-  contentStyle?: React.CSSProperties;
-  sidebarStyle?: React.CSSProperties;
-  style?: React.CSSProperties;
   pageTitle?: string;
   pageDescription?: string;
+  header?: React.ReactNode;
+  footer?: React.ReactNode;
+  sidebar?: React.ReactNode;
   children?: React.ReactNode;
 }
 
-// function classNames(...classes) {
-//   return classes.filter(Boolean).join(' ')
-// }
-
-
 const Wrapper: React.FC<LayoutProps> = ({
-  header,
-  sidebar,
-  content,
   pageTitle,
-  children,
-  pageDescription = 'ASafariM React .Net Core TypeScript Client',
+  pageDescription,
+  header,
+  footer,
+  sidebar,
+  children
 }) => {
   const [isMobile, setIsMobile] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const pt = pageTitle ? `${pageTitle} | ASafariM` : 'ASafariM';
 
 
   useEffect(() => {
@@ -48,32 +34,38 @@ const Wrapper: React.FC<LayoutProps> = ({
   }, []);
 
   useEffect(() => {
-    document.title = pageTitle ? `${pageTitle} | ASafariM` : 'ASafariM';
+    document.title = pt;
     document
       .querySelector('meta[name="description"]')
-      ?.setAttribute('content', pageDescription);
-  }, [pageTitle, pageDescription]);
+      ?.setAttribute('content', `${pageDescription}`);
+  }, [pageTitle, pageDescription, pt]);
 
-  const mainContentStyles = mergeStyles({
-    flexGrow: 1,
-    padding: '1rem',
-  });
+  useEffect(() => {
+    if (isMobile) {
+      setIsSidebarOpen(false);
+    }
+  }, [isMobile]);
 
   return (
-    <>
-      <div className="min-h-full">
-        <Navbar />
+    <div className="min-h-full">
+
+      {/* Navigation Bar */}
+      <Navbar />
+
+      {/* Page Header */}
+      <div className="w-fullbg-[var(--bg-primary)] shadow">
+        {<Header header={header} />}
       </div>
-      <div >
-        {!isMobile && sidebar && (
-          <div >{sidebar ?? 'Sidebar'}</div>
-        )}
-        <div className={mainContentStyles}>
-          {header ?? <DefaultHeader />}
-          <main>{content ?? children}</main>
-        </div>
+
+      {/* Page Content */}
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <main>{children}</main>
       </div>
-      <Footer />
+
+      {/* Page Footer */}
+      <Footer children={footer} />
+
+      {/* Sidebar */}
       {isMobile && sidebar && (
         <Panel
           isLightDismiss
@@ -86,7 +78,7 @@ const Wrapper: React.FC<LayoutProps> = ({
           {sidebar}
         </Panel>
       )}
-    </>
+    </div>
   );
 };
 

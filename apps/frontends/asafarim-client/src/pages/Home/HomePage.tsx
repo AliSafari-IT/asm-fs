@@ -1,13 +1,12 @@
 import Wrapper from "../../layout/Wrapper/Wrapper";
 import NotAuthenticated from "../../components/NotAuthenticated";
-import API_URL from "../../api/getApiUrls";
 import HomePanels from "./HomePanels";
-  const userData = localStorage.getItem('user');
-  // const token = userData ? JSON.parse(userData).token : null;
-  console.debug("API_URL", API_URL, "UserData", userData);
+import useAuth from "../../hooks/useAuth";
+
 
 export const Home = () => {
-  if (!userData) {
+  const user = useAuth(); 
+  if (!user) {
     {
       return ( 
         <Wrapper pageTitle="Home">
