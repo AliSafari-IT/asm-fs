@@ -1,6 +1,9 @@
-// src/components/RenderMenuItems.tsx
-import React from "react";
+// src/layout/Navbar/RenderMenuItems.tsx
+
+import React, { useState, useRef, useEffect } from "react";
 import { IMenuItem } from "../../interfaces/IMenuItem";
+import { Link, useLocation } from "react-router-dom";
+import { FaChevronDown } from "react-icons/fa";
 
 interface RenderMenuItemsProps {
   item: IMenuItem;
@@ -21,13 +24,48 @@ const RenderMenuItems: React.FC<RenderMenuItemsProps> = ({
 }) => {
   const hasSubMenu = item.subMenu && item.subMenu.length > 0;
   const isOpen = openMenus[item.id];
+  const liRef = useRef<HTMLLIElement>(null);
 
-  // Indentation for mobile
-  const paddingLeft = isMobile ? `${depth * 16}px` : "0";
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  // Inside the component
+  const location = useLocation();
+  const isActive = location.pathname === item.to;
+
+  // Handle click outside for dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    if (!isMobile) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      if (!isMobile) {
+        document.removeEventListener("mousedown", handleClickOutside);
+      }
+    };
+  }, [isMobile]);
+
+  const handleMouseEnter = () => {
+    if (!isMobile && hasSubMenu) {
+      setIsDropdownOpen(true);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (!isMobile && hasSubMenu) {
+      setIsDropdownOpen(false);
+    }
+  };
 
   const handleClick = () => {
     if (hasSubMenu) {
-      toggleMenu(item.id);
+      if (isMobile) {
+        toggleMenu(item.id);
+      }
     } else {
       if (isMobile && closeAllMenus) {
         closeAllMenus();
@@ -36,85 +74,76 @@ const RenderMenuItems: React.FC<RenderMenuItemsProps> = ({
   };
 
   return (
-    <li className="relative group">
-      <div className="flex items-center justify-between">
-        {/* Link or Button */}
-        {hasSubMenu ? (
+    <li
+      className={`relative ${isMobile ? "" : "group"}`}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      ref={!isMobile && hasSubMenu ? liRef : null}
+
+    >
+      {hasSubMenu ? (
+        <div className="flex items-center">
           <button
             onClick={handleClick}
-            className={`flex items-center w-full text-left px-3 py-2 rounded-md hover:bg-gray-700 focus:outline-none`}
-            style={{ paddingLeft }}
+            className={`flex items-center px-3 py-2 rounded-md hover:bg-gray-100 focus:outline-none transition-colors duration-200`}
             aria-haspopup="true"
-            aria-expanded={isOpen}
+            aria-expanded={isMobile ? isOpen : isDropdownOpen}
           >
             {item.icon && <span className="mr-2">{item.icon}</span>}
             <span>{item.label}</span>
             {/* Chevron Icon */}
-            <svg
-              className="ml-auto h-4 w-4"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              {isOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              )}
-            </svg>
+            <FaChevronDown
+              className={`ml-1 h-4 w-4 transition-transform duration-200 ${(isMobile ? isOpen : isDropdownOpen) ? "transform rotate-180" : ""
+                }`}
+            />
           </button>
-        ) : (
-          <a
-            href={item.to}
-            className={`flex items-center px-3 py-2 rounded-md hover:bg-gray-700 focus:outline-none`}
-            style={{ paddingLeft }}
-            onClick={() => {
-              if (isMobile && closeAllMenus) closeAllMenus();
-            }}
-            aria-current="page"
-          >
-            {item.icon && <span className="mr-2">{item.icon}</span>}
-            <span>{item.label}</span>
-          </a>
-        )}
-      </div>
+        </div>
+      ) : (
+        <Link
+          to={item.to || "#"}
+          className={`flex items-center px-3 py-2 rounded-md hover:bg-gray-100 transition-colors duration-200 ${isActive ? "active font-semibold " : "text-gray-700"
+            }`}
+          onClick={() => {
+            if (isMobile && closeAllMenus) {
+              closeAllMenus();
+            }
+          }}
+        >
+          {item.icon && <span className="mr-2">{item.icon}</span>}
+          <span>{item.label}</span>
+        </Link>
+      )}
 
-      {/* SubMenu */}
-      {hasSubMenu && (
-        <>
-          {/* Desktop SubMenu */}
-          {!isMobile && (
-            <ul className={`absolute left-0 mt-2 w-48 bg-white text-gray-800 rounded-md shadow-lg opacity-0 group-hover:opacity-100 group-hover:visible transition-opacity duration-200 z-10`}>
-              {item.subMenu!.map((subItem) => (
-                <RenderMenuItems
-                  key={subItem.id}
-                  item={subItem}
-                  depth={depth + 1}
-                  openMenus={openMenus}
-                  toggleMenu={toggleMenu}
-                />
-              ))}
-            </ul>
-          )}
+      {/* SubMenu for Desktop */}
+      {hasSubMenu && !isMobile && isDropdownOpen && (
+        <ul className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md py-1 z-20">
+          {item.subMenu!.map((subItem) => (
+            <RenderMenuItems
+              key={subItem.id}
+              item={subItem}
+              depth={depth + 1}
+              openMenus={openMenus}
+              toggleMenu={toggleMenu}
+            />
+          ))}
+        </ul>
+      )}
 
-          {/* Mobile SubMenu */}
-          {isMobile && isOpen && (
-            <ul className="pl-4 border-l border-gray-700">
-              {item.subMenu!.map((subItem) => (
-                <RenderMenuItems
-                  key={subItem.id}
-                  item={subItem}
-                  depth={depth + 1}
-                  openMenus={openMenus}
-                  toggleMenu={toggleMenu}
-                  isMobile
-                  closeAllMenus={closeAllMenus}
-                />
-              ))}
-            </ul>
-          )}
-        </>
+      {/* SubMenu for Mobile */}
+      {hasSubMenu && isMobile && isOpen && (
+        <ul className="pl-4 border-l border-gray-300">
+          {item.subMenu!.map((subItem) => (
+            <RenderMenuItems
+              key={subItem.id}
+              item={subItem}
+              depth={depth + 1}
+              openMenus={openMenus}
+              toggleMenu={toggleMenu}
+              isMobile
+              closeAllMenus={closeAllMenus}
+            />
+          ))}
+        </ul>
       )}
     </li>
   );

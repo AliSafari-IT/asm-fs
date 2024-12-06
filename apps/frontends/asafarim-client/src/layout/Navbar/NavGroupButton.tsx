@@ -25,7 +25,7 @@ const NavGroupButton: React.FC<RenderNavItemsProps> = ({ navData }) => {
       >
       {/* Parent Button */}
       <button
-       onClick={() => navData.url? window.open(navData.url, "_blank"): toggleDropdown(navData.id)} 
+       onClick={() => navData.to? window.open(navData.to, "_blank"): toggleDropdown(navData.id)} 
         className="flex items-center gap-2 px-4 py-2 "
       >
         {navData.icon && <span>{navData.icon}</span>}

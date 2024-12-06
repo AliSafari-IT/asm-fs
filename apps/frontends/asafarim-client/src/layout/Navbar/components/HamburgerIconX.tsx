@@ -1,6 +1,6 @@
 import { MouseEventHandler, ReactElement } from "react";
 
-const HamburgerIcon = ({ onClick, className }: { onClick?: MouseEventHandler<SVGSVGElement>, className?: string }): ReactElement => (
+const HamburgerIconX = ({ onClick, className }: { onClick?: MouseEventHandler<SVGSVGElement>, className?: string }): ReactElement => (
   <svg
     className={`h-6 w-6 ${className}`}
     xmlns="http://www.w3.org/2000/svg"
@@ -13,4 +13,4 @@ const HamburgerIcon = ({ onClick, className }: { onClick?: MouseEventHandler<SVG
   </svg>
 );
 
-export default HamburgerIcon;
+export default HamburgerIconX;

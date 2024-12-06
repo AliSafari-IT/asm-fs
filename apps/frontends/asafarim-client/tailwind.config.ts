@@ -2,6 +2,7 @@
 import withMT from "../../../node_modules/@material-tailwind/react/utils/withMT";
 
 const config = {
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
@@ -15,9 +16,21 @@ const config = {
         'spin-slow': 'spin 10s linear infinite',
         'bounce-slow': 'bounce 3s infinite',
       },
+      keyframes: {
+        spin: {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
+        bounce: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
+      },
       colors: {
         primary: 'var(--primary-color)',
         secondary: 'var(--secondary-color)',
+        danger: 'var(--danger-color)',
+        // Add more custom colors if needed
       },
       fontFamily: {
         sans: ['var(--font-sans)', 'sans-serif'],

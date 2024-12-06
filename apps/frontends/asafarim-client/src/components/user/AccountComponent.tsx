@@ -1,18 +1,18 @@
-// E:\asm\apps\dashboard-client\src\components\user\AccountComponent.tsx
+// src/components/user/AccountComponent.tsx
 
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { 
   PersonAccounts24Filled as IconLogin, 
   SignOut24Regular as IconLogout 
 } from '@fluentui/react-icons';
 
 interface AccountComponentProps {
-  isMobile?: boolean; // Add a prop to differentiate between mobile and desktop
+  isMobile?: boolean; // Prop to differentiate between mobile and desktop
   className?: string;
 }
 
-const AccountComponent: React.FC<AccountComponentProps> = ({ isMobile = false, className }) => {
+const AccountComponent: React.FC<AccountComponentProps> = ({ isMobile = false, className = "" }) => {
   const location = useLocation();
   const user = localStorage.getItem('user');
   const isActive = (path: string) => location.pathname === path;
@@ -22,21 +22,23 @@ const AccountComponent: React.FC<AccountComponentProps> = ({ isMobile = false, c
     return (
       <>
         {user ? (
-          <a
-            href="/logout"
-            className={`block px-4 py-2   ${className}`}
+          <Link
+            to="/logout"
+            className={`flex items-center px-4 py-2 text-gray-700 hover:bg-gray-200 rounded-md ${className}`}
+            aria-label="Logout"
           >
+            <IconLogout className="w-5 h-5 mr-2" />
             <span>Logout</span>
-            <IconLogout className="inline-block ml-2 -mb-2" />
-          </a>
+          </Link>
         ) : (
-          <a
-            href="/login"
-            className={`block px-4 py-2   ${className}`}
+          <Link
+            to="/login"
+            className={`flex items-center px-4 py-2 text-gray-700 hover:bg-gray-200 rounded-md ${className}`}
+            aria-label="Login"
           >
+            <IconLogin className="w-5 h-5 mr-2" />
             <span>Login</span>
-            <IconLogin className="inline-block ml-2 -mb-2" />
-          </a>
+          </Link>
         )}
       </>
     );
@@ -46,22 +48,23 @@ const AccountComponent: React.FC<AccountComponentProps> = ({ isMobile = false, c
   return (
     <>
       {user ? (
-        <a
-          href="/logout"
-          className={`hidden sm:inline-block px-3 py-2 rounded-md text-blue-300 no-underline hover:text-red-600 hover:underline ${className}`}
+        <Link
+          to="/logout"
+          className={`flex items-center px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 hover:text-red-600 transition-colors duration-200 ${isActive('/logout') ? 'bg-gray-200 font-semibold' : ''} ${className}`}
+          aria-label="Logout"
         >
-          <IconLogout />
-        </a>
+          <IconLogout className="w-5 h-5 mr-1" />
+          <span>Logout</span>
+        </Link>
       ) : (
-        <a
-          href="/login"
-          className={`hidden sm:inline-block px-3 py-2 rounded-md text-blue-300 pr-2 bg-transparent ${isActive('/login')
-            ? 'bg-blue-500 font-bold'
-            : 'text-blue-300 hover:text-teal-600 hover:underline'
-          } ${className}`}
+        <Link
+          to="/login"
+          className={`flex items-center px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 hover:text-teal-600 transition-colors duration-200 ${isActive('/login') ? 'bg-gray-200 font-semibold' : ''} ${className}`}
+          aria-label="Login"
         >
-          <IconLogin />
-        </a>
+          <IconLogin className="w-5 h-5 mr-1" />
+          <span>Login</span>
+        </Link>
       )}
     </>
   );

@@ -94,7 +94,7 @@ const NotFound: React.FC = () => {
                 </li>
                 <li className="mb-4">
                   <Link
-                    to="/about"
+                    to="/about-asafarim"
                     className="block text-xl hover:text-[var(--info-color)]  transition-colors duration-200"
                     onClick={() => setMenuOpen(false)}
                   >

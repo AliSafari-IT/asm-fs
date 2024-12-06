@@ -28,8 +28,8 @@ const LoginPage = () => {
     try {
       const user = await login({ usernameOrEmail, password });
       if (user.token) {
-          // Save token to localStorage
-      localStorage.setItem('user', JSON.stringify(user));
+        // Save token to localStorage
+        localStorage.setItem('user', JSON.stringify(user));
         console.log('Logged in successfully, token saved');
         // Set success message
         setSuccessMessage('Login successful!');
@@ -100,24 +100,22 @@ const LoginPage = () => {
           )}
 
           {/* Login button */}
-          <button
-            type="submit" // Change to type="submit" to trigger form submission
-            disabled={loading}
-            className="p-2 bg-blue-500 hover:bg-blue-700 text-white rounded-md"
-          >
-            {loading ? 'Logging in...' : 'Login'}
-          </button>
-        </form>
+          <div className='w-full flex justify-between items-center space-x-12 max-w-xs'>
+            {/* Register link or additional content here */}
+                <a href="/register" className="text-sm hover:underline ">
+                  Don't have an account? Register here
+                </a> 
 
-        {/* Redirect to Register page button */}
-        <div className="mt-4 text-center">
-          <button
-            onClick={() => navigate('/register')}
-            className="text-blue-500 hover:underline"
-          >
-            Don't have an account? Register here
-          </button>
-        </div>
+                 <button
+                type="submit"
+                disabled={loading}
+                className="primary  border border-primary rounded-md primary max-w-xs py-2 px-4"
+              >
+                {loading ? 'Logging in...' : 'Login'}
+              </button>
+          </div>
+
+        </form>
       </AlertContainer>
     </Wrapper>
   );
