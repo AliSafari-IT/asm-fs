@@ -66,7 +66,12 @@ const App = () => {
           <Layout header={<div className="w-full text-center mx-auto m-0 border-b-2 border-green-200">
             <h1>Account Settings</h1>
             <p>{"Hi, " + user?.userName + ""}</p>
-          </div>} footer={<Footer children={undefined} />}>
+          </div>} 
+          sidebar={<div className="w-full text-center mx-auto m-0 border-b-2 border-green-200">
+            <h1>Account Settings</h1>
+            <p>{"Hi, " + user?.userName + ""}</p>
+          </div>}
+          footer={<Footer  />}>
             <AccountSettings />
           </Layout>
         }
@@ -74,7 +79,7 @@ const App = () => {
       <Route
         path="/user-profile"
         element={
-          <Layout header={""} footer={<Footer children={undefined} />}>
+          <Layout header={""} footer={<Footer />} >
             <PrivateRoute>
               <UserProfile email={user?.email} />
             </PrivateRoute>

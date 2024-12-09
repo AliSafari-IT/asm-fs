@@ -10,12 +10,10 @@
       justify-content: space-between;
     }
     .left-panel {
-      background-color: #f3f2f1;
       padding: 10px;
       overflow-y: auto;
     }
     .right-panel {
-      background-color: #ffffff;
       padding: 20px;
       flex-grow: 1;
       overflow-y: auto;
@@ -33,7 +31,6 @@
     }
     .content-link {
       background-color: #4CAF50;
-      color: white;
       padding: 5px 10px;
       border: none;
       cursor: pointer;
@@ -46,7 +43,7 @@
 
     @media screen and (max-width: 768px) {
       .left-panel {
-        width: 100px;
+        min-width: 75px;
         font-size: smaller;
       }
       

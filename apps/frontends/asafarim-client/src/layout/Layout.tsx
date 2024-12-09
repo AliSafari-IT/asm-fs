@@ -1,7 +1,7 @@
 import Wrapper from "./Wrapper/Wrapper";
 
-const Layout = ({ children, header, footer }: { children: React.ReactNode, header: React.ReactNode, footer: React.ReactNode }) => (
-    <Wrapper header={header} footer={footer}>
+const Layout = ({ children, sidebar, header, footer }: { children: React.ReactNode, sidebar?: React.ReactNode, header?: React.ReactNode, footer?: React.ReactNode }) => (
+    <Wrapper pageTitle="" pageDescription="" header={header} footer={footer} sidebar={sidebar}>
       {children}
     </Wrapper>
   );

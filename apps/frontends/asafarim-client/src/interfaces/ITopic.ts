@@ -3,6 +3,5 @@ export interface ITopic {
   title: string;
   to?: string;
   icon?: React.ReactElement;
-}
-;
+};
 

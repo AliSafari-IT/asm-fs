@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { Panel, PanelType } from '@fluentui/react/lib/Panel';
+import React, { useEffect } from 'react';
 import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 import Navbar from '../Navbar/Navbar';
+import { Stack } from '@fluentui/react';
+import MainContent from './MainContent';
+import { SidebarWrapper } from './SidebarWrapper';
 
 interface LayoutProps {
   pageTitle?: string;
@@ -21,17 +23,13 @@ const Wrapper: React.FC<LayoutProps> = ({
   sidebar,
   children
 }) => {
-  const [isMobile, setIsMobile] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const pt = pageTitle ? `${pageTitle} | ASafariM` : 'ASafariM';
-
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <= 760);
-    handleResize(); // Set the initial state
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  if (!footer) {
+    footer = <Footer />;
+  }
+  if (!header) {
+    header = <Header />;
+  }
 
   useEffect(() => {
     document.title = pt;
@@ -39,45 +37,22 @@ const Wrapper: React.FC<LayoutProps> = ({
       .querySelector('meta[name="description"]')
       ?.setAttribute('content', `${pageDescription}`);
   }, [pageTitle, pageDescription, pt]);
-
-  useEffect(() => {
-    if (isMobile) {
-      setIsSidebarOpen(false);
-    }
-  }, [isMobile]);
-
+  
   return (
-    <div className="min-h-full">
-
-      {/* Navigation Bar */}
+    <div className="flex flex-col min-h-screen">
       <Navbar />
-
-      {/* Page Header */}
-      <div className="w-fullbg-[var(--bg-primary)] shadow">
-        {<Header header={header} />}
+      <div className="flex flex-1 min-w-[320px]">
+        <div className="w-[var(--sidebar-width)] bg-gray-800 border-r border-gray-700">
+          <SidebarWrapper sidebar={sidebar} />
+        </div>
+        <div className="flex flex-col flex-1">
+          {header}
+          <main className="flex-1 bg-gray-900 p-6">
+            {children}
+          </main>
+          {footer}
+        </div>
       </div>
-
-      {/* Page Content */}
-      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <main>{children}</main>
-      </div>
-
-      {/* Page Footer */}
-      <Footer children={footer} />
-
-      {/* Sidebar */}
-      {isMobile && sidebar && (
-        <Panel
-          isLightDismiss
-          isOpen={isSidebarOpen}
-          onDismiss={() => setIsSidebarOpen(false)}
-          closeButtonAriaLabel="Close"
-          type={PanelType.smallFixedNear}
-          headerText="Menu"
-        >
-          {sidebar}
-        </Panel>
-      )}
     </div>
   );
 };

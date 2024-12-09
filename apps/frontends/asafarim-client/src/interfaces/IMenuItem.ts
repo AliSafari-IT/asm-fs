@@ -1,6 +1,7 @@
 import { INavBase } from "./INavBase";
 
 export interface IMenuItem extends INavBase {
+  target?: "_blank" | "_self" | "_parent" | "_top";
   onClick?: () => void | undefined;
   onClose?: () => void | undefined;
   onOpen?: () => void | undefined;

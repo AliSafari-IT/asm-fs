@@ -8,7 +8,8 @@ export function Footer({ children = <p className="text-sm">
     ASafariM
   </a>
   . All Rights Reserved.
-</p> }: { children: React.ReactNode }) {
+</p> }: { children?: React.ReactNode }) {
+  
   return (
     <footer>
       {children}
