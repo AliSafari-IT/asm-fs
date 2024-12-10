@@ -2,8 +2,6 @@ import React, { useEffect } from 'react';
 import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 import Navbar from '../Navbar/Navbar';
-import { Stack } from '@fluentui/react';
-import MainContent from './MainContent';
 import { SidebarWrapper } from './SidebarWrapper';
 
 interface LayoutProps {

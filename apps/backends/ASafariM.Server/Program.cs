@@ -20,16 +20,14 @@ var conn = builder.Configuration.GetConnectionString("DefaultConnection");
 var sv = ServerVersion.AutoDetect(conn);
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(conn, sv));
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+// Configure Identity with secure settings
+ConfServices.ConfigureServices(builder.Services);
 
 builder.Services.AddScoped<ITaskItemService, TaskItemService>();
 builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 builder.Services.AddScoped<IUserService, UserService>();
- // Register the UserRepository with the DI container
+// Register the UserRepository with the DI container
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-// ConfServices.ConfigureServices(builder.Services);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
