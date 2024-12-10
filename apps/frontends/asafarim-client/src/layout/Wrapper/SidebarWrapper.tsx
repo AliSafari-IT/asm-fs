@@ -1,19 +1,30 @@
+import { INavItem } from "../../interfaces/INavItem";
 import navItems from "../Navbar/navItems";
 import SidebarNavItem from "./SidebarNavItem";
 
 interface SidebarWrapperProps {
     sidebar?: React.ReactNode;
+    children?: React.ReactNode;
     className?: string;
 }
 
-export const SidebarWrapper: React.FC<SidebarWrapperProps> = ({ sidebar, className = '' }) => {
+const mapNavItemToINavItem = (item: any): INavItem => {
+    // implement the mapping logic here
+    // for demonstration purposes, a simple mapping is shown
+    return {
+        ...item,
+        // add any necessary transformations here
+    };
+};
+
+export const SidebarWrapper: React.FC<SidebarWrapperProps> = ({ sidebar, children, className = '' }) => {
     return sidebar ? (
         <aside className={`bg-gradient-to-b from-[var(--bg-start)] to-[var(--bg-end)]
             border-r border-gray-200/20 dark:border-gray-700/50
             transition-all duration-300 ease-in-out
-            h-[calc(100vh-var(--navbar-height)-var(--footer-height))]
+            h-full
             overflow-y-auto
-            hidden md:block
+            w-64
             ${className}`}
         >
             {sidebar}
@@ -22,9 +33,9 @@ export const SidebarWrapper: React.FC<SidebarWrapperProps> = ({ sidebar, classNa
         <aside className={`bg-gradient-to-b from-[var(--bg-start)] to-[var(--bg-end)]
             border-r border-gray-200/20 dark:border-gray-700/50
             transition-all duration-300 ease-in-out
-            h-[calc(100vh-var(--navbar-height)-var(--footer-height))]
+            h-full
             overflow-y-auto
-            hidden md:block
+            w-64
             ${className}`}
         >
             <div className="flex flex-col h-full">
@@ -32,7 +43,7 @@ export const SidebarWrapper: React.FC<SidebarWrapperProps> = ({ sidebar, classNa
                     {navItems.map((item, index) => (
                         <SidebarNavItem
                             key={index}
-                            sidebarNavData={item}
+                            sidebarNavData={mapNavItemToINavItem(item)}
                             className="sidebar-tree-container"
                         />
                     ))}
@@ -47,6 +58,7 @@ export const SidebarWrapper: React.FC<SidebarWrapperProps> = ({ sidebar, classNa
                     </div>
                 </div>
             </div>
+            {children && <div>{children}</div>} 
         </aside>
     );
 };

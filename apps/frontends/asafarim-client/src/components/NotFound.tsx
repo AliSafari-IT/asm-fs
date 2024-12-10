@@ -1,150 +1,56 @@
-// src/components/NotFound.tsx
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { FaSafari, FaHandSparkles as FaFootballBall } from "react-icons/fa";
-import HamburgerIcon from "../layout/Navbar/components/HamburgerIcon";
-import HamburgerIconX from "../layout/Navbar/components/HamburgerIconX";
-import AsmLogo from "../layout/Navbar/components/AsmLogo";
-
-// SVG Figure Components
-const FloatingSvg = () => (
-  <svg
-    className="w-16 h-16 text-blue-400 animate-bounce"
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="2"
-      d="M12 8v8m-4-4h8"
-    />
-  </svg>
-);
-
-const FloatingCircle = () => (
-  <svg
-    className="w-10 h-10 text-green-400 animate-spin-slow"
-    xmlns="http://www.w3.org/2000/svg"
-    fill="currentColor"
-    viewBox="0 0 20 20"
-  >
-    <circle cx="10" cy="10" r="8" />
-  </svg>
-);
+import { FaCompass, FaHome } from "react-icons/fa";
+import Layout from "../layout/Layout";
+import ToggleTheme from "../layout/Theme/ToggleTheme";
 
 const NotFound: React.FC = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
-
   return (
-    <div className="not-found w-full bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 text-white relative overflow-hidden">
-      {/* Overlay for Mobile Menu */}
-      {menuOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-30 transition-opacity duration-300"></div>
-      )}
-
-      <div className="flex items-center justify-between px-6 py-4">
-        {/* Logo/Icon */}
-        <div className="flex items-center">
-          <AsmLogo className="h-10 w-10 mr-3 animate-pulse" brandName="ASafariM" />
+    <Layout header={<></>}>
+      <div className="min-h-screen w-full bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-indigo-950 flex flex-col items-center justify-center relative overflow-hidden">
+        {/* Theme Toggle */}
+        <div className="absolute top-4 right-4">
+          <ToggleTheme className="scale-75" />
         </div>
 
-        {/* Mobile Menu Icon */}
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="focus:outline-none z-40"
-          aria-label="Toggle Menu"
-        >
-          {/* Hamburger Icon when closed */}
-          {!menuOpen ? (
-            <HamburgerIcon />
-          ) : (
-            /* X Icon when open */
-            <HamburgerIconX />
-          )}
-        </button>
+        {/* Decorative Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-[20%] left-[15%] w-64 h-64 bg-blue-400/20 dark:bg-blue-500/10 rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
+          <div className="absolute top-[10%] right-[20%] w-72 h-72 bg-purple-400/20 dark:bg-purple-500/10 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
+          <div className="absolute bottom-[20%] left-[30%] w-72 h-72 bg-indigo-400/20 dark:bg-indigo-500/10 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
+        </div>
 
-        {/* Dropdown Menu */}
-        <div
-          className={`fixed top-0 right-0 h-full w-64 bg-gradient-to-t from-indigo-700 via-purple-700 to-pink-700 transform ${menuOpen ? "translate-x-0" : "translate-x-full"
-            } transition-transform duration-300 z-40`}
-          onMouseLeave={() => setMenuOpen(false)}
-        >
-          <div className="px-6 py-8">
-            <div className="flex items-center justify-between mb-8">
-              <h2
-                                aria-hidden={!menuOpen}
-                className="text-3xl font-bold mb-6  animate-parallax  *:hover:text-[var(--info-color)] hover:cursor-pointer">
-                ASafariM
-              </h2>
-              <HamburgerIconX onClick={() => setMenuOpen(false)} className="cursor-pointer" />
-            </div>
-            <nav>
-              <ul>
-                <li className="mb-4">
-                  <Link
-                    to="/"
-                    className="block text-xl hover:text-[var(--info-color)] transition-colors duration-200"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    Home
-                  </Link>
-                </li>
-                <li className="mb-4">
-                  <Link
-                    to="/about-asafarim"
-                    className="block text-xl hover:text-[var(--info-color)]  transition-colors duration-200"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    About
-                  </Link>
-                </li>
-                <li className="mb-4">
-                  <Link
-                    to="/contact"
-                    className="block text-xl hover:text-[var(--info-color)]  transition-colors duration-200"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    Contact
-                  </Link>
-                </li>
-                {/* Add more links as needed */}
-              </ul>
-            </nav>
+        {/* Content */}
+        <div className="relative z-10 text-center px-4">
+          <div className="mb-8">
+            <FaCompass className="mx-auto text-6xl text-blue-600 dark:text-blue-400 animate-spin-slow" />
           </div>
-        </div>
-      </div>
+          
+          <h1 className="text-8xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">
+            404
+          </h1>
+          
+          <h2 className="text-2xl font-semibold mb-6 text-gray-700 dark:text-gray-300">
+            Page Not Found
+          </h2>
+          
+          <p className="text-lg mb-8 max-w-md mx-auto text-gray-600 dark:text-gray-400">
+            Oops! It seems you've ventured into uncharted territory. The page you're looking for doesn't exist.
+          </p>
 
-      {/* Main Content */}
-      <div className="min-h-screen flex flex-col justify-center items-center text-center relative">
-        <h1 className="text-7xl font-extrabold mb-4">404</h1>
-        <p className="text-xl mb-8">
-          Oops! The page you're looking for doesn't exist.
-        </p>
-        <Link
-          to="/"
-          className="px-6 py-3 text-lg bg-blue-500 hover:bg-blue-600 rounded-lg shadow-md transition-colors duration-300"
-        >
-          Go Back Home
-        </Link>
+          <Link
+            to="/"
+            className="inline-flex items-center px-6 py-3 text-lg font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 dark:from-blue-500 dark:to-indigo-500 dark:hover:from-blue-600 dark:hover:to-indigo-600 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 group"
+          >
+            <FaHome className="mr-2 group-hover:animate-bounce" />
+            Return Home
+          </Link>
+        </div>
 
-        {/* Animated SVGs */}
-        <div className="absolute top-10 left-8">
-          <FaSafari className="w-32 h-32 text-yellow-300 animate-spin-slow" />
-        </div>
-        <div className="absolute top-12 right-12">
-          <FaFootballBall className="w-20 h-20 text-red-400 animate-ping" />
-        </div>
-        <div className="absolute bottom-24 left-20">
-          <FloatingCircle />
-        </div>
-        <div className="absolute bottom-16 right-24">
-          <FloatingSvg />
-        </div>
+        {/* Background Pattern */}
+        <div className="absolute inset-0 bg-grid-pattern opacity-5 dark:opacity-[0.02]"></div>
       </div>
-    </div>
+    </Layout>
   );
 };
 

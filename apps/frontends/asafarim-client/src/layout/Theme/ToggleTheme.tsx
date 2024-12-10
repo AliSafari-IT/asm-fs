@@ -49,7 +49,7 @@ const ToggleTheme: React.FC<ToggleThemeProps> = ({
       type="button"
       onClick={toggleTheme}
       title={title || `Switch to ${isDark ? 'light' : 'dark'} mode`}
-      className={`group relative h-12 w-20 rounded-xl p-1.5 transition-all duration-500
+      className={`${className} group relative h-12 w-20 rounded-xl p-1.5 transition-all duration-500  z-50 
         ${isDark 
           ? 'bg-gradient-to-b from-gray-900 via-blue-900 to-blue-800' 
           : 'bg-gradient-to-b from-blue-300 via-blue-200 to-blue-100'

@@ -1,11 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import useAuth from '../../hooks/useAuth';
 
-const UserDropdown: React.FC = () => {
+const UserDropdown: React.FC<{ user: any }> = ({ user }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const user = useAuth();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
