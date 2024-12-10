@@ -1,7 +1,11 @@
 import React from 'react';
 import AsmLogo from './components/AsmLogo';
+import UserDropdown from '../../components/user/UserDropdown';
+import { Link } from 'react-router-dom';
+import useAuth from '../../hooks/useAuth';
 
 const Navbar: React.FC = () => {
+  const user = useAuth();
 
   return (
     <nav className="bg-gray-800 text-white">
@@ -11,13 +15,19 @@ const Navbar: React.FC = () => {
             className="h-10 w-10 mr-3 animate-pulse"
             brandName="ASafariM" />
 
-          <div className="flex items-center">
-            <a href="/login" className="text-sm font-semibold mr-4">
-              Login
-            </a>
-            <a href="/register" className="text-sm font-semibold">
-              Register
-            </a>
+          <div className="flex items-center space-x-4">
+            {user ? (
+              <UserDropdown />
+            ) : (
+              <>
+                <Link to="/login" className="text-sm font-semibold hover:text-gray-300">
+                  Login
+                </Link>
+                <Link to="/register" className="text-sm font-semibold hover:text-gray-300">
+                  Register
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
