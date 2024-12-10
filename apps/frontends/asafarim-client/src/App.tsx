@@ -31,6 +31,7 @@ import { Suspense, useEffect } from "react";
 import Layout from "./layout/Layout";
 import RTNav from "./pages/Project/projects/react/tailwind/navbar/RTNav";
 import UserAccountSettings from "./pages/User/UserAccountSettings";
+import Privacy from "./pages/Privacy/Privacy";
 
 const App = () => {
   const { theme } = useTheme();
@@ -43,6 +44,10 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/privacy-eula" element={<Privacy />} />
+      <Route path="/privacy-disclaimer" element={<Privacy />} />
+      <Route path="/privacy-cookies" element={<Privacy />} />
+
       <Route path="/posts/:slug" element={<PostDetail />} />
       <Route path="/:model/add" element={<AddForm />} />
       <Route path="/:model/delete/:id" element={<DelCard />} />
@@ -58,7 +63,8 @@ const App = () => {
       <Route path="/projects" element={<ProjectHome key={Math.random()} />} />
       <Route path="/projects/:id" element={<ProjectHome key={Math.random()} />} />
       <Route path= "/projects/react/tailwind/navbar-with-dynamic-nav-items" element={<RTNav />} />
-      <Route path="/[...notfound]" element={<NotFound />} /> <Route path="/about-asafarim" element={<About />} />
+      <Route path="/[...notfound]" element={<NotFound />} /> 
+      <Route path="/about-asafarim" element={<About />} />
       <Route path="/about/akkodis-targeted-resume" element={<AkkodisTargetedResume />} />
       <Route path="/contact-asafarim" element={<Contact />} />
       <Route
