@@ -45,25 +45,21 @@ const Wrapper: React.FC<LayoutProps> = ({
       document.documentElement.classList.remove('dark');
     }
   }, [theme]);
-  
+
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       <Navbar />
       {header}
       <main className="flex-grow">
         <div className="container mx-auto px-4 py-8">
-          {sidebar ? (
-            <div className="flex gap-4">
-              <aside className="w-64 flex-shrink-0">
-                <SidebarWrapper sidebar={sidebar} />
-              </aside>
-              <div className="flex-grow">
-                {children}
-              </div>
+          <div className="flex gap-4">
+            <aside className="w-64 flex-shrink-0">
+              <SidebarWrapper sidebar={sidebar} />
+            </aside>
+            <div className="flex-grow">
+              {children}
             </div>
-          ) : (
-            children
-          )}
+          </div>
         </div>
       </main>
       {footer}
