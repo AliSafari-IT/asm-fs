@@ -3,6 +3,7 @@ import AsmLogo from './components/AsmLogo';
 import UserDropdown from '../../components/user/UserDropdown';
 import { Link } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
+import ToggleTheme from '../Theme/ToggleTheme';
 
 const Navbar: React.FC = () => {
   const user = useAuth();
@@ -17,7 +18,12 @@ const Navbar: React.FC = () => {
 
           <div className="flex items-center space-x-4">
             {user ? (
-              <UserDropdown />
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <ToggleTheme className="mr-2" />
+                  <UserDropdown />
+                </div>
+              </div>
             ) : (
               <>
                 <Link to="/login" className="text-sm font-semibold hover:text-gray-300">
