@@ -3,6 +3,7 @@ import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 import Navbar from '../Navbar/Navbar';
 import { SidebarWrapper } from './SidebarWrapper';
+import { useTheme } from '../../hooks/useTheme';
 
 interface LayoutProps {
   pageTitle?: string;
@@ -21,6 +22,7 @@ const Wrapper: React.FC<LayoutProps> = ({
   sidebar,
   children
 }) => {
+  const { theme } = useTheme();
   const pt = pageTitle ? `${pageTitle} | ASafariM` : 'ASafariM';
   if (!footer) {
     footer = <Footer />;
@@ -35,22 +37,36 @@ const Wrapper: React.FC<LayoutProps> = ({
       .querySelector('meta[name="description"]')
       ?.setAttribute('content', `${pageDescription}`);
   }, [pageTitle, pageDescription, pt]);
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
   
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       <Navbar />
-      <div className="flex flex-1 min-w-[320px]">
-        <div className="w-[var(--sidebar-width)] bg-gray-800 border-r border-gray-700">
-          <SidebarWrapper sidebar={sidebar} />
+      {header}
+      <main className="flex-grow">
+        <div className="container mx-auto px-4 py-8">
+          {sidebar ? (
+            <div className="flex gap-4">
+              <aside className="w-64 flex-shrink-0">
+                <SidebarWrapper sidebar={sidebar} />
+              </aside>
+              <div className="flex-grow">
+                {children}
+              </div>
+            </div>
+          ) : (
+            children
+          )}
         </div>
-        <div className="flex flex-col flex-1">
-          {header}
-          <main className="flex-1 bg-gray-900 p-6">
-            {children}
-          </main>
-          {footer}
-        </div>
-      </div>
+      </main>
+      {footer}
     </div>
   );
 };
