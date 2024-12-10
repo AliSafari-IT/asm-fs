@@ -19,8 +19,8 @@ export const SidebarWrapper: React.FC<SidebarWrapperProps> = ({ sidebar, classNa
             overflow-y-auto
             ${className}`}
         >
-            <div className="flex flex-col h-full py-4 overflow-y-auto">
-                <nav className="flex-1 space-y-1 px-3">
+            <div className="flex flex-col h-full py-4 overflow-y-auto ">
+                <nav className="flex-1 space-y-1 px-2">
                     {navItems.map((item, index) => (
                         <SidebarNavItem 
                             key={index} 
