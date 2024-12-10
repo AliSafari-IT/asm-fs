@@ -6,11 +6,11 @@ import useAuth from '../../hooks/useAuth';
 import MobileToggleTheme from '../../components/theme/ToggleTheme';
 import ToggleTheme from '../Theme/ToggleTheme';
 
-const Navbar: React.FC = () => {
+const Navbar: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const user = useAuth();
   // Get current view width
   const [viewWidth, setViewWidth] = React.useState(window.innerWidth);
-  const isMobile = viewWidth <= 468;
+  const isMobile = viewWidth <= 514;
   React.useEffect(() => {
     // Update view width on window resize
     const handleResize = () => {
@@ -25,8 +25,9 @@ const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
+            {children}
             <AsmLogo
-              className="h-10 w-10 mr-3"
+              className="h-10 w-10"
               brandName="ASafariM" />
           </div>
 
@@ -34,16 +35,20 @@ const Navbar: React.FC = () => {
             {isMobile ? <MobileToggleTheme /> : <ToggleTheme className="mr-2" />}
             {user ? (
               <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <UserDropdown />
-                </div>
+                <UserDropdown user={user} />
               </div>
             ) : (
               <>
-                <Link to="/login" className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary">
+                <Link
+                  to="/login"
+                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                >
                   Login
                 </Link>
-                <Link to="/register" className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary">
+                <Link
+                  to="/register"
+                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                >
                   Register
                 </Link>
               </>

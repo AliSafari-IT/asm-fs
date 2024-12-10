@@ -8,8 +8,8 @@ export const Home = () => {
   const user = useAuth(); 
   if (!user) {
     return ( 
-      <Layout >
-        <div className="alert alert-danger alert-dismissible fade show" role="alert">
+      <Layout header={undefined}>
+        <div className="w-full mt-3 alert alert-danger alert-dismissible fade show" role="alert">
           <NotAuthenticated />
         </div>
       </Layout>
@@ -17,7 +17,7 @@ export const Home = () => {
   }
 
   return (
-    <Layout sidebar={null} header={null} footer={null}>
+    <Layout  header={<></>}>
       {/* <HomeHeaderBlock />
       <AccountSettings /> */}
       <HomePanels />

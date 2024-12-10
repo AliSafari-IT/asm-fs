@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 import Navbar from '../Navbar/Navbar';
 import { SidebarWrapper } from './SidebarWrapper';
 import { useTheme } from '../../hooks/useTheme';
+import MainContent from './MainContent';
 
 interface LayoutProps {
   pageTitle?: string;
@@ -23,6 +24,7 @@ const Wrapper: React.FC<LayoutProps> = ({
   children
 }) => {
   const { theme } = useTheme();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pt = pageTitle ? `${pageTitle} | ASafariM` : 'ASafariM';
   if (!footer) {
     footer = <Footer />;
@@ -48,24 +50,41 @@ const Wrapper: React.FC<LayoutProps> = ({
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-[var(--bg-start)] to-[var(--bg-end)]">
-      <Navbar />
+      <Navbar>
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 -ml-2"
+          aria-label="Toggle mobile menu"
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+        </button>
+      </Navbar>
+      <SidebarWrapper 
+        sidebar={sidebar} 
+        className={`fixed top-[var(--navbar-height)] left-0 w-64 z-50 transition-transform duration-300 ease-in-out ${
+          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+        }`} 
+      />
       <div className="flex flex-1">
-        <SidebarWrapper sidebar={sidebar} className="z-10 left-0 max-w-[var(--sidebar-width)]" />
-        <div className="flex-1 min-h-[calc(100vh-var(--navbar-height)-var(--footer-height))] 
-          px-4 md:px-6 lg:px-8">
-          <div className="flex flex-col w-full">
-            {header}
-            <main className="flex-1 w-full">
-              <div className="w-full max-w-screen-xl mx-auto">
-                {children}
-              </div>
-            </main>
-          </div>
-        </div>
+        {/* <SidebarWrapper sidebar={sidebar} className="hidden md:block" /> */}
+        <MainContent className="flex-1 flex flex-col" header={header}>
+          {children}
+        </MainContent>
       </div>
-      <div className="w-full mt-auto">
-        {footer}
-      </div>
+      {footer}
     </div>
   );
 };
