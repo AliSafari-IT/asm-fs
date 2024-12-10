@@ -59,7 +59,7 @@ const TreeViewItem: React.FC<{ item: INavItem, level?: number }> = ({ item, leve
 const SidebarNavItem: React.FC<{ children?: React.ReactNode, sidebarNavData?: INavItem, className?: string }> = ({ children, sidebarNavData, className }) => {
     if (!children && sidebarNavData) {
         return (
-            <div className={`${className} h-full overflow-y-auto`}>
+            <div className={`${className} `}>
                 <TreeViewItem item={sidebarNavData} />
             </div>
         );

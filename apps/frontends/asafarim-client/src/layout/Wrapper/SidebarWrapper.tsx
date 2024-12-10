@@ -12,27 +12,28 @@ export const SidebarWrapper: React.FC<SidebarWrapperProps> = ({ sidebar, classNa
     }
 
     return (
-        <aside className={`fixed left-0 top-[var(--navbar-height)] h-[calc(100vh-var(--navbar-height))] w-[var(--sidebar-width)]
-            bg-gradient-to-b from-gray-900 to-gray-800
+        <aside className={`bg-gradient-to-b from-[var(--bg-primary)] to-[var(--bg-secondary)]
             border-r border-gray-700/50
             transition-all duration-300 ease-in-out
+            h-[calc(100vh-var(--navbar-height))]
             overflow-y-auto
             ${className}`}
         >
-            <div className="flex flex-col h-full py-4 overflow-y-auto ">
-                <nav className="flex-1 space-y-1 px-2">
+            <div className="flex flex-col h-full">
+                <div className="flex-1">
                     {navItems.map((item, index) => (
-                        <SidebarNavItem 
-                            key={index} 
+                        <SidebarNavItem
+                            key={index}
                             sidebarNavData={item}
+                            className="sidebar-tree-container"
                         />
                     ))}
-                </nav>
-                
+                </div>
+
                 {/* Bottom section with subtle separator */}
-                <div className="mt-auto pt-4 border-t border-gray-700/30">
-                    <div className="px-3 pb-4">
-                        <div className="text-xs text-gray-400 px-4">
+                <div className="border-t border-gray-700/30">
+                    <div className="px-3 py-4">
+                        <div className="text-xs text-gray-400">
                             ASafariM &copy; 2024
                         </div>
                     </div>
