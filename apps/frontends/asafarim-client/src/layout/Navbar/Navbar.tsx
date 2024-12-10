@@ -19,10 +19,10 @@ const Navbar: React.FC = () => {
           </div>
 
           <div className="flex items-center space-x-4">
+            <ToggleTheme className="mr-2" />
             {user ? (
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
-                  <ToggleTheme className="mr-2" />
                   <UserDropdown />
                 </div>
               </div>
