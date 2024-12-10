@@ -2,7 +2,6 @@ import { useState } from 'react';
 import Wrapper from '../../layout/Wrapper/Wrapper';
 import { useNavigate } from 'react-router-dom';
 import AlertContainer from '../../components/AlertContainer';
-import { AxiosError } from 'axios';
 import { login } from '../../api/authapi';
 
 const LoginPage = () => {
