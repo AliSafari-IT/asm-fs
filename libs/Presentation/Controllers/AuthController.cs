@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -54,11 +54,52 @@ public class AuthController : ControllerBase
             user = await _userManager.FindByNameAsync(model.UsernameOrEmail);
         }
 
-        if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password))
+        if (user == null)
         {
             return Unauthorized("Invalid credentials.");
         }
 
+        // Check if the account is locked out
+        if (await _userManager.IsLockedOutAsync(user))
+        {
+            var lockoutEnd = await _userManager.GetLockoutEndDateAsync(user);
+            return BadRequest(new { 
+                error = $"Account is locked. Try again after {lockoutEnd?.LocalDateTime:HH:mm:ss}"
+            });
+        }
+
+        // Verify the password manually first
+        var isPasswordValid = await _userManager.CheckPasswordAsync(user, model.Password);
+        
+        if (!isPasswordValid)
+        {
+            // Increment the access failed count
+            await _userManager.AccessFailedAsync(user);
+            
+            // Check if the user is now locked out after this failed attempt
+            if (await _userManager.IsLockedOutAsync(user))
+            {
+                var lockoutEnd = await _userManager.GetLockoutEndDateAsync(user);
+                return BadRequest(new { 
+                    error = $"Account is locked due to too many failed attempts. Try again after {lockoutEnd?.LocalDateTime:HH:mm:ss}"
+                });
+            }
+
+            // Get remaining attempts before lockout
+            var failedAttempts = await _userManager.GetAccessFailedCountAsync(user);
+            var maxAttempts = _userManager.Options.Lockout.MaxFailedAccessAttempts;
+            var remainingAttempts = maxAttempts - failedAttempts;
+
+            return BadRequest(new { 
+                error = $"Invalid password. {remainingAttempts} attempts remaining before lockout."
+            });
+        }
+
+        // Password is valid, reset the access failed count
+        await _userManager.ResetAccessFailedCountAsync(user);
+
+        // Sign in the user
+        await _signInManager.SignInAsync(user, false);
         var token = GenerateJwtToken(user);
         return Ok(new { Token = token, User = user });
     }

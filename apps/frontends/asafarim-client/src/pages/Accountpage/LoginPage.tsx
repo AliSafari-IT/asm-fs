@@ -37,17 +37,8 @@ const LoginPage = () => {
         navigate('/');
       }
     } catch (error) {
-      const err = error as AxiosError;
-      const response = err?.response;
-
-      const status = response?.status;
-
-      if (response && status === 401) {
-        setError(`Invalid username/email or password: (Error ${status})`);
-      } else {
-        console.error('An unexpected error occurred:', error);
-        setError('An unexpected error occurred. Please try again later. (Error 500: Internal Server Error)');
-      }
+      console.error('Login error:', error);
+      setError(error as string);
     } finally {
       setLoading(false);
     }
