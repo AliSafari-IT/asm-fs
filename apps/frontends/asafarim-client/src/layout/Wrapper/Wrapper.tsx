@@ -49,25 +49,22 @@ const Wrapper: React.FC<LayoutProps> = ({
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-[var(--bg-start)] to-[var(--bg-end)] text-gray-100">
       <Navbar />
-      <div className="flex flex-1 ">
-        <SidebarWrapper sidebar={sidebar} className="z-10 left-0 " />
-        <div className="flex min-h-[calc(100vh-var(--navbar-height))]">
-          <div className="flex flex-col flex-1 pl-[var(--sidebar-width)]">
+      <div className="flex flex-1">
+        <SidebarWrapper sidebar={sidebar} className="z-10 left-0 max-w-[var(--sidebar-width)]" />
+        <div className="flex-1 min-h-[calc(100vh-var(--navbar-height))]">
+          <div className="flex flex-col w-full">
             {header}
-            <main className="flex-1">
-              {children}
+            <main className="flex-1 w-full">
+              <div className="w-full max-w-screen-xl mx-auto px-4">
+                {children}
+              </div>
             </main>
-            {footer}
           </div>
         </div>
-        <div>
-
-        </div>
-
       </div>
-
-
-
+      <div className="w-full">
+        {footer}
+      </div>
     </div>
   );
 };

@@ -560,3 +560,7 @@ body {
 .group:hover .dropdown-menu {
   display: block;
 }
+
+.login-form {
+  @apply w-full max-w-md mx-auto;
+}
