@@ -9,7 +9,7 @@ const Navbar: React.FC = () => {
   const user = useAuth();
 
   return (
-    <nav className="bg-white dark:bg-gray-800 shadow-md">
+    <nav className="navbar">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
@@ -28,10 +28,10 @@ const Navbar: React.FC = () => {
               </div>
             ) : (
               <>
-                <Link to="/login" className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                <Link to="/login" className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary">
                   Login
                 </Link>
-                <Link to="/register" className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                <Link to="/register" className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary">
                   Register
                 </Link>
               </>

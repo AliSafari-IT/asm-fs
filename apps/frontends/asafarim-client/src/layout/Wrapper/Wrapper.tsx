@@ -51,7 +51,7 @@ const Wrapper: React.FC<LayoutProps> = ({
       <Navbar />
       <div className="flex flex-1">
         <SidebarWrapper sidebar={sidebar} className="z-10 left-0 max-w-[var(--sidebar-width)]" />
-        <div className="flex-1 min-h-[calc(100vh-var(--navbar-height))]">
+        <div className="flex-1 min-h-[calc(100vh-var(--navbar-height)-var(--footer-height)]">
           <div className="flex flex-col w-full">
             {header}
             <main className="flex-1 w-full">
