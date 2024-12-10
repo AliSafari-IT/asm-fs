@@ -3,6 +3,7 @@ import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 import Navbar from '../Navbar/Navbar';
 import { SidebarWrapper } from './SidebarWrapper';
+import { useTheme } from '../../hooks/useTheme';
 
 interface LayoutProps {
   pageTitle?: string;
@@ -21,6 +22,7 @@ const Wrapper: React.FC<LayoutProps> = ({
   sidebar,
   children
 }) => {
+  const { theme } = useTheme();
   const pt = pageTitle ? `${pageTitle} | ASafariM` : 'ASafariM';
   if (!footer) {
     footer = <Footer />;
@@ -35,21 +37,34 @@ const Wrapper: React.FC<LayoutProps> = ({
       .querySelector('meta[name="description"]')
       ?.setAttribute('content', `${pageDescription}`);
   }, [pageTitle, pageDescription, pt]);
-  
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
+
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-[var(--bg-start)] to-[var(--bg-end)]">
       <Navbar />
-      <div className="flex flex-1 min-w-[320px]">
-        <div className="w-[var(--sidebar-width)] bg-gray-800 border-r border-gray-700">
-          <SidebarWrapper sidebar={sidebar} />
+      <div className="flex flex-1">
+        <SidebarWrapper sidebar={sidebar} className="z-10 left-0 max-w-[var(--sidebar-width)]" />
+        <div className="flex-1 min-h-[calc(100vh-var(--navbar-height)-var(--footer-height))] 
+          px-4 md:px-6 lg:px-8">
+          <div className="flex flex-col w-full">
+            {header}
+            <main className="flex-1 w-full">
+              <div className="w-full max-w-screen-xl mx-auto">
+                {children}
+              </div>
+            </main>
+          </div>
         </div>
-        <div className="flex flex-col flex-1">
-          {header}
-          <main className="flex-1 bg-gray-900 p-6">
-            {children}
-          </main>
-          {footer}
-        </div>
+      </div>
+      <div className="w-full mt-auto">
+        {footer}
       </div>
     </div>
   );

@@ -30,6 +30,7 @@ import useAuth from "./hooks/useAuth"; // Custom hook for user state
 import { Suspense, useEffect } from "react";
 import Layout from "./layout/Layout";
 import RTNav from "./pages/Project/projects/react/tailwind/navbar/RTNav";
+import UserAccountSettings from "./pages/User/UserAccountSettings";
 
 const App = () => {
   const { theme } = useTheme();
@@ -63,17 +64,11 @@ const App = () => {
       <Route
         path="/user-account-settings"
         element={
-          <Layout header={<div className="w-full text-center mx-auto m-0 border-b-2 border-green-200">
-            <h1>Account Settings</h1>
-            <p>{"Hi, " + user?.userName + ""}</p>
-          </div>} 
-          sidebar={<div className="w-full text-center mx-auto m-0 border-b-2 border-green-200">
-            <h1>Account Settings</h1>
-            <p>{"Hi, " + user?.userName + ""}</p>
-          </div>}
-          footer={<Footer  />}>
-            <AccountSettings />
-          </Layout>
+          <PrivateRoute>
+            <Layout>
+              <UserAccountSettings />
+            </Layout>
+          </PrivateRoute>
         }
       />
       <Route

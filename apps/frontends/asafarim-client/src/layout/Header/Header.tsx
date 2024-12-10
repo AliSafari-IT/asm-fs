@@ -1,17 +1,13 @@
-// src/components/Header.tsx
-import React from "react";
 
-interface HeaderProps {
-  header?: React.ReactNode;
-}
+export function Header() {
 
-export function Header({ header}: HeaderProps) {
-
-    return (
+  return (
     <header className="shadow-md">
       <div className="w-full">
-          {header}
-        </div>
+        <h1 className="text-3xl font-bold text-center text-gray-900 dark:text-white">
+          ASafariM
+        </h1>
+      </div>
     </header>
   );
 }

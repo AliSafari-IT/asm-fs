@@ -8,6 +8,7 @@
 /* Global Variables */
 :root {
   --sidebar-width: 280px;
+  --navbar-height: 64px;
   --header-height: 64px;
   --footer-height: 64px;
   --transition-speed: 0.3s;
@@ -48,6 +49,13 @@ body {
   --bg-info: #4f6bed;
   --bg-inverted: #292929;
   
+  --bg-sidebar: #ffffff;  /* Pure white */
+  --bg-navbar: #f8f9fa;  /* Very light gray */
+  --bg-header: rgba(255, 255, 255, 0.95);  /* Slightly transparent white */
+  --bg-footer: #f8f9fa;  /* Very light gray to match bg-start */
+  --bg-start: #f8f9fa;  /* Very light gray-blue */
+  --bg-end: #e9ecef;    /* Soft gray */
+  
   --text-primary: #242424;
   --text-secondary: #616161;
   --text-inverted: #ffffff;
@@ -69,7 +77,7 @@ body {
   --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.16);
   
   /* Component Specific */
-  --navbar-bg: var(--bg-secondary);
+  --navbar-bg: var(--bg-navbar);
   --navbar-border: var(--border-primary);
   --navbar-text: var(--text-primary);
   
@@ -101,6 +109,13 @@ body {
   --bg-error: #e23838;
   --bg-info: #4f6bed;
   --bg-inverted: #ffffff;
+
+  --bg-sidebar: #1a1f25;  /* Deep charcoal */
+  --bg-navbar: #1e2a3a;  /* Deep navy */
+  --bg-header: rgba(30, 42, 58, 0.95);  /* Slightly transparent navy */
+  --bg-footer: #1e2a3a;  /* Match bg-start */
+  --bg-start: #1e2a3a;  /* Deep blue-gray */
+  --bg-end: #2c3e50;    /* Rich navy */
   
   --text-primary: #ffffff;
   --text-secondary: #c8c8c8;
@@ -123,7 +138,7 @@ body {
   --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.32);
   
   /* Component Specific - Dark Overrides */
-  --navbar-bg: var(--bg-secondary);
+  --navbar-bg: var(--bg-navbar);
   --navbar-border: var(--border-primary);
   --navbar-text: var(--text-primary);
   
@@ -174,9 +189,15 @@ body {
 .shadow-lg { box-shadow: var(--shadow-lg); }
 
 .sidebar-tree-container {
-  height: calc(100vh - var(--header-height));
-  overflow-y: auto;
   overflow-x: hidden;
+  overflow-y: auto;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  > div {
+    margin: 0;
+    padding: 0;
+  }
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
 
@@ -212,13 +233,13 @@ body {
   position: sticky;
   top: 0;
   z-index: 50;
-  background-color: var(--bg-primary);
+  background-color: var(--bg-navbar);
   border-bottom: 1px solid var(--border-primary);
   transition: all var(--transition-speed);
 
   .navbar-container {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
-    height: 4rem;
+    height: var(--navbar-height);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -424,7 +445,7 @@ body {
 
 /* Footer Styles */
 .footer {
-  background-color: var(--bg-secondary);
+  background-color: var(--bg-footer);
   border-top: 1px solid var(--border-primary);
   padding: 3rem 0;
   margin-top: auto;
@@ -540,4 +561,8 @@ body {
 
 .group:hover .dropdown-menu {
   display: block;
+}
+
+.login-form {
+  @apply w-full max-w-md mx-auto;
 }
