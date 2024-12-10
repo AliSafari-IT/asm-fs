@@ -3,10 +3,23 @@ import AsmLogo from './components/AsmLogo';
 import UserDropdown from '../../components/user/UserDropdown';
 import { Link } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
+import MobileToggleTheme from '../../components/theme/ToggleTheme';
 import ToggleTheme from '../Theme/ToggleTheme';
+
 
 const Navbar: React.FC = () => {
   const user = useAuth();
+  // Get current view width
+  const [viewWidth, setViewWidth] = React.useState(window.innerWidth);
+const isMobile = viewWidth <= 468;
+  React.useEffect(() => {
+    // Update view width on window resize
+    const handleResize = () => {
+      setViewWidth(window.innerWidth);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <nav className="navbar">
@@ -19,7 +32,7 @@ const Navbar: React.FC = () => {
           </div>
 
           <div className="flex items-center space-x-4">
-            <ToggleTheme className="mr-2" />
+            {isMobile? <MobileToggleTheme /> : <ToggleTheme className="mr-2" />}
             {user ? (
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">

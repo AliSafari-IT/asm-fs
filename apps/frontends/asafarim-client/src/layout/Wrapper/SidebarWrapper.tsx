@@ -7,16 +7,24 @@ interface SidebarWrapperProps {
 }
 
 export const SidebarWrapper: React.FC<SidebarWrapperProps> = ({ sidebar, className = '' }) => {
-    if (sidebar) {
-        return <>{sidebar}</>;
-    }
-
-    return (
-        <aside className={`bg-gradient-to-b from-[var(--bg-primary)] to-[var(--bg-secondary)]
-            border-r border-gray-700/50
+    return sidebar ? (
+        <aside className={`bg-gradient-to-b from-[var(--bg-start)] to-[var(--bg-end)]
+            border-r border-gray-200/20 dark:border-gray-700/50
             transition-all duration-300 ease-in-out
             h-[calc(100vh-var(--navbar-height)-var(--footer-height))]
             overflow-y-auto
+            hidden md:block
+            ${className}`}
+        >
+            {sidebar}
+        </aside>
+    ) : (
+        <aside className={`bg-gradient-to-b from-[var(--bg-start)] to-[var(--bg-end)]
+            border-r border-gray-200/20 dark:border-gray-700/50
+            transition-all duration-300 ease-in-out
+            h-[calc(100vh-var(--navbar-height)-var(--footer-height))]
+            overflow-y-auto
+            hidden md:block
             ${className}`}
         >
             <div className="flex flex-col h-full">
