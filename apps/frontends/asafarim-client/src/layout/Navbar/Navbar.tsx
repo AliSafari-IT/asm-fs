@@ -6,12 +6,11 @@ import useAuth from '../../hooks/useAuth';
 import MobileToggleTheme from '../../components/theme/ToggleTheme';
 import ToggleTheme from '../Theme/ToggleTheme';
 
-
 const Navbar: React.FC = () => {
   const user = useAuth();
   // Get current view width
   const [viewWidth, setViewWidth] = React.useState(window.innerWidth);
-const isMobile = viewWidth <= 468;
+  const isMobile = viewWidth <= 468;
   React.useEffect(() => {
     // Update view width on window resize
     const handleResize = () => {
@@ -32,7 +31,7 @@ const isMobile = viewWidth <= 468;
           </div>
 
           <div className="flex items-center space-x-4">
-            {isMobile? <MobileToggleTheme /> : <ToggleTheme className="mr-2" />}
+            {isMobile ? <MobileToggleTheme /> : <ToggleTheme className="mr-2" />}
             {user ? (
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
