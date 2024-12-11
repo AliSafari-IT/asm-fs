@@ -100,13 +100,6 @@
   --teams-blue: #4f6bed;
 }
 
-html,
-body {
-  min-width: var(--min-width);
-  width: 100%;
-}
-
-
 /* Microsoft Teams Dark Theme */
 [data-theme="dark"] {
   --bg-primary: #201f1f;
