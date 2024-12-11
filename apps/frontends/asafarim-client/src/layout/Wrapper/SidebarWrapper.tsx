@@ -1,6 +1,7 @@
+import React, { forwardRef } from "react";
 import { INavItem } from "../../interfaces/INavItem";
-import navItems from "../Navbar/navItems";
 import SidebarNavItem from "../Navbar/SidebarNavItem";
+import navItemsList from "../Navbar/navItemsList";
 
 interface SidebarWrapperProps {
     sidebar?: React.ReactNode;
@@ -17,10 +18,11 @@ const mapNavItemToINavItem = (item: any): INavItem => {
     };
 };
 
-export const SidebarWrapper: React.FC<SidebarWrapperProps> = ({ sidebar, children, className = '' }) => {
+export const SidebarWrapper = forwardRef<HTMLDivElement, SidebarWrapperProps>(
+  ({ sidebar, children, className = '' }, ref) => {
     return sidebar ? (
-        <aside className={`bg-gradient-to-b from-[var(--bg-start)] to-[var(--bg-end)]
-            border-r border-gray-200/20 dark:border-gray-700/50
+        <aside ref={ref} className={`bg-[var(--bg-secondary)]
+            border-r border-[var(--border-secondary)]
             transition-all duration-300 ease-in-out
             h-full
             overflow-y-auto
@@ -30,8 +32,8 @@ export const SidebarWrapper: React.FC<SidebarWrapperProps> = ({ sidebar, childre
             {sidebar}
         </aside>
     ) : (
-        <aside className={`bg-gradient-to-b from-[var(--bg-start)] to-[var(--bg-end)]
-            border-r border-gray-200/20 dark:border-gray-700/50
+        <aside ref={ref} className={`bg-[var(--bg-secondary)]
+            border-r border-[var(--border-secondary)]
             transition-all duration-300 ease-in-out
             h-full
             overflow-y-auto
@@ -40,19 +42,19 @@ export const SidebarWrapper: React.FC<SidebarWrapperProps> = ({ sidebar, childre
         >
             <div className="flex flex-col h-full">
                 <div className="flex-1">
-                    {navItems.map((item, index) => (
+                    {navItemsList.map((item, index) => (
                         <SidebarNavItem
                             key={index}
-                            sidebarNavData={mapNavItemToINavItem(item)}
+                            sidebarNavData={item.subMenu?.map(mapNavItemToINavItem)}
                             className="sidebar-tree-container"
                         />
                     ))}
                 </div>
 
                 {/* Bottom section with subtle separator */}
-                <div className="border-t border-gray-700/30">
+                <div className="border-t border-[var(--border-secondary)]">
                     <div className="px-3 py-4">
-                        <div className="text-xs text-gray-400">
+                        <div className="text-xs text-[var(--text-secondary)]">
                             ASafariM &copy; 2024
                         </div>
                     </div>
@@ -61,4 +63,4 @@ export const SidebarWrapper: React.FC<SidebarWrapperProps> = ({ sidebar, childre
             {children && <div>{children}</div>} 
         </aside>
     );
-};
+});
