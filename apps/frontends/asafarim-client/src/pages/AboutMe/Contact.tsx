@@ -6,10 +6,10 @@ const Contact = () => {
 
   return (
     <Wrapper 
-    header={<Header header={undefined}> Contact Page Header </Header>}
-    pageTitle="Contact"
-    footer={<Footer children={undefined} />}
-      >
+      header={<Header>Contact Page Header</Header>}
+      pageTitle="Contact"
+      footer={<Footer />}
+    >
       <p>
         This is the Contact page content.
       </p>

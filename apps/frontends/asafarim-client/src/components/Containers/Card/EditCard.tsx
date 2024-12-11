@@ -50,7 +50,7 @@ const EditCard: React.FC = () => {
     const { model, id } = useParams();
     const navigate = useNavigate();
     const classes = useStyles();
-    const [fetchedData, setFetchedData] = useState();
+    const [fetchedData, setFetchedData] = useState<any>(null); 
     const [typedData, setTypedData] = useState<any>();
 
     const validateData = (typedData: any) => {

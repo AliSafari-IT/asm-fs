@@ -13,6 +13,7 @@ interface LayoutProps {
   footer?: React.ReactNode;
   sidebar?: React.ReactNode;
   children?: React.ReactNode;
+  className?: string;
 }
 
 const Wrapper: React.FC<LayoutProps> = ({
@@ -21,7 +22,8 @@ const Wrapper: React.FC<LayoutProps> = ({
   header,
   footer,
   sidebar,
-  children
+  children,
+  className
 }) => {
   const { theme } = useTheme();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -49,7 +51,7 @@ const Wrapper: React.FC<LayoutProps> = ({
   }, [theme]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-b from-[var(--bg-start)] to-[var(--bg-end)]">
+    <div className={`flex flex-col min-h-screen bg-gradient-to-b from-[var(--bg-start)] to-[var(--bg-end)] ${className}`}>
       <Navbar>
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

@@ -381,8 +381,8 @@ const mdBooks: INavItem[] = [
     icon: <IconTeaching />,
     subMenu: mdSections,
     topics: [
-      { id: 'tailwind-vs-css', title: 'Tailwind vs Traditional CSS', to: '/md/learning/tailwind-vs-css', icon: <IconTeaching /> },
-      { id: 'best-practices', title: 'Best Practices in Tailwind', to: '/md/learning/tailwind-best-practices', icon: <IconTeaching /> },
+      { id: 'tailwind-vs-css', title: 'Tailwind vs Traditional CSS', to: '/md/learning/tailwind-vs-css', icon: <IconTeaching />, description: undefined,name:'tailwind-vs-css' },
+      { id: 'best-practices', title: 'Best Practices in Tailwind', to: '/md/learning/tailwind-best-practices', icon: <IconTeaching />, description: undefined,name:'best-practices' },
     ],
   },
 ];

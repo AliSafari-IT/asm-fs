@@ -55,7 +55,7 @@
     "@testing-library/react": "^16.0.1",
     "@types/file-saver": "^2.0.7",
     "@types/graceful-fs": "^4.1.9",
-    "@types/jest": "^29.5.13",
+    "@types/jest": "^29.5.14",
     "@types/node": "^22.7.9",
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
