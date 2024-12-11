@@ -4,6 +4,7 @@ import { createUser } from '../../api/userService';
 import { IUser } from '../../interfaces/IUser';
 import Wrapper from '../../layout/Wrapper/Wrapper';
 import Footer from '../../layout/Footer/Footer';
+import Header from '@/layout/Header/Header';
 
 const CreateUser: React.FC = () => {
   const [user, setUser] = useState<IUser>({
@@ -41,70 +42,89 @@ const CreateUser: React.FC = () => {
   };
 
   return (
-    <Wrapper header={''} footer={<Footer />}>
-        <h1 className="text-2xl font-semibold  mb-6">Create New User</h1>
-        <form onSubmit={handleSubmit} className="">
-          {/* Full Name */}
-          <div>
-            <label className="block text-sm font-medium  mb-2">Full Name</label>
-            <input
-              type="text"
-              name="fullName"
-              placeholder='Full Name'
-              value={user.fullName}
-              onChange={handleInputChange}
-              className="w-full px-4 py-3 border "
-              required
-            />
-          </div>
+    <Wrapper
+      header={<Header children={<h1 className="text-2xl font-semibold text-[var(--text-info)]">Create User</h1>} />}
+      footer={<Footer />}
+    >
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6 lg:p-8">
+          <h1 className="text-xl sm:text-2xl font-semibold text-center text-[var(--text-warning)] mb-4 sm:mb-6">User Management</h1>
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+              {/* Full Name */}
+              <div>
+                <label className="block text-[var(--text-info)] text-sm sm:text-base mb-2">Full Name</label>
+                <input
+                  type="text"
+                  name="fullName"
+                  placeholder="Full Name"
+                  value={user.fullName}
+                  onChange={handleInputChange}
+                  className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)]"
+                  required
+                />
+              </div>
 
-          {/* Email */}
-          <div>
-            <label className="block text-sm font-medium  mb-2">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={user.email}
-              onChange={handleInputChange}
-              className="w-full px-4 py-3 border "
-              required
-            />
-          </div>
-          {/* Bio */}
-          <div>
-            <label className="block text-sm font-medium  mb-2">Bio</label>
-            <textarea
-              name="remark"
-              value={user.remark}
-              onChange={handleInputChange}
-              className="w-full px-4 py-3 border "
-              required
-            />
-          </div>
-          {/* Admin Status */}
-          <div>
-            <label className="block text-sm font-medium  mb-2">Is Admin</label>
-            <select
-              name="isAdmin"
-              value={user.isAdmin ? 'true' : 'false'}
-              onChange={(e) => setUser({ ...user, isAdmin: e.target.value === 'true' })}
-              className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="false">No</option>
-              <option value="true">Yes</option>
-            </select>
-          </div>
+              {/* Email */}
+              <div>
+                <label className="block text-[var(--text-info)] text-sm sm:text-base mb-2">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={user.email}
+                  onChange={handleInputChange}
+                  className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)]"
+                  required
+                />
+              </div>
+            </div>
 
-          {/* Submit Button */}
-          <div>
-            <button
-              type="submit"
-              className="w-full py-3 px-4 mt-6 info font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              Create User
-            </button>
-          </div>
-        </form>
+            {/* Bio */}
+            <div>
+              <label className="block text-[var(--text-info)] text-sm sm:text-base mb-2">Bio</label>
+              <textarea
+                name="remark"
+                value={user.remark}
+                onChange={handleInputChange}
+                rows={4}
+                className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)]"
+                required
+              />
+            </div>
+
+            {/* Admin Status */}
+            <div>
+              <label className="block text-[var(--text-info)] text-sm sm:text-base mb-2">Is Admin</label>
+              <select
+                name="isAdmin"
+                value={user.isAdmin ? 'true' : 'false'}
+                onChange={(e) => setUser({ ...user, isAdmin: e.target.value === 'true' })}
+                className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)]"
+              >
+                <option value="false">No</option>
+                <option value="true">Yes</option>
+              </select>
+            </div>
+
+            {/* Submit and Cancel Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6">
+              <button
+                type="submit"
+                className="btn-info py-2 px-4 rounded-lg hover:bg-blue-700 w-full sm:w-auto"
+              >
+                Create User
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate('/users')}
+                className="btn-danger py-2 px-4 rounded-lg w-full sm:w-auto"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
     </Wrapper>
   );
 };

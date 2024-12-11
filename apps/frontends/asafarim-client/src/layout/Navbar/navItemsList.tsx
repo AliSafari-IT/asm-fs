@@ -244,6 +244,16 @@ const dashboardDD: IMenuItem = {
         },
       ]
     },
+    {
+      id: 'users',
+      title: 'Users',
+      label: 'Users',
+      to: '/users',
+      icon: <IconProfile />,
+      className: '',
+      style: {},
+      subMenu: []
+    }
   ]
 }
   ;
