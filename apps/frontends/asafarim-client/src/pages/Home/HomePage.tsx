@@ -4,11 +4,11 @@ import HomePanels from "./HomePanels";
 import useAuth from "../../hooks/useAuth";
 
 export const Home = () => {
-
   const user = useAuth(); 
+  
   if (!user) {
     return ( 
-      <Layout header={undefined}>
+      <Layout header={<></>} pageTitle="NotAuthenticated Page">
         <div className="w-full mt-3 alert alert-danger alert-dismissible fade show" role="alert">
           <NotAuthenticated />
         </div>
@@ -17,9 +17,7 @@ export const Home = () => {
   }
 
   return (
-    <Layout  header={<></>}>
-      {/* <HomeHeaderBlock />
-      <AccountSettings /> */}
+    <Layout  header={<></>} pageTitle="Home">
       <HomePanels />
     </Layout>
   );

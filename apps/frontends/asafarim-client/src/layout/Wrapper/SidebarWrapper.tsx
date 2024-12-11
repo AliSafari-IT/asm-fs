@@ -1,6 +1,6 @@
 import { INavItem } from "../../interfaces/INavItem";
 import navItems from "../Navbar/navItems";
-import SidebarNavItem from "./SidebarNavItem";
+import SidebarNavItem from "../Navbar/SidebarNavItem";
 
 interface SidebarWrapperProps {
     sidebar?: React.ReactNode;

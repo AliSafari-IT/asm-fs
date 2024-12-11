@@ -19,7 +19,7 @@ const DisplayMd: React.FC<DisplayMdProps> = ({ markdownContent, id }) => {
   const themeContext = useTheme();
 
   useEffect(() => {
-    console.log('Theme:', themeContext.theme);
+    console.log('Theme:', themeContext.theme, "filename:", id);
     if (themeContext.theme === 'dark') {
       document.body.setAttribute('data-theme', 'dark');
     } else if (themeContext.theme === 'light') {
@@ -51,12 +51,16 @@ const DisplayMd: React.FC<DisplayMdProps> = ({ markdownContent, id }) => {
       setTimeout(() => setCopySuccess(false), 3000);
     });
   };
+
   const saveToFile = () => {
+    const filename = id ? `${id}.md` : 'asafarim-about-me.md';
+    console.log('Saving Markdown file...', filename);
+
     const blob = new Blob([markdownContent], { type: 'text/markdown' });
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
     anchor.href = url;
-    anchor.download = 'content.md';
+    anchor.download = filename;
     anchor.click();
     // Clean up the URL object
     URL.revokeObjectURL(url);
@@ -64,6 +68,9 @@ const DisplayMd: React.FC<DisplayMdProps> = ({ markdownContent, id }) => {
 
   const saveHtmlToFile = () => {
     // Get the innerHTML of the element with class "markdown-body"
+    const filename = id ? `${id}.html` : 'asafarim-about-me.html';
+    console.log('Saving HTML file...', filename);
+
     const markdownBodyElement = document.querySelector('.markdown-body');
     if (markdownBodyElement) {
       const markdownContent = markdownBodyElement.innerHTML;
@@ -71,7 +78,7 @@ const DisplayMd: React.FC<DisplayMdProps> = ({ markdownContent, id }) => {
       const url = URL.createObjectURL(blob);
       const anchor = document.createElement('a');
       anchor.href = url;
-      anchor.download = 'asafarim-about-me.html';
+      anchor.download = filename;
       anchor.click();
       // Clean up the URL object
       URL.revokeObjectURL(url);
@@ -81,7 +88,7 @@ const DisplayMd: React.FC<DisplayMdProps> = ({ markdownContent, id }) => {
     <div className="markdown-container flex flex-col m-5" id={id}>
       <Toolbar
         aria-label="Markdown Toolbar"
-        className="m-4 p-4 flex flex-row justify-between items-center"
+        className="md-toolbar m-4 p-4 flex flex-row justify-between items-center"
       >
         {/* Left: Save Buttons */}
         <div className="flex items-center">

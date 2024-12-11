@@ -15,8 +15,6 @@ import {
 import { IChapter } from '../../interfaces/IChapter';
 import { IMenuItem } from '../../interfaces/IMenuItem';
 import { INavItem } from '../../interfaces/INavItem';
-import React from 'react';
-
 
 // Home Dropdown
 const homeDD: IMenuItem = {

@@ -1,4 +1,4 @@
-## Bio
+# Bio
 
 I am **Ali**, known for my friendly and easy-going personality. Programming is not just my profession but also my passion. With extensive experience in IT, I enjoy working with various programming languages and am committed to continuous self-improvement. I always strive to excel in my work, embracing new challenges as opportunities to learn and grow.
 

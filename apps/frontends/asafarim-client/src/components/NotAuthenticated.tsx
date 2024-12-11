@@ -20,7 +20,7 @@ const NotAuthenticated: React.FC = () => {
                     <div className="flex justify-center">
                         <Link
                             href="/login"
-                            className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2 mx-4 rounded-lg shadow-md transition-colors duration-300 ease-in-out"
+                            className="bg-red-600 hover:bg-red-700 text-[var(--text-primary)] font-bold px-6 py-2 mx-4 rounded-lg shadow-md transition-colors duration-300 ease-in-out"
                         >
                             Login
                         </Link>

@@ -1,5 +1,13 @@
+/** @type {import('tailwindcss').Config} */
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap");
+
+
 
 @tailwind base;
 @tailwind components;
@@ -7,38 +15,25 @@
 
 /* Global Variables */
 :root {
+  --font-sans: "Open Sans", sans-serif;
+  --font-segoe: "Segoe UI", sans-serif;
+  --font-playfair: "Playfair Display", serif;
+  --font-quicksand: "Quicksand", sans-serif;
+  --font-cormorant: "Cormorant Garamond", serif;
+  --font-montserrat: "Montserrat Alternates", sans-serif;
+  --font-josefin: "Josefin Sans", sans-serif;
+
   --sidebar-width: 280px;
   --navbar-height: 64px;
   --header-height: 64px;
   --footer-height: 64px;
+  --min-width: 320px;
   --transition-speed: 0.3s;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 2px rgba(88, 46, 46, 0.05);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 8px 12px rgba(0, 0, 0, 0.15);
   --shadow-xl: 0 16px 24px rgba(0, 0, 0, 0.2);
-  --min-width: 320px;
-}
 
-html, body {
-  min-width: var(--min-width);
-  width: 100%;
-}
-
-body {
-  font-family: "Open Sans", sans-serif;
-  scroll-behavior: smooth;
-  min-width: var(--min-width);
-  width: 100%;
-  overflow-x: hidden;
-  position: relative;
-
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
-  }
-}
-
-/* Add the rest regarding my themes here */
-:root {
   /* Microsoft Teams Light Theme */
   --bg-primary: #f5f5f5;
   --bg-secondary: #ffffff;
@@ -48,14 +43,20 @@ body {
   --bg-error: #e23838;
   --bg-info: #4f6bed;
   --bg-inverted: #292929;
-  
-  --bg-sidebar: #ffffff;  /* Pure white */
-  --bg-navbar: #f8f9fa;  /* Very light gray */
-  --bg-header: rgba(255, 255, 255, 0.95);  /* Slightly transparent white */
-  --bg-footer: #f8f9fa;  /* Very light gray to match bg-start */
-  --bg-start: #f8f9fa;  /* Very light gray-blue */
-  --bg-end: #e9ecef;    /* Soft gray */
-  
+
+  --bg-sidebar: #ffffff;
+  /* Pure white */
+  --bg-navbar: #f8f9fa;
+  /* Very light gray */
+  --bg-header: rgba(255, 255, 255, 0.95);
+  /* Slightly transparent white */
+  --bg-footer: #f8f9fa;
+  /* Very light gray to match bg-start */
+  --bg-start: #f8f9fa;
+  /* Very light gray-blue */
+  --bg-end: #e9ecef;
+  /* Soft gray */
+
   --text-primary: #242424;
   --text-secondary: #616161;
   --text-inverted: #ffffff;
@@ -71,25 +72,25 @@ body {
   --border-primary: #e1e1e1;
   --border-secondary: #d1d1d1;
   --border-focus: #6264a7;
-  
+
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
   --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
   --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.16);
-  
+
   /* Component Specific */
   --navbar-bg: var(--bg-navbar);
   --navbar-border: var(--border-primary);
   --navbar-text: var(--text-primary);
-  
+
   --dropdown-bg: var(--bg-secondary);
   --dropdown-hover: var(--bg-tertiary);
   --dropdown-border: var(--border-primary);
-  
+
   --button-primary-bg: var(--accent-primary);
   --button-primary-text: var(--text-inverted);
   --button-secondary-bg: var(--bg-tertiary);
   --button-secondary-text: var(--text-primary);
-  
+
   /* Teams-specific colors */
   --teams-purple: #6264a7;
   --teams-purple-dark: #464775;
@@ -98,6 +99,13 @@ body {
   --teams-green: #92c353;
   --teams-blue: #4f6bed;
 }
+
+html,
+body {
+  min-width: var(--min-width);
+  width: 100%;
+}
+
 
 /* Microsoft Teams Dark Theme */
 [data-theme="dark"] {
@@ -110,13 +118,19 @@ body {
   --bg-info: #4f6bed;
   --bg-inverted: #ffffff;
 
-  --bg-sidebar: #1a1f25;  /* Deep charcoal */
-  --bg-navbar: #1e2a3a;  /* Deep navy */
-  --bg-header: rgba(30, 42, 58, 0.95);  /* Slightly transparent navy */
-  --bg-footer: #1e2a3a;  /* Match bg-start */
-  --bg-start: #1e2a3a;  /* Deep blue-gray */
-  --bg-end: #2c3e50;    /* Rich navy */
-  
+  --bg-sidebar: #1a1f25;
+  /* Deep charcoal */
+  --bg-navbar: #1e2a3a;
+  /* Deep navy */
+  --bg-header: rgba(30, 42, 58, 0.95);
+  /* Slightly transparent navy */
+  --bg-footer: #1e2a3a;
+  /* Match bg-start */
+  --bg-start: #1e2a3a;
+  /* Deep blue-gray */
+  --bg-end: #2c3e50;
+  /* Rich navy */
+
   --text-primary: #ffffff;
   --text-secondary: #c8c8c8;
   --text-inverted: #242424;
@@ -132,20 +146,20 @@ body {
   --border-primary: #484644;
   --border-secondary: #605e5c;
   --border-focus: #7b83eb;
-  
+
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.16);
   --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.24);
   --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.32);
-  
+
   /* Component Specific - Dark Overrides */
   --navbar-bg: var(--bg-navbar);
   --navbar-border: var(--border-primary);
   --navbar-text: var(--text-primary);
-  
+
   --dropdown-bg: var(--bg-secondary);
   --dropdown-hover: var(--bg-tertiary);
   --dropdown-border: var(--border-primary);
-  
+
   /* Teams-specific dark mode colors */
   --teams-purple: #7b83eb;
   --teams-purple-dark: #6264a7;
@@ -156,15 +170,37 @@ body {
 }
 
 /* Teams-specific utility classes */
-.bg-teams-purple { background-color: var(--teams-purple); }
-.bg-teams-red { background-color: var(--teams-red); }
-.bg-teams-green { background-color: var(--teams-green); }
-.bg-teams-blue { background-color: var(--teams-blue); }
+.bg-teams-purple {
+  background-color: var(--teams-purple);
+}
 
-.text-teams-purple { color: var(--teams-purple); }
-.text-teams-red { color: var(--teams-red); }
-.text-teams-green { color: var(--teams-green); }
-.text-teams-blue { color: var(--teams-blue); }
+.bg-teams-red {
+  background-color: var(--teams-red);
+}
+
+.bg-teams-green {
+  background-color: var(--teams-green);
+}
+
+.bg-teams-blue {
+  background-color: var(--teams-blue);
+}
+
+.text-teams-purple {
+  color: var(--teams-purple);
+}
+
+.text-teams-red {
+  color: var(--teams-red);
+}
+
+.text-teams-green {
+  color: var(--teams-green);
+}
+
+.text-teams-blue {
+  color: var(--teams-blue);
+}
 
 /* Base styles using theme variables */
 body {
@@ -173,20 +209,49 @@ body {
 }
 
 /* Utility classes for common theme usage */
-.bg-primary { background-color: var(--bg-primary); }
-.bg-secondary { background-color: var(--bg-secondary); }
-.bg-tertiary { background-color: var(--bg-tertiary); }
+.bg-primary {
+  background-color: var(--bg-primary);
+}
 
-.text-primary { color: var(--text-primary); }
-.text-secondary { color: var(--text-secondary); }
-.text-tertiary { color: var(--text-tertiary); }
+.bg-secondary {
+  background-color: var(--bg-secondary);
+}
 
-.border-primary { border-color: var(--border-primary); }
-.border-secondary { border-color: var(--border-secondary); }
+.bg-tertiary {
+  background-color: var(--bg-tertiary);
+}
 
-.shadow-sm { box-shadow: var(--shadow-sm); }
-.shadow-md { box-shadow: var(--shadow-md); }
-.shadow-lg { box-shadow: var(--shadow-lg); }
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-tertiary {
+  color: var(--text-tertiary);
+}
+
+.border-primary {
+  border-color: var(--border-primary);
+}
+
+.border-secondary {
+  border-color: var(--border-secondary);
+}
+
+.shadow-sm {
+  box-shadow: var(--shadow-sm);
+}
+
+.shadow-md {
+  box-shadow: var(--shadow-md);
+}
+
+.shadow-lg {
+  box-shadow: var(--shadow-lg);
+}
 
 .sidebar-tree-container {
   overflow-x: hidden;
@@ -194,10 +259,12 @@ body {
   height: auto;
   display: flex;
   flex-direction: column;
-  > div {
+
+  >div {
     margin: 0;
     padding: 0;
   }
+
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
 
@@ -248,12 +315,12 @@ body {
   /* Logo Section */
   .logo-section {
     @apply flex items-center gap-2;
-    
+
     .brand-logo {
       color: var(--primary);
       font-weight: 600;
       transition: color var(--transition-speed);
-      
+
       &:hover {
         color: var(--accent-hover);
       }
@@ -266,14 +333,15 @@ body {
 
     .nav-item {
       position: relative;
-      
+
       /* Top Level Items */
       .nav-link {
         @apply flex items-center px-3 py-2 rounded-md;
         color: var(--text-primary);
         transition: all var(--transition-speed);
-        
-        &:hover, &.active {
+
+        &:hover,
+        &.active {
           color: var(--primary);
           background-color: var(--bg-secondary);
         }
@@ -284,6 +352,7 @@ body {
 
         .chevron {
           @apply ml-1 transition-transform duration-200;
+
           &.open {
             @apply rotate-180;
           }
@@ -354,7 +423,7 @@ body {
     .menu-button {
       @apply p-2 rounded-md;
       color: var(--text-primary);
-      
+
       &:hover {
         background-color: var(--bg-secondary);
       }
@@ -380,7 +449,8 @@ body {
         @apply block w-full text-left px-3 py-2 rounded-md;
         color: var(--text-primary);
 
-        &:hover, &.active {
+        &:hover,
+        &.active {
           background-color: var(--bg-secondary);
           color: var(--primary);
         }
@@ -394,7 +464,8 @@ body {
             @apply block w-full text-left px-3 py-2 rounded-md;
             color: var(--text-primary);
 
-            &:hover, &.active {
+            &:hover,
+            &.active {
               background-color: var(--bg-secondary);
               color: var(--primary);
             }
@@ -410,7 +481,7 @@ body {
   flex: 1;
   padding: 2rem 0;
   background-color: var(--bg-primary);
-  
+
   .page-container {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
@@ -498,6 +569,190 @@ body {
   }
 }
 
+/** Markdown Styles */
+.markdown-body {
+  font-family: var(--font-sans);
+  line-height: 1.5;
+
+  color: var(--text-primary);
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: var(--text-primary);
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    font-family: var(--font-josefin);
+    color: var(--text-info);
+    text-align: center;
+  }
+
+  strong {
+    font-weight: bold;
+  }
+
+  a {
+    color: var(--accent-primary);
+    text-decoration: underline;
+  }
+
+  code {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+  }
+
+  pre {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    padding: 0.5rem;
+    border-radius: 4px;
+    overflow-x: auto;
+  }
+
+  blockquote {
+    border-left: 2px solid var(--border-primary);
+    color: var(--text-primary);
+    padding-left: 1rem;
+    margin: 1rem 0;
+  }
+
+  ul,
+  ol {
+    margin-left: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  li {
+    margin-bottom: 0.25rem;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1rem 0;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--border-primary);
+    margin: 2rem 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+
+    th,
+    td {
+      padding: 0.5rem;
+      border: 1px solid var(--border-primary);
+    }
+
+    th {
+      background-color: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+  }
+
+  p {
+    margin-bottom: 0.5rem;
+  }
+
+  figure {
+    margin: 1rem 0;
+
+    figcaption {
+      text-align: center;
+      color: var(--text-secondary);
+    }
+  }
+
+  iframe {
+    max-width: 100%;
+  }
+}
+
+/* Toolbar Styles */
+.md-toolbar {
+  @apply flex items-center justify-between mb-0;
+  background-color: var(--bg-primary);
+  border-bottom: 1px solid var(--border-primary);
+  padding: 0.5rem 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  color: var(--text-primary);
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: toolbarFadeIn 0.8s ease-out;
+  }
+}
+
+.md-toolbar-buttons {
+  @apply flex items-center space-x-4;
+  color: var(--text-primary);
+
+  button {
+    @apply px-4 py-2 rounded-md;
+    color: var(--text-inverted);
+    transition: all var(--transition-speed);
+
+    &:hover {
+      background-color: var(--bg-info);
+    }
+  }
+}
+
+.md-page-title {
+  @apply text-3xl font-bold mb-4;
+  color: var(--text-primary);
+  position: relative;
+  padding-bottom: 0.5rem;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--text-primary) 0%, transparent 100%);
+    transition: width 0.3s ease-in-out;
+  }
+
+  &:hover::after {
+    width: 180px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: titleFadeIn 0.8s ease-out;
+  }
+}
+
+@keyframes titleFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Responsive Adjustments */
 @media screen and (min-width: 1441px) {
   :root {
@@ -531,7 +786,10 @@ body {
 
 /* Prevent width from going below 320px */
 @media screen and (max-width: 320px) {
-  html, body, .app-container {
+
+  html,
+  body,
+  .app-container {
     --sidebar-width: 150px;
 
     width: 100%;
@@ -540,15 +798,37 @@ body {
 }
 
 /* Utility Classes */
-.text-success { color: var(--text-success); }
-.text-warning { color: var(--text-warning); }
-.text-error { color: var(--text-error); }
-.text-info { color: var(--text-info); }
+.text-success {
+  color: var(--text-success);
+}
 
-.bg-success { background-color: var(--bg-success); }
-.bg-warning { background-color: var(--bg-warning); }
-.bg-error { background-color: var(--bg-error); }
-.bg-info { background-color: var(--bg-info); }
+.text-warning {
+  color: var(--text-warning);
+}
+
+.text-error {
+  color: var(--text-error);
+}
+
+.text-info {
+  color: var(--text-info);
+}
+
+.bg-success {
+  background-color: var(--bg-success);
+}
+
+.bg-warning {
+  background-color: var(--bg-warning);
+}
+
+.bg-error {
+  background-color: var(--bg-error);
+}
+
+.bg-info {
+  background-color: var(--bg-info);
+}
 
 .menu-item {
   @apply hover:bg-gray-600 transition-all duration-200 rounded-md;

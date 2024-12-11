@@ -24,7 +24,6 @@ import UsersList from "./pages/User/UsersList";
 import CreateUser from "./pages/User/CreateUser";
 import EditUser from "./pages/User/EditUser";
 import Footer from "./layout/Footer/Footer";
-import AccountSettings from "./pages/Accountpage/AccountSettings";
 import UserProfile from "./pages/User/UserProfile";
 import useAuth from "./hooks/useAuth"; // Custom hook for user state
 import { Suspense, useEffect } from "react";
