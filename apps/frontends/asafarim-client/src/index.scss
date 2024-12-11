@@ -6,6 +6,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100..900;1,100..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 
 
 
@@ -22,6 +23,7 @@
   --font-cormorant: "Cormorant Garamond", serif;
   --font-montserrat: "Montserrat Alternates", sans-serif;
   --font-josefin: "Josefin Sans", sans-serif;
+  --font-roboto: "Roboto", sans-serif;
 
   --sidebar-width: 280px;
   --navbar-height: 64px;
@@ -160,6 +162,39 @@
   --teams-red: #e23838;
   --teams-green: #92c353;
   --teams-blue: #4f6bed;
+}
+
+// Fonts
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+.font-playfair {
+  font-family: var(--font-playfair);
+}
+
+.font-quicksand {
+  font-family: var(--font-quicksand);
+}
+
+.font-cormorant {
+  font-family: var(--font-cormorant);
+}
+
+.font-montserrat {
+  font-family: var(--font-montserrat);
+}
+
+.font-josefin {
+  font-family: var(--font-josefin);
+}
+
+.font-segoe {
+  font-family: var(--font-segoe);
+}
+
+.font-roboto {
+  font-family: var(--font-roboto);
 }
 
 /* Teams-specific utility classes */

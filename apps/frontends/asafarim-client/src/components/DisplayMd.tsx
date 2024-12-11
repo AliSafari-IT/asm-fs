@@ -88,10 +88,10 @@ const DisplayMd: React.FC<DisplayMdProps> = ({ markdownContent, id }) => {
     <div className="markdown-container flex flex-col m-5" id={id}>
       <Toolbar
         aria-label="Markdown Toolbar"
-        className="md-toolbar m-4 p-4 flex flex-row justify-between items-center"
+        className="md-toolbar m-4 p-4 flex flex-row justify-between items-center border-b"
       >
         {/* Left: Save Buttons */}
-        <div className="flex items-center">
+        <div className="flex items-center ">
           <SaveButtons
             onSaveMarkdown={saveToFile}
             onSaveHtml={saveHtmlToFile}
@@ -108,10 +108,8 @@ const DisplayMd: React.FC<DisplayMdProps> = ({ markdownContent, id }) => {
 
       <ReactMarkdown
         rehypePlugins={[rehypeRaw, rehypeSanitize]}
-        className="markdown-body mt-4"
-      >
-        {markdownContent}
-      </ReactMarkdown>
+        className="markdown-body mt-4 px-4 py-2 md:px-8 md:py-4 lg:px-12 lg:py-6 xl:px-16 xl:py-8 rounded-md shadow-md"
+        children={markdownContent} />
     </div>
   );
 };

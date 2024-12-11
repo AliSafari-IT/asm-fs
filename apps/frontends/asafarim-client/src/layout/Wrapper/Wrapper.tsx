@@ -72,7 +72,7 @@ const Wrapper: React.FC<LayoutProps> = ({
   }, [isMobileMenuOpen]);
 
   return (
-    <div className={`flex flex-col min-h-screen bg-gradient-to-b from-[var(--bg-start)] to-[var(--bg-end)] text-[var(--text-primary)] ${className}`}>
+    <div className={`flex flex-col min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] ${className}`}>
       <Navbar>
         <button
           ref={buttonRef}
@@ -96,15 +96,22 @@ const Wrapper: React.FC<LayoutProps> = ({
           </svg>
         </button>
       </Navbar>
+      {/* Mobile Sidebar Overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 "
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
       <SidebarWrapper 
         ref={sidebarRef}
         sidebar={sidebar} 
-        className={`fixed top-[var(--navbar-height)] left-0 w-64 z-50 transition-transform duration-300 ease-in-out bg-[var(--bg-secondary)] border-r border-[var(--border-color)] ${
+        className={`fixed top-[var(--navbar-height)] left-0 w-64 z-50 transition-transform duration-300 ease-in-out bg-[var(--bg-secondary)] border-r border-[var(--border-secondary)] ${
           isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
         }`} 
       />
-      <div className="flex flex-1">
-        {/* <SidebarWrapper sidebar={sidebar} className="hidden md:block" /> */}
+      <div className="flex flex-1 pt-[var(--navbar-height)]">
+        {/* Main Content */}
         <MainContent className="flex-1 flex flex-col bg-[var(--bg-primary)]" header={header}>
           {children}
         </MainContent>

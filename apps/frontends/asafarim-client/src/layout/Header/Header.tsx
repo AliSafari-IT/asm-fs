@@ -1,9 +1,11 @@
-export function Header() {
+export function Header({ children }: { children?: React.ReactNode }) {
+
   return (
-    <header className="h-16 bg-[var(--header-color)] dark:bg-gray-800 flex items-center justify-center border-b border-gray-200 dark:border-gray-700">
-      <div className="text-3xl font-bold text-gray-900 dark:text-white">
+    <header className="h-16 bg-[var(--bg-secondary)] flex items-center justify-center border-b border-[var(--border-secondary)]  font-josefin font-extrabold">
+      {children ?? <div className="text-3xl text-[var(--text-primary)] font-josefin font-extrabold">
         ASafariM
       </div>
+      }
     </header>
   );
 }
