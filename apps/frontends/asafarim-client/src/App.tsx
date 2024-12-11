@@ -17,7 +17,6 @@ import AddForm from "./components/crud/AddForm";
 import ProjectHome from "./pages/Project/Index";
 import PostDetail from "./pages/Post/PostDetail";
 import LogoutPage from "./pages/Accountpage/LogoutPage";
-import Contact from "./pages/AboutMe/Contact";
 import Register from "./pages/Accountpage/Register";
 import LoginPage from "./pages/Accountpage/LoginPage";
 import UsersList from "./pages/User/UsersList";
@@ -31,6 +30,7 @@ import Layout from "./layout/Layout";
 import RTNav from "./pages/Project/projects/react/tailwind/navbar/RTNav";
 import UserAccountSettings from "./pages/User/UserAccountSettings";
 import Privacy from "./pages/Privacy/Privacy";
+import Contact from "./pages/Contact";
 
 const App = () => {
   const { theme } = useTheme();

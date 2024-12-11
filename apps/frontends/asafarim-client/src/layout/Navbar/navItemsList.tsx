@@ -47,13 +47,21 @@ const homeDD: IMenuItem = {
     {
       id: 'contact',
       title: 'Contact',
-      to: '/contact-asafarim',
       icon: <IconContact />,
       label: 'Contact',
       description: 'Contact ASafariM for any questions or feedback.',
       name: 'Contact',
-      className: '',
       subMenu: [
+        {
+          id: 'contact-us',
+          title: 'Contact Us',
+          to: '/contact-asafarim',
+          icon: <IconContact />,
+          label: 'Contact Us',
+          description: 'Contact ASafariM for any questions or feedback.',
+          name: 'Contact Us',
+          className: ''
+        },
         {
           id: 'email',
           title: 'Email',
