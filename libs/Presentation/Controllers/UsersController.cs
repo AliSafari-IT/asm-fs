@@ -1,16 +1,16 @@
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Application.Interfaces;
 using Domain.Entities;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
 using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using SecureCore.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SecureCore.Models;
 
 namespace Presentation.Controllers
 {
@@ -19,18 +19,24 @@ namespace Presentation.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+
         // private readonly IHttpContextAccessor _accessor;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<UsersController> _logger;
         private readonly IUserRepository _userRepository;
-        public UsersController(IUserService userService, UserManager<ApplicationUser> userManager, IUserRepository userRepository, ILogger<UsersController> logger)
+
+        public UsersController(
+            IUserService userService,
+            UserManager<ApplicationUser> userManager,
+            IUserRepository userRepository,
+            ILogger<UsersController> logger
+        )
         {
             _userService = userService;
             _userManager = userManager;
             _userRepository = userRepository;
             _logger = logger;
         }
-
 
         // GET: api/users
         [HttpGet]
@@ -161,6 +167,18 @@ namespace Presentation.Controllers
             return NoContent();
         }
 
+        // GET: api/users/by-email/{email}
+        [HttpGet("by-email/{email}")]
+        public async Task<IActionResult> GetUserByEmail(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+            return Ok(user);
+        }
+
         // GET: api/users/full-info/{email}
         [HttpGet("full-info/{email}")]
         public async Task<IActionResult> GetUserFullInfostring(string email)
@@ -184,6 +202,7 @@ namespace Presentation.Controllers
             var userFullInfo = new
             {
                 UserId = aspNetUser.Id,
+                userInfo.Id,
                 aspNetUser.UserName,
                 aspNetUser.Email,
                 aspNetUser.NormalizedUserName,
@@ -192,7 +211,7 @@ namespace Presentation.Controllers
                 userInfo.UpdatedAt,
                 userInfo.IsAdmin,
                 userInfo.IsDeleted,
-                userInfo.DeletedAt
+                userInfo.DeletedAt,
             };
 
             return Ok(userFullInfo);

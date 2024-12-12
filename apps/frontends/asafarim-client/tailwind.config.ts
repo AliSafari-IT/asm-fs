@@ -1,4 +1,3 @@
-
 import withMT from "../../../node_modules/@material-tailwind/react/utils/withMT";
 
 const config = {
@@ -30,7 +29,17 @@ const config = {
         primary: 'var(--primary-color)',
         secondary: 'var(--secondary-color)',
         danger: 'var(--danger-color)',
-        // Add more custom colors if needed
+        warning: 'var(--warning-color)',
+        success: 'var(--success-color)',
+        info: 'var(--info-color)',
+        hover: {
+          primary: 'var(--primary-hover)',
+          secondary: 'var(--secondary-hover)',
+          danger: 'var(--danger-hover)',
+          warning: 'var(--warning-hover)',
+          success: 'var(--success-hover)',
+          info: 'var(--info-hover)',
+        }
       },
       fontFamily: {
         sans: ['var(--font-sans)', 'sans-serif'],

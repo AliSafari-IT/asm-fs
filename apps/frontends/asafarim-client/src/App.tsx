@@ -2,7 +2,6 @@ import {
   Routes,
   Route,
   Navigate,
-  useParams,
 } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
 import About from "./pages/AboutMe/About";
@@ -43,8 +42,6 @@ const App = () => {
   useEffect(() => {
     if (user) {
       console.log('User logged in:', user);
-      console.log('mdFileName:', mdFileName);
-      console.log('filepath:', legalDocs.subMenu?.find(doc => doc.filepath?.includes(mdFileName ?? ''))?.filepath);
     } else {
       console.log('User not logged in');
     }
