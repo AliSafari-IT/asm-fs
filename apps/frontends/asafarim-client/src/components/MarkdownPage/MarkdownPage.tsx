@@ -5,10 +5,10 @@ import Button from '../Button/Button';
 import { legalDocs } from '../../layout/Navbar/navItemsList';
 
 // Import all markdown files
-import privacyPolicyMd from '../../../src/pages/Privacy/privacy-policy.md?raw';
-import termsOfServiceMd from '../../../src/pages/Privacy/terms-of-service.md?raw';
-import disclaimerMd from '../../../src/pages/Privacy/legal-disclaimer.md?raw';
-import cookiePolicyMd from '../../../src/pages/Privacy/cookie-policy.md?raw';
+import privacyPolicyMd from '@/pages/Privacy/privacy-policy.md?raw';
+import termsOfServiceMd from '@/pages/Privacy/terms-of-service.md?raw';
+import disclaimerMd from '@/pages/Privacy/legal-disclaimer.md?raw';
+import cookiePolicyMd from '@/pages/Privacy/cookie-policy.md?raw';
 
 
 interface MarkdownPageProps {
