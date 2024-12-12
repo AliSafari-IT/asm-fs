@@ -9,8 +9,8 @@ import {
   Accessibility24Regular as IconAccount,
   Bluetooth28Regular as IconBlog,
   SignOut24Regular as IconLogout,
-  LearningApp24Regular as IconLearning
-
+  LearningApp24Regular as IconLearning,
+  Gauge24Regular as IconLegal 
 } from '@fluentui/react-icons';
 import { IChapter } from '../../interfaces/IChapter';
 import { IMenuItem } from '../../interfaces/IMenuItem';
@@ -195,8 +195,7 @@ const dashboardDD: IMenuItem = {
               to: '/user-profile/privacy',
               icon: <IconSettings />,
               className: '',
-              style: {},
-              subMenu: []
+              style: {}
             },
             {
               id: 'profile-notifications',
@@ -205,8 +204,7 @@ const dashboardDD: IMenuItem = {
               to: '/user-profile/notifications',
               icon: <IconSettings />,
               className: '',
-              style: {},
-              subMenu: []
+              style: {}
             },
           ]
         },
@@ -235,8 +233,7 @@ const dashboardDD: IMenuItem = {
                   to: '/backup-settings',
                   icon: <IconSettings />,
                   className: '',
-                  style: {},
-                  subMenu: []
+                  style: {}
                 },
               ]
             },
@@ -255,8 +252,7 @@ const dashboardDD: IMenuItem = {
       subMenu: []
     }
   ]
-}
-  ;
+};
 
 const mdChapters: INavItem[] = [
   {
@@ -350,7 +346,7 @@ const mdChapters: INavItem[] = [
       { id: 'cards', title: 'Card Layouts', to: '/md/components/cards', icon: <IconProject /> },
       { id: 'dropdowns', title: 'Dynamic Dropdowns', to: '/md/components/dropdowns', icon: <IconProject /> },
     ],
-  },
+  }
 ];
 
 const mdSections: INavItem[] = [
@@ -456,6 +452,48 @@ const learn: INavItem = {
   icon: <IconLearning />,
   subMenu: mdBooks,
 };
+
+// Legal Docs
+export const legalDocs: INavItem = {
+  id: 'legal',
+  title: 'Legal',
+  label: 'Legal',
+  name: 'asafarim-legal',
+  to: '#',
+  icon: <IconLegal />,
+  subMenu: [
+    {
+      id: 'privacy-policy',
+      title: 'Privacy Policy',
+      to: '/legal/privacy-policy',
+      filepath: '/src/pages/Privacy/privacy-policy.md',
+      icon: <IconLegal />,
+      subMenu: []
+    },
+    {
+      id: 'terms-of-service',
+      title: 'Terms of Service',
+      to: '/legal/terms-of-service',
+      icon: <IconLegal />,
+      filepath: '/src/pages/Privacy/terms-of-service.md'
+    },
+    {
+      id: 'disclaimer',
+      title: 'Disclaimer',
+      to: '/legal/legal-disclaimer',
+      icon: <IconLegal />,
+      filepath: '/src/pages/Privacy/legal-disclaimer.md'
+    },
+    {
+      id: 'cookie-policy',
+      title: 'Cookie Policy',
+      to: '/legal/cookie-policy',
+      icon: <IconLegal />,
+      filepath: '/src/pages/Privacy/cookie-policy.md'
+    },
+  ],
+};
+
 const navItems: INavItem[] = [
   homeDD,
   blog,
@@ -463,6 +501,7 @@ const navItems: INavItem[] = [
   books,
   dashboardDD,
   learn,
+  legalDocs
 ];
 
 export default navItems;

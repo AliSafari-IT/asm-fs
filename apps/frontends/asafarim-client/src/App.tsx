@@ -2,6 +2,7 @@ import {
   Routes,
   Route,
   Navigate,
+  useParams,
 } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
 import About from "./pages/AboutMe/About";
@@ -29,12 +30,26 @@ import { Suspense, useEffect } from "react";
 import Layout from "./layout/Layout";
 import RTNav from "./pages/Project/projects/react/tailwind/navbar/RTNav";
 import UserAccountSettings from "./pages/User/UserAccountSettings";
-import Privacy from "./pages/Privacy/Privacy";
 import Contact from "./pages/Contact";
+import MarkdownPage from "./components/MarkdownPage/MarkdownPage";
+import { legalDocs } from './layout/Navbar/navItemsList';
 
 const App = () => {
   const { theme } = useTheme();
   const user = useAuth();
+  const currentPath = window.location.pathname;
+  const mdFileName = currentPath.split('/').pop();
+
+  useEffect(() => {
+    if (user) {
+      console.log('User logged in:', user);
+      console.log('mdFileName:', mdFileName);
+      console.log('filepath:', legalDocs.subMenu?.find(doc => doc.filepath?.includes(mdFileName ?? ''))?.filepath);
+    } else {
+      console.log('User not logged in');
+    }
+  }, [user]);
+
 
   useEffect(() => {
     document.body.setAttribute("data-theme", theme);
@@ -43,10 +58,15 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/privacy-eula" element={<Privacy />} />
-      <Route path="/privacy-disclaimer" element={<Privacy />} />
-      <Route path="/privacy-cookies" element={<Privacy />} />
-
+      <Route
+        path="/legal/:slug"
+        element={
+          <MarkdownPage
+            filepath={legalDocs.subMenu?.find(doc => doc.filepath?.includes(mdFileName ?? ''))?.filepath ?? ''}
+            title={legalDocs.subMenu?.find(doc => doc.filepath?.includes(mdFileName ?? ''))?.title ?? 'Not Found'}
+          />
+        }
+      />
       <Route path="/posts/:slug" element={<PostDetail />} />
       <Route path="/:model/add" element={<AddForm />} />
       <Route path="/:model/delete/:id" element={<DelCard />} />
@@ -61,8 +81,8 @@ const App = () => {
       />
       <Route path="/projects" element={<ProjectHome key={Math.random()} />} />
       <Route path="/projects/:id" element={<ProjectHome key={Math.random()} />} />
-      <Route path= "/projects/react/tailwind/navbar-with-dynamic-nav-items" element={<RTNav />} />
-      <Route path="/[...notfound]" element={<NotFound />} /> 
+      <Route path="/projects/react/tailwind/navbar-with-dynamic-nav-items" element={<RTNav />} />
+      <Route path="/[...notfound]" element={<NotFound />} />
       <Route path="/about-asafarim" element={<About />} />
       <Route path="/about/akkodis-targeted-resume" element={<AkkodisTargetedResume />} />
       <Route path="/contact-asafarim" element={<Contact />} />
