@@ -1,25 +1,47 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { legalDocs } from '../Navbar/navItemsList';
 
 const Footer: React.FC = () => {
     return (
-        <footer className="w-full flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 mx-auto px-4 py-6 bg-[var(--bg-secondary)] text-[var(--text-secondary)]">
-            <div className="flex items-center space-x-2 sx:space-x-4 md:space-x-6 lg:space-x-8 xl:space-x-10 2xl:space-x-12 pl-[1%] mx-auto">
-                <Link to="/privacy-policy" className="text-sm hover:text-[var(--text-warning)] transition-colors">
-                    Privacy Policy
-                </Link>
-                <span className="text-[var(--text-info)] font-bold font-landing">|</span>
-                <Link to="/terms-of-service" className="text-sm hover:text-[var(--text-warning)] transition-colors">
-                    Terms of Service
-                </Link>
-                <span className="text-[var(--text-info)] font-bold font-landing">|</span>
-                <Link to="/contact-asafarim" className="text-sm hover:text-[var(--text-warning)] transition-colors">
-                    Contact
-                </Link>
-            </div>
+        <footer className="w-full bg-[var(--bg-secondary)] text-[var(--text-secondary)] py-6">
+            <div className="container mx-auto px-4">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                    <nav className="w-full md:w-auto">
+                        <ul className="flex flex-wrap justify-center md:justify-start items-center gap-4">
+                            {legalDocs.subMenu?.map((doc, index) => (
+                                <React.Fragment key={doc.id}>
+                                    <li>
+                                        <a
+                                            href={doc.to}
+                                            className="text-sm hover:text-[var(--text-warning)] hover:underline transition-colors"
+                                        >
+                                            {doc.title}
+                                        </a>
+                                    </li>
+                                    {index < (legalDocs.subMenu?.length || 0) - 1 && (
+                                        <li className="text-[var(--text-info)] font-bold font-landing">
+                                            |
+                                        </li>
+                                    )}
+                                </React.Fragment>
+                            ))}
+                            <li className="text-[var(--text-info)] font-bold font-landing">|</li>
+                            <li>
+                                <Link 
+                                    to="/contact-asafarim" 
+                                    className="text-sm hover:text-[var(--text-warning)] hover:underline transition-colors"
+                                >
+                                    Contact
+                                </Link>
+                            </li>
+                        </ul>
+                    </nav>
 
-            <div className="text-sm text-center md:text-right pr-[1%]">
-                &copy; {new Date().getFullYear()} ASafariM. All rights reserved.
+                    <div className="text-sm text-center md:text-right whitespace-nowrap">
+                        &copy; {new Date().getFullYear()} ASafariM. All rights reserved.
+                    </div>
+                </div>
             </div>
         </footer>
     );
