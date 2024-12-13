@@ -9,9 +9,9 @@ import { IRegisterModel } from '../../interfaces/IRegisterModel';
 import Wrapper from '../../layout/Wrapper/Wrapper';
 import Footer from '../../layout/Footer/Footer';
 import Header from '@/layout/Header/Header';
-import { EditSvgIcon } from '@/components/SvgIcons/EditSvgIcon';
-import { UserInfoSvgIcon } from '@/components/SvgIcons/UserInfoSvgIcon';
-import { DeleteSvgIcon } from '@/components/SvgIcons/DeleteSvgIcon';
+import { EditSvgIcon } from '@/assets/SvgIcons/EditSvgIcon';
+import { UserInfoSvgIcon } from '@/assets/SvgIcons/UserInfoSvgIcon';
+import { DeleteSvgIcon } from '@/assets/SvgIcons/DeleteSvgIcon';
 import { UserInfo } from '../../interfaces/IUserInfo';
 
 const UsersList: React.FC = () => {
