@@ -1,3 +1,4 @@
+using System.Text;
 using Application.Interfaces;
 using ASafariM.Server.ConfServices;
 using Infrastructure.Repositories;
@@ -8,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SecureCore.Data;
 using SecureCore.Models;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.AddConsole();
@@ -26,10 +26,12 @@ ConfServices.ConfigureServices(builder.Services);
 builder.Services.AddScoped<ITaskItemService, TaskItemService>();
 builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 builder.Services.AddScoped<IUserService, UserService>();
+
 // Register the UserRepository with the DI container
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder
+    .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -39,7 +41,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateLifetime = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])
+            ),
         };
     });
 
@@ -48,9 +52,14 @@ builder.Services.AddAuthorization();
 // Add CORS policy
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("MyLocalHosts", builder => builder.WithOrigins("http://localhost:5173", "http://localhost:3000")
-    .AllowAnyHeader()
-    .AllowAnyMethod());
+    options.AddPolicy(
+        "MyLocalHosts",
+        builder =>
+            builder
+                .WithOrigins("http://localhost:5173", "http://localhost:3000")
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+    );
 });
 
 builder.Services.AddControllers();
@@ -58,6 +67,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -66,10 +76,8 @@ if (app.Environment.IsDevelopment())
 }
 app.UseCors("MyLocalHosts");
 
-
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-

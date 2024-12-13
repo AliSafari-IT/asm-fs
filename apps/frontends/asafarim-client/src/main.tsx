@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { initializeIcons } from '@fluentui/font-icons-mdl2';
-import './index.scss';
+import './index.css';
 import AppWithRouter from './AppWithRouter';
 //import { ThemeProvider } from './hooks/useTheme';
 import { AzureDarkTheme } from '@fluentui-contrib/azure-theme';

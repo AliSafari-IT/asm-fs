@@ -5,4 +5,5 @@ export interface INavItem extends INavBase {
     onClick?: () => void | undefined;
     subMenu?: INavItem[],
     topics?: ITopic[],
+    filepath?: string
   }

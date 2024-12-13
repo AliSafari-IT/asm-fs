@@ -1,11 +1,15 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using SecureCore.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using SecureCore.Data;
+using SecureCore.Models;
 
 namespace Presentation.Controllers;
 
@@ -16,14 +20,22 @@ public class AuthController : ControllerBase
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IConfiguration _configuration;
+    private readonly ILogger<AuthController> _logger;
+    private readonly ApplicationDbContext _context;
 
-    public AuthController(UserManager<ApplicationUser> userManager,
-                          SignInManager<ApplicationUser> signInManager,
-                          IConfiguration configuration)
+    public AuthController(
+        UserManager<ApplicationUser> userManager,
+        SignInManager<ApplicationUser> signInManager,
+        IConfiguration configuration,
+        ILogger<AuthController> logger,
+        ApplicationDbContext context
+    )
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _configuration = configuration;
+        _logger = logger;
+        _context = context;
     }
 
     [HttpPost("register")]
@@ -63,26 +75,32 @@ public class AuthController : ControllerBase
         if (await _userManager.IsLockedOutAsync(user))
         {
             var lockoutEnd = await _userManager.GetLockoutEndDateAsync(user);
-            return BadRequest(new { 
-                error = $"Account is locked. Try again after {lockoutEnd?.LocalDateTime:HH:mm:ss}"
-            });
+            return BadRequest(
+                new
+                {
+                    error = $"Account is locked. Try again after {lockoutEnd?.LocalDateTime:HH:mm:ss}",
+                }
+            );
         }
 
         // Verify the password manually first
         var isPasswordValid = await _userManager.CheckPasswordAsync(user, model.Password);
-        
+
         if (!isPasswordValid)
         {
             // Increment the access failed count
             await _userManager.AccessFailedAsync(user);
-            
+
             // Check if the user is now locked out after this failed attempt
             if (await _userManager.IsLockedOutAsync(user))
             {
                 var lockoutEnd = await _userManager.GetLockoutEndDateAsync(user);
-                return BadRequest(new { 
-                    error = $"Account is locked due to too many failed attempts. Try again after {lockoutEnd?.LocalDateTime:HH:mm:ss}"
-                });
+                return BadRequest(
+                    new
+                    {
+                        error = $"Account is locked due to too many failed attempts. Try again after {lockoutEnd?.LocalDateTime:HH:mm:ss}",
+                    }
+                );
             }
 
             // Get remaining attempts before lockout
@@ -90,9 +108,12 @@ public class AuthController : ControllerBase
             var maxAttempts = _userManager.Options.Lockout.MaxFailedAccessAttempts;
             var remainingAttempts = maxAttempts - failedAttempts;
 
-            return BadRequest(new { 
-                error = $"Invalid password. {remainingAttempts} attempts remaining before lockout."
-            });
+            return BadRequest(
+                new
+                {
+                    error = $"Invalid password. {remainingAttempts} attempts remaining before lockout.",
+                }
+            );
         }
 
         // Password is valid, reset the access failed count
@@ -153,7 +174,11 @@ public class AuthController : ControllerBase
             return NotFound("User not found.");
         }
 
-        var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+        var result = await _userManager.ChangePasswordAsync(
+            user,
+            model.CurrentPassword,
+            model.NewPassword
+        );
 
         if (result.Succeeded)
         {
@@ -163,12 +188,162 @@ public class AuthController : ControllerBase
         return BadRequest(result.Errors);
     }
 
+    // /Users/request-reactivation
+    [HttpPost("request-reactivation")]
+    public async Task<IActionResult> RequestAccountReactivation(
+        [FromBody] ReactivationRequest request
+    )
+    {
+        try
+        {
+            // Find the user by email
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+
+            if (user == null)
+            {
+                return NotFound(new { Message = "User not found" });
+            }
+
+            if (!user.IsDeleted)
+            {
+                return BadRequest(new { Message = "This account is not deleted" });
+            }
+
+            // Create a reactivation request record
+            var reactivationRequest = new UserReactivationRequest
+            {
+                Id = Guid.NewGuid(),
+                UserId = user.Id,
+                Email = user.Email!,
+                RequestDate = DateTime.UtcNow,
+                Status = ReactivationRequestStatus.Pending,
+            };
+
+            _context.UserReactivationRequests.Add(reactivationRequest);
+            await _context.SaveChangesAsync();
+
+            // TODO: Send email notification to administrators
+
+            return Ok(
+                new
+                {
+                    Message = "Reactivation request sent successfully. An administrator will review your request.",
+                    RequestId = reactivationRequest.Id,
+                }
+            );
+        }
+        catch (Exception ex)
+        {
+            // Log the error
+            _logger.LogError(ex, "Error processing reactivation request");
+            return StatusCode(
+                500,
+                new { Message = "An error occurred while processing your request" }
+            );
+        }
+    }
+
+    [HttpPost("approve-reactivation/{requestId}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> ApproveReactivationRequest(Guid requestId)
+    {
+        try
+        {
+            var request = await _context
+                .UserReactivationRequests.Include(r => r.User)
+                .FirstOrDefaultAsync(r => r.Id == requestId);
+
+            if (request == null)
+            {
+                return NotFound(new { Message = "Reactivation request not found" });
+            }
+
+            if (request.Status != ReactivationRequestStatus.Pending)
+            {
+                return BadRequest(new { Message = "This request has already been processed" });
+            }
+
+            var user = await _context.Users.FindAsync(request.UserId);
+            if (user == null)
+            {
+                return NotFound(new { Message = "User not found" });
+            }
+
+            // Restore the user
+            user.Restore();
+            user.UpdatedAt = DateTime.UtcNow;
+
+            // Update the request status
+            request.Status = ReactivationRequestStatus.Approved;
+            request.ProcessedDate = DateTime.UtcNow;
+            request.ProcessedBy = User.Identity.Name;
+
+            await _context.SaveChangesAsync();
+
+            // TODO: Send email notification to user
+
+            return Ok(new { Message = "Account reactivated successfully" });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error processing reactivation approval");
+            return StatusCode(
+                500,
+                new { Message = "An error occurred while processing the request" }
+            );
+        }
+    }
+
+    [HttpPost("reject-reactivation/{requestId}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> RejectReactivationRequest(
+        Guid requestId,
+        [FromBody] string reason
+    )
+    {
+        try
+        {
+            var request = await _context.UserReactivationRequests.FirstOrDefaultAsync(r =>
+                r.Id == requestId
+            );
+
+            if (request == null)
+            {
+                return NotFound(new { Message = "Reactivation request not found" });
+            }
+
+            if (request.Status != ReactivationRequestStatus.Pending)
+            {
+                return BadRequest(new { Message = "This request has already been processed" });
+            }
+
+            // Update the request status
+            request.Status = ReactivationRequestStatus.Rejected;
+            request.ProcessedDate = DateTime.UtcNow;
+            request.ProcessedBy = User.Identity.Name;
+
+            await _context.SaveChangesAsync();
+
+            // TODO: Send email notification to user with rejection reason
+
+            return Ok(new { Message = "Reactivation request rejected" });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error processing reactivation rejection");
+            return StatusCode(
+                500,
+                new { Message = "An error occurred while processing the request" }
+            );
+        }
+    }
+
     private string GenerateJwtToken(ApplicationUser user)
     {
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
@@ -208,7 +383,6 @@ public class UpdateUsernameModel
     public string UserId { get; set; } = string.Empty;
     public string NewUsername { get; set; } = string.Empty;
     public string CurrentEmail { get; set; } = string.Empty;
-
 }
 
 public class UpdatePasswordModel

@@ -1,9 +1,9 @@
 // E:\asm-fs\libs\Infrastructure\Repositories\IUserRepository.cs
 
-using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Domain.Entities;
 
 namespace Infrastructure.Repositories
 {

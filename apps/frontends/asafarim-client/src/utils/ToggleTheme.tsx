@@ -1,7 +1,7 @@
 // E:\asm\apps\dashboard-client\src\components\theme\ToggleTheme.tsx
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
-import { useTheme } from '../../hooks/useTheme';
+import { useTheme } from '../hooks/useTheme';
 import { SizeProp } from '@fortawesome/fontawesome-svg-core';
 
 export const ToggleThemeIcon = ({ theme , size = '1x' }: { theme: string, size?: SizeProp  }) => {

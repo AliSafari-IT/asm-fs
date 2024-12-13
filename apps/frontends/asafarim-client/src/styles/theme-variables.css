@@ -1,0 +1,138 @@
+:root[data-theme="light"] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f3f4f6;
+  --bg-tertiary: #f0f0f0;
+  --bg-success: #92c353;
+  --bg-warning: #f8d22a;
+  --bg-danger: #e23838;
+  --bg-error: #e23838;
+  --bg-info: #4f6bed;
+  --bg-inverted: #201f1f;
+  --bg-transparent: rgba(255, 255, 255, 0);
+  
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-inverted: #ffffff;
+  --text-success: #0f5132;
+  --text-warning: #664d03;
+  --text-error: #842029;
+  --text-danger: #842029;
+  --text-info: #055160;
+
+  --accent-primary: #6264a7;
+  --accent-secondary: #464775;
+  --accent-hover: #7b83eb;
+
+  --border-primary: #e5e7eb;
+  --border-secondary: #d1d5db;
+  --border-focus: #6264a7;
+
+  /* Component Specific */
+  --button-primary: var(--teams-purple);
+  --button-primary-hover: var(--teams-purple-light);
+  --button-primary-active: var(--teams-purple-dark);
+  --button-primary-text: #ffffff;
+  --button-primary-disabled: var(--bg-tertiary);
+  
+  --button-secondary: var(--bg-tertiary);
+  --button-secondary-hover: var(--bg-secondary);
+  --button-secondary-active: var(--bg-primary);
+  --button-secondary-text: var(--text-primary);
+  --button-secondary-border: var(--border-secondary);
+
+  /* Navbar */
+  --navbar-bg: var(--bg-navbar);
+  --navbar-border: var(--border-primary);
+  --navbar-text: var(--text-primary);
+
+  /* Dropdown */
+  --dropdown-bg: var(--bg-secondary);
+  --dropdown-hover: var(--bg-tertiary);
+  --dropdown-border: var(--border-primary);
+
+  /* Teams-specific colors */
+  --teams-purple: #6264a7;
+  --teams-purple-dark: #464775;
+  --teams-purple-light: #7b83eb;
+  --teams-red: #c4314b;
+  --teams-green: #92c353;
+  --teams-blue: #4f6bed;
+
+  /* Layout backgrounds */
+  --bg-sidebar: #f8f9fa;
+  --bg-navbar: #ffffff;
+  --bg-header: rgba(255, 255, 255, 0.95);
+  --bg-footer: #ffffff;
+  --bg-start: #ffffff;
+  --bg-end: #f8f9fa;
+}
+
+:root[data-theme="dark"] {
+  --bg-primary: #1a1f25;
+  --bg-secondary: #242832;
+  --bg-tertiary: #2d3341;
+  --bg-success: #92c353;
+  --bg-warning: #f8d22a;
+  --bg-danger: #e23838;
+  --bg-error: #e23838;
+  --bg-info: #4f6bed;
+  --bg-inverted: #ffffff;
+  --bg-transparent: rgba(0, 0, 0, 0);
+  --bg-navbar: #1e2a3a;
+
+  --text-primary: #ffffff;
+  --text-secondary: #b8c4d9;
+  --text-inverted: #242424;
+  --text-success: #a5d670;
+  --text-warning: #ffd84d;
+  --text-error: #ff4d4d;
+  --text-danger: #ff4d4d;
+  --text-info: #6b84ff;
+
+  --accent-primary: #8b93ff;
+  --accent-secondary: #7b83eb;
+  --accent-hover: #a5abff;
+
+  --border-primary: #3a4150;
+  --border-secondary: #4a5262;
+  --border-focus: #8b93ff;
+
+  /* Component Specific */
+  --button-primary: var(--teams-purple);
+  --button-primary-hover: var(--teams-purple-light);
+  --button-primary-active: var(--teams-purple-dark);
+  --button-primary-text: #ffffff;
+  --button-primary-disabled: var(--bg-tertiary);
+  
+  --button-secondary: var(--bg-tertiary);
+  --button-secondary-hover: var(--bg-secondary);
+  --button-secondary-active: var(--bg-primary);
+  --button-secondary-text: var(--text-primary);
+  --button-secondary-border: var(--border-secondary);
+
+  /* Navbar */
+  --navbar-bg: var(--bg-navbar);
+  --navbar-border: var(--border-primary);
+  --navbar-text: var(--text-primary);
+
+  /* Dropdown */
+  --dropdown-bg: var(--bg-secondary);
+  --dropdown-hover: var(--bg-tertiary);
+  --dropdown-border: var(--border-primary);
+
+  /* Teams-specific colors */
+  --teams-purple: #8b93ff;
+  --teams-purple-dark: #7b83eb;
+  --teams-purple-light: #a5abff;
+  --teams-red: #ff4d4d;
+  --teams-green: #a5d670;
+  --teams-blue: #6b84ff;
+
+  /* Layout backgrounds */
+  --bg-sidebar: #1a1f25;
+  --bg-navbar: #1e2a3a;
+  --bg-header: rgba(30, 42, 58, 0.95);
+  --bg-footer: #1e2a3a;
+  --bg-start: #1e2a3a;
+  --bg-end: #1a1f25;
+}

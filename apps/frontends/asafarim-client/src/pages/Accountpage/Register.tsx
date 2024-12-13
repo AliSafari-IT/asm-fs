@@ -24,16 +24,17 @@ const Register: React.FC = () => {
         navigate('/login');
       }, 2000); // Redirect after 2 seconds
     } catch (error) {
-      const errObj = error as { code: string, description: string }[];
-      const errMsg = errObj[0].code + ': ' + errObj[0].description;
-      console.log("Registration failed:", errMsg);
-
-      // Check for duplicate email error (this depends on how your backend sends errors)
-      if (errMsg.includes('already')) {
-        setError('This email is already associated with an account. Please <a href="/login">log in</a> or use a different email.');
+      console.log("Registration error:", error);
+      if (error instanceof Error) {
+        const errorMessage = error.message;
+        // Check for duplicate email error
+        if (errorMessage.toLowerCase().includes('already')) {
+          setError('This email is already associated with an account. Please <a href="/login">log in</a> or use a different email.');
+        } else {
+          setError(errorMessage);
+        }
       } else {
-        console.log("Registration failed:", errMsg);
-        setError(errMsg);
+        setError('An unexpected error occurred during registration.');
       }
     } finally {
       setLoading(false);

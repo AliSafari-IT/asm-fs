@@ -1,12 +1,14 @@
-using Application.Interfaces;
-using Domain.Entities;
-using Domain.Enum;
-using Microsoft.EntityFrameworkCore;
-using SecureCore.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.Interfaces;
+using Domain.Entities;
+using Domain.Enum;
+using Infrastructure.Mapping;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using SecureCore.Data;
 
 namespace Infrastructure.Services
 {
@@ -22,38 +24,44 @@ namespace Infrastructure.Services
         // Get all user roles
         public async Task<IEnumerable<UserRole>> GetUserRolesAsync()
         {
-            return await _context.UserRoles.Include(ur => ur.User).ToListAsync();
+            var identityUserRoles = await _context.UserRoles.ToListAsync();
+            return identityUserRoles.Select(ur => ur.ToDomainUserRole());
         }
 
         // Get user role by ID
         public async Task<UserRole> GetUserRoleByIdAsync(Guid id)
         {
-            return await _context.UserRoles.Include(ur => ur.User).FirstOrDefaultAsync(ur => ur.Id == id);
+            var identityUserRole = await _context.UserRoles.FirstOrDefaultAsync(ur =>
+                ur.UserId == id.ToString()
+            );
+            return identityUserRole?.ToDomainUserRole();
         }
 
         // Create a new user role
         public async Task<UserRole> CreateUserRoleAsync(UserRole userRole)
         {
-            userRole.Id = Guid.NewGuid();
-            _context.UserRoles.Add(userRole);
+            var identityUserRole = userRole.ToIdentityUserRole();
+            await _context.UserRoles.AddAsync(identityUserRole);
             await _context.SaveChangesAsync();
-            return userRole;
+            return identityUserRole.ToDomainUserRole();
         }
 
         // Update user role
         public async Task UpdateUserRoleAsync(UserRole userRole)
         {
-            _context.UserRoles.Update(userRole);
+            var identityUserRole = userRole.ToIdentityUserRole();
+            _context.UserRoles.Update(identityUserRole);
             await _context.SaveChangesAsync();
         }
 
         // Delete user role
         public async Task DeleteUserRoleAsync(Guid id)
         {
-            var userRole = await _context.UserRoles.FindAsync(id);
+            var userRole = await GetUserRoleByIdAsync(id);
             if (userRole != null)
             {
-                _context.UserRoles.Remove(userRole);
+                var identityUserRole = userRole.ToIdentityUserRole();
+                _context.UserRoles.Remove(identityUserRole);
                 await _context.SaveChangesAsync();
             }
         }
@@ -61,14 +69,7 @@ namespace Infrastructure.Services
         // Assign role to a user
         public async Task AssignRoleToUserAsync(Guid userId, UserRoleEnum role)
         {
-            var userRole = new UserRole
-            {
-                UserId = userId,
-                Role = role,
-                CreatedAt = DateTime.UtcNow,
-                CreatedBy = userId // Or fetch current user
-            };
-
+            var userRole = new UserRole { UserId = userId, Role = role };
             await CreateUserRoleAsync(userRole);
         }
     }

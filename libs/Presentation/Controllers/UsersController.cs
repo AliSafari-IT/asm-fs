@@ -1,16 +1,16 @@
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Application.Interfaces;
 using Domain.Entities;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
 using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using SecureCore.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SecureCore.Models;
 
 namespace Presentation.Controllers
 {
@@ -19,18 +19,24 @@ namespace Presentation.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+
         // private readonly IHttpContextAccessor _accessor;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<UsersController> _logger;
         private readonly IUserRepository _userRepository;
-        public UsersController(IUserService userService, UserManager<ApplicationUser> userManager, IUserRepository userRepository, ILogger<UsersController> logger)
+
+        public UsersController(
+            IUserService userService,
+            UserManager<ApplicationUser> userManager,
+            IUserRepository userRepository,
+            ILogger<UsersController> logger
+        )
         {
             _userService = userService;
             _userManager = userManager;
             _userRepository = userRepository;
             _logger = logger;
         }
-
 
         // GET: api/users
         [HttpGet]
@@ -130,35 +136,41 @@ namespace Presentation.Controllers
 
         // DELETE: api/users/{id}
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(Guid id)
+        public async Task<IActionResult> DeleteUser(Guid id, [FromBody] DeleteAccountModel model)
         {
-            var user = await _userService.GetUserByIdAsync(id);
-
+            var user = await _userManager.FindByIdAsync(id.ToString());
             if (user == null)
             {
                 return NotFound("User not found.");
             }
 
-            // Get the logged-in user's ID for DeletedBy, otherwise set to null if not authenticated
-            var deletedByString = User.Identity.IsAuthenticated
-                ? User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                : null;
-
-            // Convert the string value to Guid? (nullable Guid)
-            if (Guid.TryParse(deletedByString, out var deletedBy))
+            // Verify password
+            var isPasswordValid = await _userManager.CheckPasswordAsync(user, model.Password);
+            if (!isPasswordValid)
             {
-                user.DeletedBy = deletedBy;
-            }
-            else
-            {
-                user.DeletedBy = null; // Set to null if the GUID cannot be parsed
+                return BadRequest(new { message = "Invalid password provided." });
             }
 
-            user.DeletedAt = DateTime.UtcNow;
-
-            await _userService.DeleteUserAsync(id);
+            // Proceed with deletion
+            var result = await _userManager.DeleteAsync(user);
+            if (!result.Succeeded)
+            {
+                return BadRequest(new { message = "Error deleting user account." });
+            }
 
             return NoContent();
+        }
+
+        // GET: api/users/by-email/{email}
+        [HttpGet("by-email/{email}")]
+        public async Task<IActionResult> GetUserByEmail(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+            return Ok(user);
         }
 
         // GET: api/users/full-info/{email}
@@ -184,6 +196,7 @@ namespace Presentation.Controllers
             var userFullInfo = new
             {
                 UserId = aspNetUser.Id,
+                userInfo.Id,
                 aspNetUser.UserName,
                 aspNetUser.Email,
                 aspNetUser.NormalizedUserName,
@@ -192,12 +205,17 @@ namespace Presentation.Controllers
                 userInfo.UpdatedAt,
                 userInfo.IsAdmin,
                 userInfo.IsDeleted,
-                userInfo.DeletedAt
+                userInfo.DeletedAt,
             };
 
             return Ok(userFullInfo);
         }
 
         // GET: api/users/{id}/user-account-settings
+    }
+
+    public class DeleteAccountModel
+    {
+        public string Password { get; set; } = string.Empty;
     }
 }

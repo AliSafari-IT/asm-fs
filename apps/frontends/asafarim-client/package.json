@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
+  "packageManager": "yarn@4.5.1",
   "scripts": {
     "dev": "vite",
     "start": "vite",
@@ -13,6 +14,7 @@
     "rs": "yarn stop && yarn dev"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@fluentui-contrib/azure-theme": "^0.0.3",
     "@fluentui-contrib/react-resize-handle": "^0.6.1",
     "@fluentui-contrib/react-shadow": "^0.1.0",
@@ -47,11 +49,12 @@
     "rehype-sanitize": "^6.0.0",
     "tailwindcss": "^3.4.13",
     "tsparticles": "^3.7.1",
-    "uuid": "^10.0.0",
+    "uuid": "^11.0.3",
     "vite-plugin-md": "^0.21.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
+    "@tailwindcss/forms": "^0.5.9",
     "@testing-library/react": "^16.0.1",
     "@types/file-saver": "^2.0.7",
     "@types/graceful-fs": "^4.1.9",
@@ -60,6 +63,7 @@
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
     "@types/react-icons": "^3.0.0",
+    "@types/uuid": "^10.0.0",
     "@vitejs/plugin-react": "^4.3.2",
     "eslint": "^9.11.1",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",

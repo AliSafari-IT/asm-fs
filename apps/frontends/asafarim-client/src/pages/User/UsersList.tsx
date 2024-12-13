@@ -4,11 +4,15 @@ import { Link } from 'react-router-dom';
 import { IUser } from '../../interfaces/IUser';
 import { deleteUser, getUsers } from '../../api/userService';
 import { getUserFullInfo } from '../../utils/userUtils'; // Import getUserFullInfo
-import UserInfo from '../../interfaces/IUserInfo';
 import { register } from '../../api/authapi';
 import { IRegisterModel } from '../../interfaces/IRegisterModel';
 import Wrapper from '../../layout/Wrapper/Wrapper';
 import Footer from '../../layout/Footer/Footer';
+import Header from '@/layout/Header/Header';
+import { EditSvgIcon } from '@/components/SvgIcons/EditSvgIcon';
+import { UserInfoSvgIcon } from '@/components/SvgIcons/UserInfoSvgIcon';
+import { DeleteSvgIcon } from '@/components/SvgIcons/DeleteSvgIcon';
+import { UserInfo } from '../../interfaces/IUserInfo';
 
 const UsersList: React.FC = () => {
   const [users, setUsers] = useState<IUser[]>([]);
@@ -97,107 +101,127 @@ const UsersList: React.FC = () => {
 
   return (
     <Wrapper
-          header={''}
-          footer={<Footer />}
+      header={<Header children={<h1 className="text-2xl font-semibold text-[var(--text-info)]">Users List</h1>} />}
+      footer={<Footer />}
+    >
+      <div className="max-w-6xl mx-auto p-6 rounded-lg shadow-lg">
+        <h1 className="text-2xl font-semibold text-center text-[var(--text-warning)] mb-6">User Management</h1>
+        <Link
+          to="/users/create"
+          className="btn-info py-2 px-4 rounded-lg hover:bg-blue-700 mb-4 inline-block"
         >
-    <div className="max-w-6xl mx-auto p-6 rounded-lg shadow-lg">
-      <h1 className="text-2xl font-semibold text-gray-700 mb-6">User Management</h1>
-      <Link
-        to="/users/create"
-        className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 mb-4 inline-block"
-      >
-        Add New User
-      </Link>
-      <table className="min-w-full shadow-md rounded-lg">
-        <thead>
-          <tr>
-            <th className="px-6 py-3 text-left text-info">Email</th>
-            <th className="px-6 py-3 text-left text-info">Full Name</th>
-            <th className="px-6 py-3 text-left text-info">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <tr key={user.id}>
-              <td className="px-6 py-3">{user.email}</td>
-              <td className="px-6 py-3">{user.fullName}</td>
-              <td className="px-6 py-3">
-                <Link
-                  to={`/users/edit/${user.id}`}
-                  className="bg-yellow-500 text-white py-1 px-3 rounded-lg hover:bg-yellow-600"
-                >
-                  Edit
-                </Link>
-                <button
-                  onClick={() => handleDelete(user.id)}
-                  className="bg-red-600 text-white py-1 px-3 rounded-lg hover:bg-red-700 ml-2"
-                >
-                  Delete
-                </button>
-                <button
-                  onClick={() => handleUserInfo(user.email)} // Handle UserInfo click
-                  className="bg-green-500 text-white py-1 px-3 rounded-lg hover:bg-green-700 ml-2"
-                >
-                  UserInfo
-                </button>
-              </td>
+          {/* Add Icon for "Create User" */}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6 inline-block"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span className="ml-2">Create User</span>
+        </Link>
+        <table className="min-w-full shadow-md rounded-lg">
+          <thead>
+            <tr>
+              <th className="px-6 py-3 text-left text-info">Email</th>
+              <th className="px-6 py-3 text-left text-info">Full Name</th>
+              <th className="px-6 py-3 text-left text-info">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr key={user.id}>
+                <td className="px-6 py-3">{user.email}</td>
+                <td className="px-6 py-3">{user.fullName}</td>
+                <td className="px-6 py-3">
+                  <Link
+                    to={`/users/edit/${user.id}`}
+                    className="cursor-pointer mr-2 inline-block"
+                    title='Edit User'
+                  >
+                    {EditSvgIcon}
+                  </Link>
+                  <button
+                    onClick={() => handleDelete(user.id)}
+                    className="cursor-pointer mr-2 inline-block text-danger"
+                    title='Delete User'
+                  >
+                    {DeleteSvgIcon}
+                  </button>
+                  <button
+                    onClick={() => handleUserInfo(user.email)} // Handle UserInfo click
+                    className="cursor-pointer mr-2 inline-block text-info"
+                    title='User Info'
+                  >
+                    {/* UserInfo svg icon */}
+                    {UserInfoSvgIcon}
+               
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
 
-      {/* Display the User Info */}
-      {userInfo && selectedUser && (
-        <div className="mt-8 p-4 border border-yellow-600 rounded-lg shadow-lg">
-          <h2 className="text-xl font-semibold mb-4">User Information for {selectedUser.fullName}</h2>
-          <table className="min-w-full shadow-md rounded-lg table-auto tabular-nums">
-            <tbody>
-              {Object.entries(userInfo).map(([key, value]) => (
-                <tr key={key}>
-                  <td className="px-6 py-3 font-bold">{key}</td>
-                  <td className="px-6 py-3">{value}</td>
-                </tr> 
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {/* Error Message */}
-      {error && <div className="mt-4 alert alert-danger">
-        <div className="text-red-500 mt-4">{error}</div>
-        <div className="flex justify-end mt-4 space-x-6">
-          <button
-            className='subpixel-antialiased bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700'
-            onClick={() => addUserToAccounts(account!)}>Add this user to the account list</button>
-          <button onClick={() => setError('')}>Close</button>
-        </div>
-        {loading && <div>Loading...</div>}
-      </div>}
-
-       {/* Display success message */}
-       {successMessage && (
-        <div className="w-full p-4 mb-2 success border border-green-200 rounded-lg shadow text-center mt-5">
-          <p className="text-sm font-medium">{successMessage}</p>
-          <div>
-            <table className="min-w-full bg-white shadow-md rounded-lg">
-              <thead className="bg-gray-200">
-                <tr>
-                  <th className="px-6 py-3 text-left text-gray-600">Email</th>
-                  <th className="px-6 py-3 text-left text-gray-600">Password</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white">
-                <tr className="border-b border-gray-200">
-                  <td className="px-6 py-3 text-purple-950 font-mono">{account?.email}</td>
-                  <td className="px-6 py-3  font-semiboldbold text-black">{account?.password}</td>
-                </tr>
+        {/* Display the User Info */}
+        {userInfo && selectedUser && (
+          <div className="mt-8 p-4 border border-yellow-600 rounded-lg shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">User Information for {selectedUser.fullName}</h2>
+            <table className="min-w-full shadow-md rounded-lg table-auto tabular-nums">
+              <tbody>
+                {Object.entries(userInfo).map(([key, value]) => (
+                  <tr key={key}>
+                    <td className="px-6 py-3 font-bold">{key}</td>
+                    <td className="px-6 py-3">{value}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+
+        {/* Error Message */}
+        {error && <div className="mt-4 alert alert-danger">
+          <div className="text-red-500 mt-4">{error}</div>
+          <div className="flex justify-end mt-4 space-x-6">
+            <button
+              className='subpixel-antialiased bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700'
+              onClick={() => addUserToAccounts(account!)}>Add this user to the account list</button>
+            <button onClick={() => setError('')}>Close</button>
+          </div>
+          {loading && <div>Loading...</div>}
+        </div>}
+
+        {/* Display success message */}
+        {successMessage && (
+          <div className="w-full p-4 mb-2 success border border-green-200 rounded-lg shadow text-center mt-5">
+            <p className="text-sm font-medium">{successMessage}</p>
+            <div>
+              <table className="min-w-full bg-white shadow-md rounded-lg">
+                <thead className="bg-gray-200">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-gray-600">Email</th>
+                    <th className="px-6 py-3 text-left text-gray-600">Password</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white">
+                  <tr className="border-b border-gray-200">
+                    <td className="px-6 py-3 text-purple-950 font-mono">{account?.email}</td>
+                    <td className="px-6 py-3  font-semiboldbold text-black">{account?.password}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </div>
     </Wrapper>);
 };
 
