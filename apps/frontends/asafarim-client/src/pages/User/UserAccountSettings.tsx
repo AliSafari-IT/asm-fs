@@ -5,6 +5,7 @@ import useAuth from '../../hooks/useAuth';
 import ExportData from './ExportData';
 import DeleteAccount from './DeleteAccount';
 import { updateUser } from '../../api/userService';
+import { useNavigate } from 'react-router-dom';
 
 const UserAccountSettings: React.FC = () => {
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
@@ -16,9 +17,16 @@ const UserAccountSettings: React.FC = () => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const user = useAuth();
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
+    // If user is not authenticated, redirect to home
+    if (!user?.email) {
+      navigate('/');
+      return;
+    }
+
     const fetchUserInfo = async () => {
       if (!user?.email) {
         setError('User is not authenticated.');
@@ -40,7 +48,7 @@ const UserAccountSettings: React.FC = () => {
     };
 
     fetchUserInfo();
-  }, [user.email]);
+  }, [user?.email]);
 
   const handleSaveChanges = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -245,12 +253,12 @@ const UserAccountSettings: React.FC = () => {
                 <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
                   <h4 className="text-md font-medium text-gray-700 dark:text-gray-300 mb-2">Export Your Data</h4>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Download a copy of your personal data</p>
-                  <ExportData />
+                  <ExportData currentUserInfo={userInfo} />
                 </div>
                 <div className="p-4 border border-red-200 dark:border-red-900 rounded-lg bg-red-50 dark:bg-red-900/10">
                   <h4 className="text-md font-medium text-red-700 dark:text-red-400 mb-2">Delete Account</h4>
                   <p className="text-sm text-red-600 dark:text-red-300 mb-4">Permanently delete your account and all associated data</p>
-                  <DeleteAccount />
+                  <DeleteAccount currentUserInfo={userInfo} />
                 </div>
               </div>
             </div>

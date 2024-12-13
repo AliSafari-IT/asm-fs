@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-const UserDropdown: React.FC<{ user: any }> = ({ user }) => {
+const UserDropdown: React.FC<{ auth: any }> = ({ auth: { user } }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -25,7 +25,7 @@ const UserDropdown: React.FC<{ user: any }> = ({ user }) => {
         className="flex items-center space-x-2 text-[var(--text-info)] hover:text-[var(--info)] focus:outline-none transition-colors duration-200"
       >
         <div className="w-8 h-8 rounded-full bg-[var(--info)] text-[var(--text-primary)] flex items-center justify-center">
-          {user.userName?.charAt(0).toUpperCase()}
+          {`${user.userName?.charAt(0).toUpperCase()}`}
         </div>
         <span className="text-sm font-medium text-[var(--text-warning)]">{user.userName}</span>
         <svg

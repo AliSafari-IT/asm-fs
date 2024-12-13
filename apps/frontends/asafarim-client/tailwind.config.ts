@@ -1,7 +1,7 @@
 import withMT from "../../../node_modules/@material-tailwind/react/utils/withMT";
 
 const config = {
-  darkMode: 'class',
+  darkMode: ['class', '[data-theme="dark"]'],
   content: [
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
@@ -11,81 +11,29 @@ const config = {
   ],
   theme: {
     extend: {
-      animation: {
-        'spin-slow': 'spin 10s linear infinite',
-        'bounce-slow': 'bounce 3s infinite',
-      },
-      keyframes: {
-        spin: {
-          '0%': { transform: 'rotate(0deg)' },
-          '100%': { transform: 'rotate(360deg)' },
-        },
-        bounce: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-10px)' },
-        },
-      },
       colors: {
-        primary: 'var(--primary-color)',
-        secondary: 'var(--secondary-color)',
-        danger: 'var(--danger-color)',
-        warning: 'var(--warning-color)',
-        success: 'var(--success-color)',
-        info: 'var(--info-color)',
-        hover: {
-          primary: 'var(--primary-hover)',
-          secondary: 'var(--secondary-hover)',
-          danger: 'var(--danger-hover)',
-          warning: 'var(--warning-hover)',
-          success: 'var(--success-hover)',
-          info: 'var(--info-hover)',
-        }
+        'teams-purple': 'var(--teams-purple)',
+        'teams-purple-dark': 'var(--teams-purple-dark)',
+        'teams-purple-light': 'var(--teams-purple-light)',
       },
-      fontFamily: {
-        sans: ['var(--font-sans)', 'sans-serif'],
-        serif: ['var(--font-serif)', 'serif'],
-        mono: ['var(--font-mono)', 'monospace'],
+      backgroundColor: {
+        primary: 'var(--bg-primary)',
+        secondary: 'var(--bg-secondary)',
+        tertiary: 'var(--bg-tertiary)',
       },
-      fontSize: {
-        xs: '0.75rem',
-        sm: '0.875rem',
-        base: '1rem',
-        lg: '1.125rem',
-        xl: '1.25rem',
-        '2xl': '1.5rem',
-        '3xl': '1.875rem',
-        '4xl': '2.25rem',
-        '5xl': '3rem',
-        '6xl': '4rem',
+      textColor: {
+        primary: 'var(--text-primary)',
+        secondary: 'var(--text-secondary)',
       },
-      spacing: {
-        0: '0',
-        1: '0.25rem',
-        2: '0.5rem',
-        3: '0.75rem',
-        4: '1rem',
-        56: "14rem",
-      },
-      width: {        
-        'xs': '375px',
-        'sm': '480px',
-        'md': '580px',
-        'lg': '720px',
-        'xl': '860px',
-        '2xl': '1024px',
-        '3xl': '1280px',
-        '4xl': '1440px',
-        '5xl': '1600px',
+      borderColor: {
+        primary: 'var(--border-primary)',
+        secondary: 'var(--border-secondary)',
       },
     },
   },
-  variants: {
-    extend: {},
-  },
-  plugins: [],
-  corePlugins: {
-    preflight: false,
-  }
+  plugins: [
+    require('@tailwindcss/forms'),
+  ],
 };
 
 /** @type {import('tailwindcss').Config} */

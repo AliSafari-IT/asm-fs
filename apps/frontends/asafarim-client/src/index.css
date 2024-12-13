@@ -1,0 +1,130 @@
+/* Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
+@import './styles/theme-variables.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global Variables */
+:root {
+  /* Status Colors */
+  --danger-light: #f8d7da;
+  --danger-dark: #842029;
+  --warning-light: #fff3cd;
+  --warning-dark: #664d03;
+  --success-light: #d1e7dd;
+  --success-dark: #0f5132;
+  --info-light: #cff4fc;
+  --info-dark: #055160;
+
+  /* Fonts */
+  --font-sans: "Open Sans", sans-serif;
+  --font-segoe: "Segoe UI", sans-serif;
+  --font-playfair: "Playfair Display", serif;
+  --font-quicksand: "Quicksand", sans-serif;
+  --font-cormorant: "Cormorant Garamond", serif;
+  --font-montserrat: "Montserrat Alternates", sans-serif;
+  --font-josefin: "Josefin Sans", sans-serif;
+  --font-roboto: "Roboto", sans-serif;
+
+  /* Layout */
+  --sidebar-width: 280px;
+  --navbar-height: 64px;
+  --header-height: 64px;
+  --footer-height: 64px;
+  --min-width: 320px;
+  --transition-speed: 0.3s;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(88, 46, 46, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 12px rgba(0, 0, 0, 0.15);
+  --shadow-xl: 0 16px 24px rgba(0, 0, 0, 0.2);
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-teams-purple text-white 
+           hover:bg-teams-purple-light 
+           active:bg-teams-purple-dark
+           disabled:opacity-50 disabled:cursor-not-allowed
+           px-4 py-2 rounded-md font-medium
+           shadow-sm
+           transition-all duration-200 ease-in-out;
+  }
+
+  .btn-secondary {
+    @apply bg-tertiary text-primary 
+           hover:bg-secondary
+           active:bg-primary
+           border border-secondary
+           disabled:opacity-50 disabled:cursor-not-allowed
+           px-4 py-2 rounded-md font-medium
+           shadow-sm
+           transition-all duration-200 ease-in-out;
+  }
+
+  /* Text Utilities */
+  .text-default {
+    @apply text-[var(--text-primary)];
+  }
+
+  .text-muted {
+    @apply text-[var(--text-secondary)];
+  }
+
+  /* Background Utilities */
+  .bg-default {
+    @apply bg-[var(--bg-primary)];
+  }
+
+  .bg-alt {
+    @apply bg-[var(--bg-secondary)];
+  }
+
+  /* Layout Components */
+  .navbar {
+    @apply sticky top-0 z-50 bg-[var(--bg-navbar)] border-b border-[var(--navbar-border)] text-[var(--navbar-text)];
+  }
+
+  .footer {
+    @apply bg-[var(--bg-footer)] border-t border-[var(--border-primary)] py-12 mt-auto;
+  }
+
+  /* Font Utilities */
+  .font-sans { @apply font-[var(--font-sans)]; }
+  .font-segoe { @apply font-[var(--font-segoe)]; }
+  .font-playfair { @apply font-[var(--font-playfair)]; }
+  .font-quicksand { @apply font-[var(--font-quicksand)]; }
+  .font-cormorant { @apply font-[var(--font-cormorant)]; }
+  .font-montserrat { @apply font-[var(--font-montserrat)]; }
+  .font-josefin { @apply font-[var(--font-josefin)]; }
+  .font-roboto { @apply font-[var(--font-roboto)]; }
+
+  /* Teams-specific Utilities */
+  .bg-teams-purple { @apply bg-[var(--teams-purple)]; }
+  .bg-teams-red { @apply bg-[var(--teams-red)]; }
+  .bg-teams-green { @apply bg-[var(--teams-green)]; }
+  .bg-teams-blue { @apply bg-[var(--teams-blue)]; }
+
+  .text-teams-purple { @apply text-[var(--teams-purple)]; }
+  .text-teams-red { @apply text-[var(--teams-red)]; }
+  .text-teams-green { @apply text-[var(--teams-green)]; }
+  .text-teams-blue { @apply text-[var(--teams-blue)]; }
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  :root {
+    --sidebar-width: 180px;
+  }
+}

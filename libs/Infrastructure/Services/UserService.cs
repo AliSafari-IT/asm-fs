@@ -1,9 +1,10 @@
-﻿using Application.Interfaces;
-using Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Application.Interfaces;
+using Domain.Entities;
+using Infrastructure.Mapping;
+using Microsoft.EntityFrameworkCore;
 using SecureCore.Data;
 
 namespace Infrastructure.Services
@@ -20,17 +21,20 @@ namespace Infrastructure.Services
         // Get list of users, excluding deleted ones
         public async Task<IEnumerable<User>> GetUsersAsync()
         {
-            return await _context.Users
-                .Where(u => !u.IsDeleted) // Exclude deleted users
-                .ToListAsync();
+            return (
+                await _context
+                    .Users.Where(u => !u.IsDeleted) // Exclude deleted users
+                    .ToListAsync()
+            ).Select(u => u.ToDomainUser());
         }
 
         // Get a user by Id, excluding deleted ones
         public async Task<User> GetUserByIdAsync(Guid id)
         {
-            return await _context.Users
-                .Where(u => u.Id == id && !u.IsDeleted) // Exclude deleted users
-                .FirstOrDefaultAsync();
+            return await _context
+                .Users.Where(u => u.Id.Equals(id) && !u.IsDeleted)
+                .FirstOrDefaultAsync()
+                .ContinueWith(t => t.Result?.ToDomainUser());
         }
 
         // Create a new user
@@ -40,30 +44,32 @@ namespace Infrastructure.Services
             user.CreatedAt = DateTime.UtcNow;
             user.UpdatedAt = DateTime.UtcNow;
 
-            _context.Users.Add(user);
+            var applicationUser = user.ToApplicationUser();
+            _context.Users.Add(applicationUser);
             await _context.SaveChangesAsync();
-            return user;
+            return applicationUser.ToDomainUser();
         }
 
         // Update an existing user
         public async Task<User> UpdateUserAsync(User user)
         {
-            var existingUser = await _context.Users
-                .FirstOrDefaultAsync(u => u.Id == user.Id && !u.IsDeleted); // Only update non-deleted users
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u =>
+                u.Id.Equals(user.Id) && !u.IsDeleted
+            ); // Only update non-deleted users
 
             if (existingUser == null)
             {
                 return null; // Return null if user is not found or is deleted
             }
 
-            existingUser.FullName = user.FullName;
+            existingUser.UserName = user.FullName; // Map FullName to UserName
             existingUser.Email = user.Email;
             existingUser.IsAdmin = user.IsAdmin;
             existingUser.UpdatedAt = DateTime.UtcNow;
             _context.Users.Update(existingUser);
             await _context.SaveChangesAsync();
 
-            return existingUser;
+            return existingUser.ToDomainUser();
         }
 
         // Mark a user as deleted
@@ -73,7 +79,7 @@ namespace Infrastructure.Services
 
             if (user != null && !user.IsDeleted)
             {
-                user.MarkAsDeleted(id);  // Or use the current user's Id here
+                user.MarkAsDeleted(id); // Or use the current user's Id here
                 await _context.SaveChangesAsync();
             }
         }
@@ -81,9 +87,10 @@ namespace Infrastructure.Services
         // Get all non-deleted users
         public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
-            return await _context.Users
-                .Where(u => !u.IsDeleted) // Exclude deleted users
-                .ToListAsync();
+            return (IEnumerable<User>)
+                await _context
+                    .Users.Where(u => !u.IsDeleted) // Exclude deleted users
+                    .ToListAsync();
         }
 
         // Not implemented: Assign task to user (placeholder for future implementation)

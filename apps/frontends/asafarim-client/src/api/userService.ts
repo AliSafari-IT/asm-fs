@@ -45,7 +45,7 @@ export const updateUser = async (id: string, user: IUserModel): Promise<IUser> =
   console.log("updateUser - Original ID:", id);
   console.log("updateUser - User data:", user);
   const targetUserUrl = `${USERS_URL}/by-email/${user.email}`;
-  console.log("updateUserUrl:", targetUserUrl);
+  console.log("targetUserUrl:", targetUserUrl);
   try {
     // First, get the AspNetUsers ID for this email
     const idResponse = await axios.get(targetUserUrl);

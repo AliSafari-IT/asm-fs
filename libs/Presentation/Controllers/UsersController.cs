@@ -136,33 +136,27 @@ namespace Presentation.Controllers
 
         // DELETE: api/users/{id}
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(Guid id)
+        public async Task<IActionResult> DeleteUser(Guid id, [FromBody] DeleteAccountModel model)
         {
-            var user = await _userService.GetUserByIdAsync(id);
-
+            var user = await _userManager.FindByIdAsync(id.ToString());
             if (user == null)
             {
                 return NotFound("User not found.");
             }
 
-            // Get the logged-in user's ID for DeletedBy, otherwise set to null if not authenticated
-            var deletedByString = User.Identity.IsAuthenticated
-                ? User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                : null;
-
-            // Convert the string value to Guid? (nullable Guid)
-            if (Guid.TryParse(deletedByString, out var deletedBy))
+            // Verify password
+            var isPasswordValid = await _userManager.CheckPasswordAsync(user, model.Password);
+            if (!isPasswordValid)
             {
-                user.DeletedBy = deletedBy;
-            }
-            else
-            {
-                user.DeletedBy = null; // Set to null if the GUID cannot be parsed
+                return BadRequest(new { message = "Invalid password provided." });
             }
 
-            user.DeletedAt = DateTime.UtcNow;
-
-            await _userService.DeleteUserAsync(id);
+            // Proceed with deletion
+            var result = await _userManager.DeleteAsync(user);
+            if (!result.Succeeded)
+            {
+                return BadRequest(new { message = "Error deleting user account." });
+            }
 
             return NoContent();
         }
@@ -218,5 +212,10 @@ namespace Presentation.Controllers
         }
 
         // GET: api/users/{id}/user-account-settings
+    }
+
+    public class DeleteAccountModel
+    {
+        public string Password { get; set; } = string.Empty;
     }
 }

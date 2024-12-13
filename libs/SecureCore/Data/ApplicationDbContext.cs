@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SecureCore.Models;
@@ -10,9 +11,10 @@ namespace SecureCore.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }
 
-        public DbSet<User> Users { get; set; }
-        public DbSet<UserRole> UserRoles { get; set; }
+        public override DbSet<ApplicationUser> Users { get; set; }
+        public override DbSet<IdentityUserRole<string>> UserRoles { get; set; }
         public DbSet<TaskItem> TaskItems { get; set; }
+        public DbSet<UserReactivationRequest> UserReactivationRequests { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -31,6 +33,36 @@ namespace SecureCore.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // Configure UserReactivationRequest
+            modelBuilder.Entity<UserReactivationRequest>(entity =>
+            {
+                entity.ToTable("user_reactivation_requests");
+
+                entity.Property(e => e.Id).HasColumnType("char(36)").IsRequired();
+
+                entity.Property(e => e.UserId).HasColumnType("varchar(255)").IsRequired();
+
+                entity.Property(e => e.Email).HasColumnType("longtext").IsRequired();
+
+                entity.Property(e => e.RequestDate).HasColumnType("datetime(6)").IsRequired();
+
+                entity.Property(e => e.Status).HasColumnType("int").IsRequired();
+
+                entity
+                    .Property(e => e.ProcessedDate)
+                    .HasColumnType("datetime(6)")
+                    .IsRequired(false);
+
+                entity.Property(e => e.ProcessedBy).HasColumnType("longtext").IsRequired(false);
+
+                // Configure the relationship with ApplicationUser
+                entity
+                    .HasOne(e => e.User)
+                    .WithMany()
+                    .HasForeignKey(e => e.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
 
             // Mapping the 'users' table
             modelBuilder.Entity<User>(entity =>
