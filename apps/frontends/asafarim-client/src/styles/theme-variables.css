@@ -135,4 +135,81 @@
   --bg-footer: #1e2a3a;
   --bg-start: #1e2a3a;
   --bg-end: #1a1f25;
+
+  /* Markdown viewer  */
+  --markdown-bg: var(--bg-secondary);
+  --markdown-text: var(--text-primary);
+  --markdown-border: var(--border-primary);
+  --markdown-code-bg: var(--bg-tertiary);
+  --markdown-code-text: var(--text-primary);
+  --markdown-code-border: var(--border-primary);
+  --markdown-code-highlight-bg: var(--bg-navbar);
+  --markdown-code-highlight-text: var(--text-primary);
+  --markdown-code-highlight-border: var(--border-primary);
+  --markdown-highlight-bg: var(--bg-navbar);
+  --markdown-highlight-text: var(--text-primary);
+  --markdown-highlight-border: var(--border-primary);
+  --markdown-link-bg: var(--bg-navbar);
+  --markdown-link-text: var(--text-primary);
+  --markdown-link-border: var(--border-primary);
+  --markdown-link-hover-bg: var(--bg-navbar);
+  --markdown-link-hover-text: var(--text-primary);
+  --markdown-link-hover-border: var(--border-primary);
+  --markdown-link-active-bg: var(--bg-navbar);
+  --markdown-link-active-text: var(--text-primary);
+  --markdown-link-active-border: var(--border-primary);
+  --markdown-link-visited-bg: var(--bg-navbar);
+  --markdown-link-visited-text: var(--text-primary);
+  --markdown-link-visited-border: var(--border-primary);
+  --markdown-quote-bg: var(--bg-navbar);
+  --markdown-quote-text: var(--text-primary);
+  --markdown-quote-border: var(--border-primary);
+  --markdown-table-bg: var(--bg-navbar);
+  --markdown-table-text: var(--text-primary);
+  --markdown-table-border: var(--border-primary);
+  --markdown-table-cell-bg: var(--bg-navbar);
+  --markdown-table-cell-text: var(--text-primary);
+  --markdown-table-cell-border: var(--border-primary);
+  --markdown-table-header-bg: var(--bg-navbar);
+  --markdown-table-header-text: var(--text-primary);
+  --markdown-table-header-border: var(--border-primary);
+  --markdown-table-row-bg: var(--bg-navbar);
+  --markdown-table-row-text: var(--text-primary);
+  --markdown-table-row-border: var(--border-primary);
+  --markdown-table-row-hover-bg: var(--bg-navbar);
+  --markdown-table-row-hover-text: var(--text-primary);
+  --markdown-table-row-hover-border: var(--border-primary);
+  --markdown-table-row-active-bg: var(--bg-navbar);
+  --markdown-table-row-active-text: var(--text-primary);
+  --markdown-table-row-active-border: var(--border-primary);
+  --markdown-list-bg: var(--bg-navbar);
+  --markdown-list-text: var(--text-primary);
+  --markdown-list-border: var(--border-primary);
+  --markdown-list-item-bg: var(--bg-navbar);
+  --markdown-list-item-text: var(--text-primary);
+  --markdown-list-item-border: var(--border-primary);
+  --markdown-list-item-hover-bg: var(--bg-navbar);
+  --markdown-list-item-hover-text: var(--text-primary);
+  --markdown-list-item-hover-border: var(--border-primary);
+  --markdown-list-item-active-bg: var(--bg-navbar);
+  --markdown-header-bg: var(--bg-navbar);
+  --markdown-header-text: var(--text-primary);
+  --markdown-header-border: var(--border-primary);
+  --markdown-header-hover-bg: var(--bg-navbar);
+  --markdown-header-hover-text: var(--text-primary);
+  --markdown-header-hover-border: var(--border-primary);
+  --markdown-header-active-bg: var(--bg-navbar);
+  --markdown-header-active-text: var(--text-primary);
+  --markdown-header-active-border: var(--border-primary);
+
+
+  /* Code editor */
+  --code-editor-bg: var(--bg-secondary);
+  --code-editor-text: var(--text-primary);
+  --code-editor-border: var(--border-primary);
+  --code-editor-highlight-bg: var(--bg-navbar);
+  --code-editor-highlight-text: var(--text-primary);
+  --code-editor-highlight-border: var(--border-primary);
+
+
 }

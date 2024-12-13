@@ -15,6 +15,7 @@ import {
 import { IChapter } from '../../interfaces/IChapter';
 import { IMenuItem } from '../../interfaces/IMenuItem';
 import { INavItem } from '../../interfaces/INavItem';
+import {  getChangelogFiles } from '@/utils/changelogUtils';
 
 // Home Dropdown
 const homeDD: IMenuItem = {
@@ -494,6 +495,22 @@ export const legalDocs: INavItem = {
   ],
 };
 
+const changelogDocs: INavItem = {
+  id: 'changelog',
+  title: 'Changelog',
+  label: 'Changelog',
+  name: 'asafarim-changelog',
+  to: '/changelogs',
+  icon: <IconLegal />,
+  subMenu: [ {
+    id: 'changelog',
+    title: 'Changelog',
+    to: '/changelogs',
+    icon: <IconLegal />,
+    subMenu: getChangelogFiles().subMenu
+  }],
+};
+
 const navItems: INavItem[] = [
   homeDD,
   blog,
@@ -501,7 +518,8 @@ const navItems: INavItem[] = [
   books,
   dashboardDD,
   learn,
-  legalDocs
+  legalDocs,
+  changelogDocs,
 ];
 
 export default navItems;

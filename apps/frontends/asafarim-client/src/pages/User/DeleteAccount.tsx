@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../components/Button/Button';
 import useAuth from '@/hooks/useAuth';
-import { CancelSvgIcon } from '@/components/SvgIcons/CancelSvgIcon';
+import { CancelSvgIcon } from '@/assets/SvgIcons/CancelSvgIcon';
 import { UserInfo } from '@/interfaces/IUserInfo';
 import { deleteUserAccount } from '@/utils/userUtils';
 

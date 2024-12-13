@@ -32,6 +32,7 @@ import Contact from "./pages/Contact";
 import MarkdownPage from "./components/MarkdownPage/MarkdownPage";
 import { legalDocs } from './layout/Navbar/navItemsList';
 import { ThemeProvider } from './contexts/ThemeContext';
+import ChangelogPage from './pages/Changelog/ChangelogPage';
 
 function App() {
   const user = useAuth().user;
@@ -57,6 +58,10 @@ function App() {
                 title={legalDocs.subMenu?.find(doc => doc.filepath?.includes(mdFileName ?? ''))?.title ?? 'Not Found'}
               />
             }
+          />
+          <Route
+            path="/changelogs/:slug?"
+            element={<ChangelogPage />}
           />
           <Route path="/posts/:slug" element={<PostDetail />} />
           <Route path="/:model/add" element={<AddForm />} />
