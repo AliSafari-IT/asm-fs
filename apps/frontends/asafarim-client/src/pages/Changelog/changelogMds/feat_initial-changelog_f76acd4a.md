@@ -1,4 +1,6 @@
-# Changelog 21 Nov 2024
+# Integrated Tailwind CSS for improved styling
+
+Date: 2024-11-21
 
 All notable changes to this project will be documented in this file.
 

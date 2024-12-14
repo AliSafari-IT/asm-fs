@@ -1,4 +1,6 @@
-# Changelog 21 Nov 2024
+# Enhanced with responsive design and theme support.
+Date: 21 Sep 2024
+Updated: 14 Dec 2024
 
 ### [Unreleased]
 

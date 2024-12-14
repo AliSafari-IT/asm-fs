@@ -21,11 +21,13 @@ const changelogFiles = {
 
 const changeLogs: INavItem = {
   id: 'changelog-docs',
-  title: 'Changelogs',
-  label: 'Changelogs',
+  title: 'Recent Changes',
+  label: 'Recent Changes',
   name: 'asafarim-changelogs',
-  to: '/changelogs',
+  to: '#',
   icon: ChangeLogSvgIcon,
+  createdAt: new Date(),
+  updatedAt: new Date(),
   subMenu: Object.entries(changelogFiles).map(([path, content]) => {
     const slug = path.split('/').pop()?.replace('.md', '') || '';
     const type = slug.split('_')[0];
@@ -39,7 +41,10 @@ const changeLogs: INavItem = {
       to: `${to}`,
       filepath: path,
       icon: ChangeLogSvgIcon,
-      content
+      content,
+      createdAt: getCreationDate(content) || new Date('2024-09-07T17:18:11+01:00'),
+      updatedAt: getUpdateDate(content) || getCreationDate(content) || new Date('2024-09-07T17:18:11+01:00'),
+      subMenu: []
     };
   }),
   content: ''
@@ -54,3 +59,20 @@ export const getChangelogByRelPath = (to?: string): INavItem | undefined => {
   const fullPath = `/changelogs/${to}`;
   return getChangelogFiles().subMenu?.find(doc => doc.to === fullPath);
 };
+
+function getCreationDate(content: string): Date | undefined {
+  const match = content?.match(/(?:\*\*Date:?\*\*|Date:) (.+?)(?:\n|$)/m);
+  if (!match) return undefined;
+  const dateStr = match[1].trim();
+  const parsedDate = new Date(dateStr);
+  return isNaN(parsedDate.getTime()) ? undefined : parsedDate;
+}
+
+function getUpdateDate(content: string): Date | undefined {
+  const match = content?.match(/(?:\*\*(?:Updated|Modified|Changed|Last Changed):?\*\*|(?:Updated|Modified|Changed|Last Changed):) (.+?)(?:\n|$)/m);
+  if (!match) return undefined;
+  const dateStr = match[1].trim();
+  // Try parsing both formats: "December 07, 2024" and "10/10/2024, 1:00:00 AM"
+  const parsedDate = new Date(dateStr);
+  return isNaN(parsedDate.getTime()) ? undefined : parsedDate;
+}

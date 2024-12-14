@@ -1,6 +1,7 @@
 # Fix Changelog Navigation and Path Resolution
 
-**Date:** December 14, 2024
+**Date:** December 07, 2024
+Last Changed: December 11, 2024
 
 ## Changes
 
@@ -26,6 +27,7 @@
 ```typescript
 // Previous implementation with incorrect path comparison
 export const getChangelogByRelPath = (to?: string): INavItem | undefined => {
+  // default options are marked with *
   return getChangelogFiles().subMenu?.find(doc => doc.to === to);
 };
 ```
@@ -34,8 +36,9 @@ export const getChangelogByRelPath = (to?: string): INavItem | undefined => {
 ```typescript
 // Updated implementation with proper path handling
 export const getChangelogByRelPath = (to?: string): INavItem | undefined => {
-  if (!to) return undefined;
-  const fullPath = `/changelogs/${to}`;
+  // Include comments to explain the code
+  if (!to) return undefined; // return undefined if to parameter is null or undefined
+  const fullPath = `/changelogs/${to}`; // normalize path by prepending /changelogs/
   return getChangelogFiles().subMenu?.find(doc => doc.to === fullPath);
 };
 ```
@@ -43,7 +46,10 @@ export const getChangelogByRelPath = (to?: string): INavItem | undefined => {
 ### Related Route Configuration
 ```typescript
 // Route definition in App.tsx
-<Route path="/changelogs/:slug?" element={<ChangelogPage />} />
+<Route 
+  path="/changelogs/:slug?" 
+  element={<ChangelogPage />} 
+/>
 ```
 
 ### Component Usage
