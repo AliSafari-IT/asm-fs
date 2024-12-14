@@ -495,21 +495,7 @@ export const legalDocs: INavItem = {
   ],
 };
 
-const changelogDocs: INavItem = {
-  id: 'changelog',
-  title: 'Changelog',
-  label: 'Changelog',
-  name: 'asafarim-changelog',
-  to: '/changelogs',
-  icon: <IconLegal />,
-  subMenu: [ {
-    id: 'changelog',
-    title: 'Changelog',
-    to: '/changelogs',
-    icon: <IconLegal />,
-    subMenu: getChangelogFiles().subMenu
-  }],
-};
+const changelogDocs: INavItem = getChangelogFiles();
 
 const navItems: INavItem[] = [
   homeDD,

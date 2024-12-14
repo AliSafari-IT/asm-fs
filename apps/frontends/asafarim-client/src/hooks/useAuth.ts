@@ -1,15 +1,9 @@
+import { IAuthState } from "@/interfaces/IAuthState";
+import { IUser } from "@/interfaces/IUser";
 import { useEffect, useState, useCallback } from "react";
 
-interface User {
-  id: string;
-  email: string;
-  isAdmin: boolean;
-  isDeleted: boolean;
-  fullname: string;
-}
-
-function useAuth() {
-    const [user, setUser] = useState<User | null>(() => {
+function useAuth(): IAuthState {
+    const [user, setUser] = useState<IUser | null>(() => {
       const userData = localStorage.getItem('user');
       //Log userData to console, and Parse the user data from localStorage
       console.log('useAuth(): User data from localStorage:', userData ? JSON.parse(userData).user : null);

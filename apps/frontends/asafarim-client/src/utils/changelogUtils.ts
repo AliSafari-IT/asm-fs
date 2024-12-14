@@ -18,18 +18,19 @@ const changeLogs: INavItem = {
   title: 'Changelogs',
   label: 'Changelogs',
   name: 'asafarim-changelogs',
-  to: '#',
+  to: '/changelogs',
   icon: ChangeLogSvgIcon,
   subMenu: Object.entries(changelogFiles).map(([path, content]) => {
     const slug = path.split('/').pop()?.replace('.md', '') || '';
     const type = slug.split('_')[0];
     const title = slug.split('_').slice(1).join('-');
+    const to = `/changelogs/${slug}`;
     return {
       id: `changelog-${slug}`,
       title: `${type.toUpperCase()}: ${title}`,
       label: slug,
       name: `changelog-${slug}`,
-      to: `${slug}`,
+      to: `${to}`,
       filepath: path,
       icon: ChangeLogSvgIcon,
       content
@@ -43,5 +44,7 @@ export const getChangelogFiles = (): INavItem => {
 };
 
 export const getChangelogByRelPath = (to?: string): INavItem | undefined => {
-  return getChangelogFiles().subMenu?.find(doc => doc.to === to);
+  if (!to) return undefined;
+  const fullPath = `/changelogs/${to}`;
+  return getChangelogFiles().subMenu?.find(doc => doc.to === fullPath);
 };

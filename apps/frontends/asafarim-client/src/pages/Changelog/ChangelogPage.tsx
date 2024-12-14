@@ -5,6 +5,7 @@ import Wrapper from '../../layout/Wrapper/Wrapper';
 import { getChangelogFiles, getChangelogByRelPath } from '../../utils/changelogUtils';
 import Header from '@/layout/Header/Header';
 import { RecentChangesSvg, RecentChangesSvgIcon } from '@/assets/SvgIcons/RecentChangesSvg';
+import SidebarNavItem from '../../layout/Navbar/SidebarNavItem';
 
 const ChangelogPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -16,6 +17,18 @@ const ChangelogPage: React.FC = () => {
     return match ? match[1] : '';
   };
 
+  // Extract the date from markdown content
+  const getChangelogDate = (content: string): string => {
+    const match = content?.match(/\*\*Date:\*\* (.+)$/m);
+    return match ? match[1] : '';
+  };
+
+  // Extract git hash from the file path
+  const getGitHash = (path: string): string => {
+    const match = path?.match(/_([a-f0-9]+)$/);
+    return match ? match[1] : '';
+  };
+
   const pageTitle = currentChangelog?.content ? getFirstHeading(currentChangelog.content) : '';
 
   const asideBlock = (
@@ -24,27 +37,15 @@ const ChangelogPage: React.FC = () => {
         <RecentChangesSvgIcon />
         Recent Changes
       </h2>
-      <ul className="space-y-3">
-        {getChangelogFiles().subMenu?.map((log) => (
-          <li key={log.id} className="flex items-center">
-            <RecentChangesSvg />
-            <Link
-              to={`/changelogs/${log.to}`}
-              className={`block p-3 rounded-md transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-700 ${
-                slug === log.to ? 'bg-info-light text-info-dark font-semibold' : 'text-gray-600 dark:text-gray-300'
-              }`}
-            >
-              {log.title}: {
-                log.content ? (
-                  <span className="font-semibold">{getFirstHeading(log.content)}</span>
-                ) : (
-                  <span className="italic">No title</span>
-                )
-              }
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <SidebarNavItem
+        sidebarNavData={getChangelogFiles().subMenu?.map(log => ({
+          ...log,
+          title: log.content ? getFirstHeading(log.content) : 'No title',
+          icon: <RecentChangesSvg />,
+          className: slug === log.to ? 'emphasized' : ''
+        }))}
+        className="space-y-1"
+      />
     </div>
   );
 
@@ -53,15 +54,15 @@ const ChangelogPage: React.FC = () => {
       header={
         <Header>
           <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="py-6  flex items-center justify-between">
+            <div className="py-6 flex items-center justify-between">
               <h1 className="text-xl sm:text-2xl changelog-title max-w-[70%] break-words">
                 <span className="gradient-text py-6 block">
                   {pageTitle || 'Changelogs'}
                 </span>
               </h1>
               {currentChangelog && (
-                <Link 
-                  to="/changelogs" 
+                <Link
+                  to="/changelogs"
                   className="inline-flex items-center gap-2 text-info-dark hover:text-info transition-colors duration-200"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -81,14 +82,50 @@ const ChangelogPage: React.FC = () => {
           <DisplayMd id={currentChangelog.id} markdownContent={`${currentChangelog?.content}`} />
         </div>
       ) : (
-        <div className="text-center py-12 px-4">
-          <div className="max-w-2xl mx-auto">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Select a Changelog</h2>
+        <div className="text-center py-8 px-4">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Recent Changes</h2>
             <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
-              Choose a changelog from the list to view detailed information about updates and changes.
+              A chronological list of updates and changes to the application.
             </p>
-            <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
-              {asideBlock}
+            <div className="mt-8">
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                  <thead className="bg-gray-50 dark:bg-gray-800">
+                    <tr>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">#</th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Title</th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Git Hash</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+                    {getChangelogFiles().subMenu
+                      ?.map(log => ({
+                        ...log,
+                        title: log.content ? getFirstHeading(log.content) : 'No title',
+                        date: log.content ? getChangelogDate(log.content) : '',
+                        hash: getGitHash(log.to || '')
+                      }))
+                      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                      .map((log, index) => (
+                        <tr key={log.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{index + 1}</td>
+                          <td className="px-6 py-4">
+                            <Link
+                              to={log.to || '#'}
+                              className="text-info-dark hover:text-info transition-colors duration-200"
+                            >
+                              {log.title}
+                            </Link>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{log.date}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-500 dark:text-gray-400">{log.hash}</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>

@@ -2,12 +2,11 @@ import React from 'react';
 import AsmLogo from './components/AsmLogo';
 import UserDropdown from '../../components/user/UserDropdown';
 import { Link } from 'react-router-dom';
-import useAuth from '../../hooks/useAuth';
 import MobileToggleTheme from '../../utils/ToggleTheme';
 import ToggleTheme from '../Theme/ToggleTheme';
+import { IAuthState } from '@/interfaces/IAuthState';
 
-const Navbar: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  const auth = useAuth();
+const Navbar: React.FC<{ children?: React.ReactNode, auth?: IAuthState }> = ({ children, auth }) => {
   // Get current view width
   const [viewWidth, setViewWidth] = React.useState(window.innerWidth);
   const isMobile = viewWidth <= 514;
@@ -33,7 +32,7 @@ const Navbar: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
 
           <div className="flex items-center space-x-4">
             {isMobile ? <MobileToggleTheme /> : <ToggleTheme className="mr-2" />}
-            {auth ? (
+            {auth && auth.user ? (
               <div className="flex items-center gap-4">
                 <UserDropdown auth={auth} />
               </div>

@@ -5,6 +5,7 @@ import Navbar from '../Navbar/Navbar';
 import { SidebarWrapper } from './SidebarWrapper';
 import { useTheme } from '../../hooks/useTheme';
 import MainContent from './MainContent';
+import useAuth from '@/hooks/useAuth';
 
 interface LayoutProps {
   pageTitle?: string;
@@ -30,6 +31,8 @@ const Wrapper: React.FC<LayoutProps> = ({
   const sidebarRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const pt = pageTitle ? `${pageTitle} | ASafariM` : 'ASafariM';
+  const auth = useAuth();
+
   if (!footer) {
     footer = <Footer />;
   }
@@ -73,7 +76,7 @@ const Wrapper: React.FC<LayoutProps> = ({
 
   return (
     <div className={`flex flex-col min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] ${className}`}>
-      <Navbar>
+      <Navbar auth={auth}>
         <button
           ref={buttonRef}
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
