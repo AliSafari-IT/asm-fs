@@ -19,6 +19,15 @@ const changelogFiles = {
   }),
 };
 
+// import mdDocs from src\assets\mdDocs
+
+const mdDocs = {
+  ...import.meta.glob('@/assets/mdDocs/**/*.md', {
+    as: 'raw',
+    eager: true,
+  }),
+};
+
 const changeLogs: INavItem = {
   id: 'changelog-docs',
   title: 'Recent Changes',
@@ -42,8 +51,39 @@ const changeLogs: INavItem = {
       filepath: path,
       icon: ChangeLogSvgIcon,
       content,
-      createdAt: getCreationDate(content) || new Date('2024-09-07T17:18:11+01:00'),
-      updatedAt: getUpdateDate(content) || getCreationDate(content) || new Date('2024-09-07T17:18:11+01:00'),
+      createdAt: getCreationDate(content) || new Date(Date.now()),
+      updatedAt: getUpdateDate(content) || getCreationDate(content) || new Date(Date.now()),
+      subMenu: []
+    };
+  }),
+  content: ''
+};
+
+const mdFileTree: INavItem = {
+  id: 'tech-docs',
+  title: 'Tech Docs',
+  label: 'Tech Docs',
+  name: 'asafarim-tech-docs',
+  to: '#',
+  icon: ChangeLogSvgIcon,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  subMenu: Object.entries(mdDocs).map(([path, content]) => {
+    const slug = path.split('/').pop()?.replace('.md', '') || '';
+    const type = slug.split('_')[0];
+    const title = slug.split('_').slice(1).join('-');
+    const to = `/tech-docs/${slug}`;
+    return {
+      id: `tech-docs-${slug}`,
+      title: `${type.toUpperCase()}: ${title}`,
+      label: slug,
+      name: `tech-docs-${slug}`,
+      to,
+      filepath: path,
+      icon: ChangeLogSvgIcon,
+      content,
+      createdAt: getCreationDate(content) || new Date(Date.now()),
+      updatedAt: getUpdateDate(content) || getCreationDate(content) || new Date(Date.now()),
       subMenu: []
     };
   }),
@@ -54,10 +94,25 @@ export const getChangelogFiles = (): INavItem => {
   return changeLogs;
 };
 
+export const getMdFileTree = (): INavItem => {
+  return mdFileTree;
+};
+
 export const getChangelogByRelPath = (to?: string): INavItem | undefined => {
   if (!to) return undefined;
   const fullPath = `/changelogs/${to}`;
   return getChangelogFiles().subMenu?.find(doc => doc.to === fullPath);
+};
+
+export const getMdDocByRelPath = (to?: string): INavItem | undefined => {
+  if (!to) return undefined;
+  const fullPath = `/tech-docs/${to}`;
+  return getMdFileTree().subMenu?.find(doc => doc.to === fullPath);
+};
+
+export const getMdDocByFilePath = (filePath?: string): INavItem | undefined => {
+  if (!filePath) return undefined;
+  return getMdFileTree().subMenu?.find(doc => doc.filepath === filePath);
 };
 
 function getCreationDate(content: string): Date | undefined {
@@ -76,3 +131,14 @@ function getUpdateDate(content: string): Date | undefined {
   const parsedDate = new Date(dateStr);
   return isNaN(parsedDate.getTime()) ? undefined : parsedDate;
 }
+
+
+export default {
+  getChangelogFiles,
+  getChangelogByRelPath,
+  getCreationDate,
+  getUpdateDate,
+  getMdDocByRelPath,
+  getMdDocByFilePath,
+  getMdFileTree,
+};

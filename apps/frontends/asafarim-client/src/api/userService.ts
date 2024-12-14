@@ -5,10 +5,10 @@ import { IUserModel } from '../interfaces/IUserModel';
 // in development mode use https://localhost:5001/api/Users
 // in production mode use https://asafarim.com/api/users
 const isDevelopment = import.meta.env.VITE_ENVIRONMENT === 'development';
-const BASE_URL = isDevelopment ? 'https://localhost:5001/api' : 'https://asafarim.com/api';
-const USERS_URL = `${BASE_URL}/Users`;
-const USER_INFO_URL = `${BASE_URL}/Users/userInfo`;
-const USER_FULLINFO_URL = `${BASE_URL}/Users/full-info`;
+const BASE_API_URL = isDevelopment ? 'https://localhost:5001/api' : 'https://asafarim.com/api';
+const USERS_URL = `${BASE_API_URL}/Users`;
+const USER_INFO_URL = `${BASE_API_URL}/Users/userInfo`;
+//const USER_FULLINFO_URL = `${BASE_API_URL}/Users/full-info`;
 
 // Get all users
 export const getUsers = async (): Promise<IUser[]> => {
@@ -41,10 +41,9 @@ export const createUser = async (user: IUserModel): Promise<IUser> => {
 };
 
 // Update an existing user
-export const updateUser = async (id: string, user: IUserModel): Promise<IUser> => {
-  console.log("updateUser - Original ID:", id);
+export const updateUser = async (user: IUserModel): Promise<IUser> => {
   console.log("updateUser - User data:", user);
-  const targetUserUrl = `${USERS_URL}/by-email/${user.email}`;
+  const targetUserUrl = `${USERS_URL}/by-email/${user.email.replace('@', '%40')}`;
   console.log("targetUserUrl:", targetUserUrl);
   try {
     // First, get the AspNetUsers ID for this email
@@ -57,7 +56,6 @@ export const updateUser = async (id: string, user: IUserModel): Promise<IUser> =
     console.log("updateUserUrl:", updateUserUrl);
 
     const response = await axios.put(updateUserUrl, {
-      id: user.id,
       email: user.email,
       fullName: user.fullName,
       isAdmin: user.isAdmin,

@@ -83,7 +83,7 @@ const UserAccountSettings: React.FC = () => {
         userId: userInfo.userId || userInfo.id // Fallback to id if userId is not present
       };
 
-      const result = await updateUser(userInfo.id, updatedUser);
+      const result = await updateUser(updatedUser);
       if (result) {
         setSuccessMessage('Changes saved successfully');
         // Refresh user info after successful update

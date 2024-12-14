@@ -1,26 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import DisplayMd from '../../components/DisplayMd';
 import Wrapper from '../../layout/Wrapper/Wrapper';
-import { getChangelogFiles, getChangelogByRelPath } from '../../utils/changelogUtils';
+import { getChangelogFiles, getChangelogByRelPath } from '../../utils/mdFilesUtils';
 import Header from '@/layout/Header/Header';
 import { RecentChangesSvg, RecentChangesSvgIcon } from '@/assets/SvgIcons/RecentChangesSvg';
 import SidebarNavItem from '../../layout/Navbar/SidebarNavItem';
+import SortArray, { SortOrder } from '../../components/SortArray';
+import { getFirstHeading } from '../../utils/mdUtils';
 
 const ChangelogPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const currentChangelog = getChangelogByRelPath(slug);
 
-  // Extract the first H1 heading from markdown content
-  const getFirstHeading = (content: string): string => {
-    const match = content?.match(/^#\s+(.+)$/m);
-    return match ? match[1] : '';
-  };
-
   // Extract git hash from the file path
   const getGitHash = (path: string): string => {
     const match = path?.match(/_([a-f0-9]+)$/);
     return match ? match[1] : '';
+  };
+
+  const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
+
+  const handleSortChange = (newOrder: SortOrder) => {
+    setSortOrder(newOrder);
   };
 
   const pageTitle = currentChangelog?.content ? getFirstHeading(currentChangelog.content) : '';
@@ -103,13 +105,17 @@ const ChangelogPage: React.FC = () => {
               A chronological list of updates and changes to the application.
             </p>
             <div className="mt-8">
+              <div className="flex justify-end mb-4">
+              </div>
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                   <thead className="bg-gray-50 dark:bg-gray-800">
                     <tr>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">#</th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Title</th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Created/Changed At</th>
+                      <th scope="col" className="text-center px-6 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">#</th>
+                      <th scope="col" className="text-center px-6 py-3  text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Title</th>
+                      <th scope="col" className="text-center px-6 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider align-middle">
+                      Created/Changed At <SortArray sortOrder={sortOrder} onSortChange={handleSortChange} className="scale-x-150 ml-0 border-0 bg-transparent info " label="" />
+                      </th>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Git Hash</th>
                     </tr>
                   </thead>
@@ -129,7 +135,7 @@ const ChangelogPage: React.FC = () => {
                       .sort((a, b) => {
                         const aTime = a.mostRecentDate?.getTime() || 0;
                         const bTime = b.mostRecentDate?.getTime() || 0;
-                        return bTime - aTime;
+                        return sortOrder === 'desc' ? bTime - aTime : aTime - bTime;
                       })
                       .map((log, index) => (
                         <tr key={log.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">

@@ -1,15 +1,15 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 import vitePluginMd from 'vite-plugin-md';
 import path from 'path';
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
+    
     react(),
     vitePluginMd({
-      mode: ['html'],
-      markdownIt: {
+      markdownItOptions: {
         html: true,
       },
     }),
@@ -33,4 +33,4 @@ export default defineConfig({
     outDir: '../../../dist/asafarim-client', // Relative to the frontend app's directory
     emptyOutDir: true, // Cleans the directory before build
   },
-})
+});

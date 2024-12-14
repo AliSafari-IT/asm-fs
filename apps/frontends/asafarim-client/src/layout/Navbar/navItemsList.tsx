@@ -15,7 +15,7 @@ import {
 import { IChapter } from '../../interfaces/IChapter';
 import { IMenuItem } from '../../interfaces/IMenuItem';
 import { INavItem } from '../../interfaces/INavItem';
-import {  getChangelogFiles } from '@/utils/changelogUtils';
+import {  getChangelogFiles } from '@/utils/mdFilesUtils';
 
 // Home Dropdown
 const homeDD: IMenuItem = {

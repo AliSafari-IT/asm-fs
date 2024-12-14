@@ -2,7 +2,11 @@
 import axios, { AxiosError } from 'axios';
 import { handleError } from '../utils/handleError'; // Import the centralized error handler
 
-const API_URL = 'http://localhost:5000/api/Auth'; // Replace with your actual API URL
+const isDevelopment = import.meta.env.VITE_ENVIRONMENT === 'development';
+
+const BASE_URL = isDevelopment ? 'https://localhost:5001' : 'https://asafarim.com';
+
+const API_URL = `${BASE_URL}/api/Auth`; // Replace with your actual API URL
 
 export interface UpdateEmailModel {
   userId: string;

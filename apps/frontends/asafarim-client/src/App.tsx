@@ -27,12 +27,14 @@ import useAuth from "./hooks/useAuth"; // Custom hook for user state
 import { Suspense, useEffect } from "react";
 import Layout from "./layout/Layout";
 import RTNav from "./pages/Project/projects/react/tailwind/navbar/RTNav";
-import UserAccountSettings from "./pages/User/UserAccountSettings";
+//import UserAccountSettings from "./pages/User/UserAccountSettings";
 import Contact from "./pages/Contact";
 import MarkdownPage from "./components/MarkdownPage/MarkdownPage";
 import { legalDocs } from './layout/Navbar/navItemsList';
 import { ThemeProvider } from './contexts/ThemeContext';
 import ChangelogPage from './pages/Changelog/ChangelogPage';
+import AccountSettings from "./pages/Accountpage/AccountSettings";
+import TechDocsPage from './pages/TechDocs/TechDocsPage';
 
 function App() {
   const user = useAuth().user;
@@ -59,10 +61,7 @@ function App() {
               />
             }
           />
-          <Route
-            path="/changelogs/:slug?"
-            element={<ChangelogPage />}
-          />
+
           <Route path="/posts/:slug" element={<PostDetail />} />
           <Route path="/:model/add" element={<AddForm />} />
           <Route path="/:model/delete/:id" element={<DelCard />} />
@@ -86,9 +85,7 @@ function App() {
             path="/user-account-settings"
             element={
               <PrivateRoute>
-                <Layout>
-                  <UserAccountSettings />
-                </Layout>
+                <AccountSettings />
               </PrivateRoute>
             }
           />
@@ -131,6 +128,14 @@ function App() {
             }
           />
           <Route path="/health-ui" element={<Navigate to="/health-ui" />} />
+          <Route
+            path="/changelogs/:slug?"
+            element={<ChangelogPage />}
+          />
+          <Route
+            path="/tech-docs/:slug?"
+            element={<TechDocsPage />}
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
