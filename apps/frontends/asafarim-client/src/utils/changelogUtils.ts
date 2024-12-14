@@ -8,10 +8,16 @@ export interface ChangelogItem {
 }
 
 // Import changelog files using Vite's glob import
-const changelogFiles = import.meta.glob('@/pages/Changelog/changelogMds/*.md', {
-  as: 'raw',
-  eager: true,
-});
+const changelogFiles = {
+  ...import.meta.glob('@/pages/Changelog/changelogMds/*.md', {
+    as: 'raw',
+    eager: true,
+  }),
+  ...import.meta.glob('/docs/ChangeLogs/*.md', {
+    as: 'raw',
+    eager: true,
+  }),
+};
 
 const changeLogs: INavItem = {
   id: 'changelog-docs',

@@ -5,13 +5,14 @@
   "type": "module",
   "packageManager": "yarn@4.5.1",
   "scripts": {
-    "dev": "vite",
-    "start": "vite",
-    "build": "tsc -b && vite build",
+    "dev": "yarn copy-changelogs && vite",
+    "start": "yarn copy-changelogs && vite",
+    "build": "yarn copy-changelogs && tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "stop": "npx kill-port 5173",
-    "rs": "yarn stop && yarn dev"
+    "rs": "yarn stop && yarn dev",
+    "copy-changelogs": "xcopy /Y /I \"E:\\asm-fs\\docs\\ChangeLogs\\*.md\" \"src\\pages\\Changelog\\changelogMds\""
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
