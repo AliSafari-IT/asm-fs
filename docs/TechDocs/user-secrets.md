@@ -1,3 +1,10 @@
+# User Secrets
+
+Date: 2024-09-11 
+Updated: 2024-12-15
+
+User secrets are a secure way to store sensitive information, such as database connection strings or API keys, in your ASP.NET Core application.
+
 To add user secrets to your ASP.NET MVC application, follow these steps:
 
 ### Step 1: Add the User Secrets Tool

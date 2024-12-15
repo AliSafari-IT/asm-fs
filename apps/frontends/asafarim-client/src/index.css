@@ -294,21 +294,21 @@
 }
 
 .warning {
-  @apply bg-warning-light text-warning-dark;
+  @apply  text-warning-dark;
 }
 
 .success {
-  @apply bg-success-light text-success-dark;
+  @apply  text-success-dark;
 }
 
 .primary {
-  @apply bg-primary text-primary;
+  @apply  text-primary;
 }
 
 .secondary {
-  @apply bg-secondary text-secondary;
+  @apply  text-secondary;
 }
 
 .danger, .error {
-  @apply bg-danger-light text-danger-dark;
+  @apply  text-danger-dark;
 }

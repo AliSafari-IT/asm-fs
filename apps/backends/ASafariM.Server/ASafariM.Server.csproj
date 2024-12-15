@@ -55,6 +55,7 @@
 		<ProjectReference Include="..\..\..\libs\Infrastructure\Infrastructure.csproj" />
 		<ProjectReference Include="..\..\..\libs\SecureCore\SecureCore.csproj" />
 		<ProjectReference Include="..\..\..\libs\Presentation\Presentation.csproj" />
+		<ProjectReference Include="..\..\..\libs\Domain\Domain.csproj" />
 	</ItemGroup>
 
 </Project>

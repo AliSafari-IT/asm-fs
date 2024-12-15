@@ -96,7 +96,7 @@ Ensure the following tools are installed:
 #### Clone the Repository
 
 ```bash
-git clone https://github.com/asm-fs/asm-fs.git
+git clone https://github.com/AliSafari-IT/asm-fs.git
 cd asm-fs
 ```
 

@@ -1,27 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import DisplayMd from '../../components/DisplayMd';
 import Wrapper from '../../layout/Wrapper/Wrapper';
-import { getChangelogFiles, getChangelogByRelPath } from '../../utils/changelogUtils';
+import { getMdFiles,  getChangelogByRelPath } from '../../utils/mdFilesUtils';
 import Header from '@/layout/Header/Header';
 import { RecentChangesSvg, RecentChangesSvgIcon } from '@/assets/SvgIcons/RecentChangesSvg';
 import SidebarNavItem from '../../layout/Navbar/SidebarNavItem';
+import SortArray, { SortOrder } from '../../components/SortArray';
+import { getFirstHeading } from '../../utils/mdUtils';
 
 const ChangelogPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const currentChangelog = getChangelogByRelPath(slug);
-
-  // Extract the first H1 heading from markdown content
-  const getFirstHeading = (content: string): string => {
-    const match = content?.match(/^#\s+(.+)$/m);
-    return match ? match[1] : '';
-  };
-
-  // Extract the date from markdown content
-  const getChangelogDate = (content: string): string => {
-    const match = content?.match(/\*\*Date:\*\* (.+)$/m);
-    return match ? match[1] : '';
-  };
 
   // Extract git hash from the file path
   const getGitHash = (path: string): string => {
@@ -29,8 +19,19 @@ const ChangelogPage: React.FC = () => {
     return match ? match[1] : '';
   };
 
-  const pageTitle = currentChangelog?.content ? getFirstHeading(currentChangelog.content) : '';
+  const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
 
+  const handleSortChange = (newOrder: SortOrder) => {
+    setSortOrder(newOrder);
+  };
+
+  const pageTitle = currentChangelog?.content ? getFirstHeading(currentChangelog.content) : '';
+  const treeviewItems = (getMdFiles().changelogs.subMenu ?? []).map(log => ({
+    ...log,
+    title: log.content ? getFirstHeading(log.content) : 'No title',
+    icon: <RecentChangesSvg />,
+    className: slug === log.to ? 'emphasized' : ''
+  }));
   const asideBlock = (
     <div className="text-left p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
       <h2 className="text-2xl font-bold mb-6 text-info-dark flex items-center gap-2">
@@ -38,7 +39,7 @@ const ChangelogPage: React.FC = () => {
         Recent Changes
       </h2>
       <SidebarNavItem
-        sidebarNavData={getChangelogFiles().subMenu?.map(log => ({
+        sidebarNavData={(getMdFiles().changelogs.subMenu ?? []).map(log => ({
           ...log,
           title: log.content ? getFirstHeading(log.content) : 'No title',
           icon: <RecentChangesSvg />,
@@ -48,6 +49,21 @@ const ChangelogPage: React.FC = () => {
       />
     </div>
   );
+
+  function getLastChangedAt(createdAt: Date | undefined, updatedAt: Date | undefined): React.ReactNode {
+    if (createdAt && updatedAt && createdAt.getTime() === updatedAt.getTime()) {
+      return createdAt.toLocaleString();
+    }
+    return (
+      <>
+        <span className="font-semibold">Created:</span>{' '}
+        <span>{createdAt?.toLocaleString()}</span>
+        <br />
+        <span className="font-semibold">Last Changed:</span>{' '}
+        <span>{updatedAt?.toLocaleString()}</span>
+      </>
+    );
+  }
 
   return (
     <Wrapper
@@ -89,25 +105,38 @@ const ChangelogPage: React.FC = () => {
               A chronological list of updates and changes to the application.
             </p>
             <div className="mt-8">
+              <div className="flex justify-end mb-4">
+              </div>
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                   <thead className="bg-gray-50 dark:bg-gray-800">
                     <tr>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">#</th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Title</th>
-                      <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                      <th scope="col" className="text-center px-6 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">#</th>
+                      <th scope="col" className="text-center px-6 py-3  text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Title</th>
+                      <th scope="col" className="text-center px-6 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider align-middle">
+                      Created/Changed At <SortArray sortOrder={sortOrder} onSortChange={handleSortChange} className="scale-x-150 ml-0 border-0 bg-transparent info " label="" />
+                      </th>
                       <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Git Hash</th>
                     </tr>
                   </thead>
                   <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
-                    {getChangelogFiles().subMenu
-                      ?.map(log => ({
-                        ...log,
-                        title: log.content ? getFirstHeading(log.content) : 'No title',
-                        date: log.content ? getChangelogDate(log.content) : '',
-                        hash: getGitHash(log.to || '')
-                      }))
-                      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                    {treeviewItems?.length > 0
+                      && treeviewItems
+                      .map(log => {
+                        // Get the most recent date (either updated or created)
+                        const mostRecentDate = log.updatedAt ?? log.createdAt;
+                        return {
+                          ...log,
+                          title: log.content ? getFirstHeading(log.content) : 'No title',
+                          hash: getGitHash(log.to || ''),
+                          mostRecentDate
+                        };
+                      })
+                      .sort((a, b) => {
+                        const aTime = a.mostRecentDate?.getTime() || 0;
+                        const bTime = b.mostRecentDate?.getTime() || 0;
+                        return sortOrder === 'desc' ? bTime - aTime : aTime - bTime;
+                      })
                       .map((log, index) => (
                         <tr key={log.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{index + 1}</td>
@@ -119,7 +148,7 @@ const ChangelogPage: React.FC = () => {
                               {log.title}
                             </Link>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{log.date}</td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{getLastChangedAt(log.createdAt, log.updatedAt)}</td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-500 dark:text-gray-400">{log.hash}</td>
                         </tr>
                       ))}

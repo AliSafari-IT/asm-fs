@@ -1,5 +1,4 @@
 import React, { forwardRef } from "react";
-import { INavItem } from "../../interfaces/INavItem";
 import SidebarNavItem from "../Navbar/SidebarNavItem";
 import navItemsList from "../Navbar/navItemsList";
 
@@ -9,14 +8,6 @@ interface SidebarWrapperProps {
     className?: string;
 }
 
-const mapNavItemToINavItem = (item: any): INavItem => {
-    // implement the mapping logic here
-    // for demonstration purposes, a simple mapping is shown
-    return {
-        ...item,
-        // add any necessary transformations here
-    };
-};
 
 export const SidebarWrapper = forwardRef<HTMLDivElement, SidebarWrapperProps>(
   ({ sidebar, children, className = '' }, ref) => {
@@ -45,7 +36,7 @@ export const SidebarWrapper = forwardRef<HTMLDivElement, SidebarWrapperProps>(
                     {navItemsList.map((item, index) => (
                         <SidebarNavItem
                             key={index}
-                            sidebarNavData={item.subMenu?.map(mapNavItemToINavItem)}
+                            sidebarNavData={[item]} // Wrap each item in an array to make it a root-level item
                             className="sidebar-tree-container"
                         />
                     ))}

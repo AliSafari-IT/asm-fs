@@ -5,13 +5,14 @@
   "type": "module",
   "packageManager": "yarn@4.5.1",
   "scripts": {
-    "dev": "vite",
-    "start": "vite",
-    "build": "tsc -b && vite build",
+    "dev": "yarn copy-changelogs && vite",
+    "start": "yarn copy-changelogs && vite",
+    "build": "yarn copy-changelogs && tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "stop": "npx kill-port 5173",
-    "rs": "yarn stop && yarn dev"
+    "rs": "yarn stop && yarn dev",
+    "copy-changelogs": "xcopy /Y /I \"E:\\asm-fs\\docs\\ChangeLogs\\*.md\" \"src\\pages\\Changelog\\changelogMds\""
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
@@ -30,6 +31,7 @@
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@headlessui/react": "^2.2.0",
     "@material-tailwind/react": "^2.1.10",
+    "@types/react-syntax-highlighter": "^15.5.13",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.7",
     "docx": "^9.0.2",
@@ -44,6 +46,7 @@
     "react-dom": "^18.3.1",
     "react-markdown": "^9.0.1",
     "react-router-dom": "^7.0.1",
+    "react-syntax-highlighter": "^15.6.1",
     "react-tsparticles": "^2.12.2",
     "rehype-raw": "^7.0.0",
     "rehype-sanitize": "^6.0.0",

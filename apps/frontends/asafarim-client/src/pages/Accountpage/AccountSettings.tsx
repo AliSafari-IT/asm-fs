@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { FaUndo } from 'react-icons/fa';  // Import the reset icon from react-icons
-import AlertContainer from '../../components/AlertContainer';
+import { FaUndo, FaEnvelope, FaUser, FaLock, FaKey } from 'react-icons/fa';
 import authService from '../../api/authService';
+import Layout from '@/layout/Layout';
 
 const AccountSettings: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -9,27 +9,25 @@ const AccountSettings: React.FC = () => {
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
-    const [successMessage, setSuccessMessage] = useState<string | null>(null); // New state for success message
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [activeTab, setActiveTab] = useState('email');
 
-    // Fetch user data from localStorage
     useEffect(() => {
         const userData = localStorage.getItem('user');
         if (userData) {
             const user = JSON.parse(userData).user;
-            setEmail(user.email);  // Assuming user object contains 'email'
-            setUsername(user.userName);  // Assuming user object contains 'username'
+            setEmail(user.email);
+            setUsername(user.userName);
         }
-    }, []); // Empty dependency array ensures it only runs once when the component is mounted.
+    }, []);
 
-    // Reset email and username to original values from localStorage
     const handleResetEmailUsername = () => {
         const userData = localStorage.getItem('user');
         if (userData) {
             const user = JSON.parse(userData).user;
-            setEmail(user.email);  // Reset email to original value
-            setUsername(user.userName);  // Reset username to original value
+            setEmail(user.email);
+            setUsername(user.userName);
         }
     };
 
@@ -37,7 +35,7 @@ const AccountSettings: React.FC = () => {
         e.preventDefault();
         setLoading(true);
         setError(null);
-        setSuccessMessage(null);  // Reset success message
+        setSuccessMessage(null);
 
         try {
             const userData = localStorage.getItem('user');
@@ -55,7 +53,7 @@ const AccountSettings: React.FC = () => {
         e.preventDefault();
         setLoading(true);
         setError(null);
-        setSuccessMessage(null);  // Reset success message
+        setSuccessMessage(null);
 
         try {
             const userData = localStorage.getItem('user');
@@ -73,13 +71,15 @@ const AccountSettings: React.FC = () => {
         e.preventDefault();
         setLoading(true);
         setError(null);
-        setSuccessMessage(null);  // Reset success message
+        setSuccessMessage(null);
 
         try {
             const userData = localStorage.getItem('user');
             const userId = userData ? JSON.parse(userData).user.id : null;
             const result = await authService.updatePassword({ userId, currentPassword, newPassword });
             setSuccessMessage(result.message);
+            setCurrentPassword('');
+            setNewPassword('');
         } catch (error) {
             setError(error as string || 'Failed to update password');
         } finally {
@@ -87,100 +87,198 @@ const AccountSettings: React.FC = () => {
         }
     };
 
+    const tabButtonClass = (isActive: boolean) => `
+        flex items-center gap-3 px-6 py-3 rounded-lg transition-all duration-300 w-full sm:w-auto
+        ${isActive
+            ? 'bg-info/10 text-info dark:bg-info-dark/20 dark:text-info-light border-l-4 border-info dark:border-info-light'
+            : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300'}
+    `;
+
+    const inputClass = `
+        w-full p-3 rounded-lg
+        bg-white dark:bg-gray-800
+        border border-gray-200 dark:border-gray-700
+        focus:ring-2 focus:ring-info/20 dark:focus:ring-info-light/20
+        focus:border-info dark:focus:border-info-light
+        text-gray-900 dark:text-gray-100
+        placeholder-gray-500 dark:placeholder-gray-400
+        transition-all duration-300
+        pl-12
+    `;
+
+    const buttonClass = `
+        w-full sm:w-auto px-8 py-3 rounded-lg
+        bg-gradient-to-r from-info to-info-dark
+        dark:from-info-dark dark:to-info
+        text-white font-medium
+        transition-all duration-300
+        hover:shadow-lg hover:scale-[1.02]
+        disabled:opacity-50 disabled:cursor-not-allowed
+        disabled:hover:scale-100 disabled:hover:shadow-none
+    `;
+
     return (
-        <AlertContainer theme="info" className="w-1/2 mx-auto my-10 px-4 py-3 rounded relative">
-            <div className="flex justify-center space-x-4 mb-4">
-                <button onClick={() => setActiveTab('email')} className={`p-2 ${activeTab === 'email' ? 'bg-blue-700' : 'bg-blue-500'} hover:bg-blue-700 text-white rounded-md`}>Update Email</button>
-                <button onClick={() => setActiveTab('username')} className={`p-2 ${activeTab === 'username' ? 'bg-blue-700' : 'bg-blue-500'} hover:bg-blue-700 text-white rounded-md`}>Update Username</button>
-                <button onClick={() => setActiveTab('password')} className={`p-2 ${activeTab === 'password' ? 'bg-blue-700' : 'bg-blue-500'} hover:bg-blue-700 text-white rounded-md`}>Update Password</button>
+        <Layout header={
+            <div className="bg-gradient-to-r from-info/5 to-info-dark/5 dark:from-info-dark/5 dark:to-info/5 p-6">
+                <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Account Settings</h1>
+                <p className="text-gray-600 dark:text-gray-400 mt-2">Manage your account preferences and security settings</p>
             </div>
+        }>
+            <div className="max-w-6xl mx-auto px-4 py-8">
+                <div className="grid grid-cols-1 md:grid-cols-[240px,1fr] gap-8">
+                    {/* Sidebar Navigation */}
+                    <nav className="space-y-2">
+                        <button 
+                            onClick={() => setActiveTab('email')} 
+                            className={tabButtonClass(activeTab === 'email')}
+                        >
+                            <FaEnvelope className="text-xl" />
+                            <span>Email Settings</span>
+                        </button>
+                        <button 
+                            onClick={() => setActiveTab('username')} 
+                            className={tabButtonClass(activeTab === 'username')}
+                        >
+                            <FaUser className="text-xl" />
+                            <span>Username</span>
+                        </button>
+                        <button 
+                            onClick={() => setActiveTab('password')} 
+                            className={tabButtonClass(activeTab === 'password')}
+                        >
+                            <FaKey className="text-xl" />
+                            <span>Password</span>
+                        </button>
+                    </nav>
 
-            {activeTab === 'email' && (
-                <form onSubmit={handleUpdateEmail} className="flex flex-col items-center justify-center space-y-4">
-                    <div className="w-full max-w-xs relative">
-                        <label htmlFor="email" className="block mb-2 font-bold text-indigo-400">Current Email:
-                            <FaUndo onClick={handleResetEmailUsername} className="absolute left-3 top-10 transform -translate-y-1/2 cursor-pointer" />
-                            <input
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                placeholder="Enter new email"
-                                className="p-2 border rounded-md w-full max-w-xs ml-8"
-                                required
-                            />
-                        </label>
-                    </div>
-                    <button type="submit" disabled={loading} className="p-2 bg-blue-500 hover:bg-blue-700 text-white rounded-md">
-                        {loading ? 'Updating...' : 'Update Email'}
-                    </button>
-                </form>
-            )}
+                    {/* Main Content */}
+                    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+                        {activeTab === 'email' && (
+                            <form onSubmit={handleUpdateEmail} className="space-y-6">
+                                <div className="space-y-1">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        Email Address
+                                    </label>
+                                    <div className="relative">
+                                        <FaEnvelope className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                                        <FaUndo
+                                            onClick={handleResetEmailUsername}
+                                            className="absolute right-4 top-1/2 -translate-y-1/2 text-info dark:text-info-light cursor-pointer hover:scale-110 transition-transform"
+                                            title="Reset to original"
+                                        />
+                                        <input
+                                            type="email"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            placeholder="Enter your email"
+                                            className={inputClass}
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                                <button type="submit" disabled={loading} className={buttonClass}>
+                                    {loading ? 'Updating...' : 'Update Email'}
+                                </button>
+                            </form>
+                        )}
 
-            {activeTab === 'username' && (
-                <form onSubmit={handleUpdateUsername} className="flex flex-col items-center justify-center space-y-4">
-                    <div className="w-full max-w-xs relative">
-                        <label htmlFor="username" className="block mb-2 font-bold text-indigo-400">Current Username:
-                            <FaUndo onClick={handleResetEmailUsername} className="absolute left-3 top-10 transform -translate-y-1/2 cursor-pointer" />
-                            <input
-                                type="text"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
-                                placeholder="Enter new username"
-                                className="p-2 border rounded-md w-full max-w-xs ml-8"
-                                required
-                            />
-                        </label>
-                    </div>
-                    <button type="submit" disabled={loading} className="p-2 bg-blue-500 hover:bg-blue-700 text-white rounded-md">
-                        {loading ? 'Updating...' : 'Update Username'}
-                    </button>
-                </form>
-            )}
+                        {activeTab === 'username' && (
+                            <form onSubmit={handleUpdateUsername} className="space-y-6">
+                                <div className="space-y-1">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        Username
+                                    </label>
+                                    <div className="relative">
+                                        <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                                        <FaUndo
+                                            onClick={handleResetEmailUsername}
+                                            className="absolute right-4 top-1/2 -translate-y-1/2 text-info dark:text-info-light cursor-pointer hover:scale-110 transition-transform"
+                                            title="Reset to original"
+                                        />
+                                        <input
+                                            type="text"
+                                            value={username}
+                                            onChange={(e) => setUsername(e.target.value)}
+                                            placeholder="Enter your username"
+                                            className={inputClass}
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                                <button type="submit" disabled={loading} className={buttonClass}>
+                                    {loading ? 'Updating...' : 'Update Username'}
+                                </button>
+                            </form>
+                        )}
 
-            {activeTab === 'password' && (
-                <form onSubmit={handleUpdatePassword} className="flex flex-col items-center justify-center space-y-4">
-                    <div className="w-full max-w-xs">
-                        <label htmlFor="currentPassword" className="block mb-2 font-bold">Current Password:</label>
-                        <input
-                            type="password"
-                            value={currentPassword}
-                            onChange={(e) => setCurrentPassword(e.target.value)}
-                            placeholder="Enter current password"
-                            className="p-2 border rounded-md w-full max-w-xs"
-                            required
-                        />
-                    </div>
-                    <div className="w-full max-w-xs">
-                        <label htmlFor="newPassword" className="block mb-2 font-bold">New Password:</label>
-                        <input
-                            type="password"
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
-                            placeholder="Enter new password"
-                            className="p-2 border rounded-md w-full max-w-xs"
-                            required
-                        />
-                    </div>
-                    <button type="submit" disabled={loading} className="p-2 bg-blue-500 hover:bg-blue-700 text-white rounded-md">
-                        {loading ? 'Updating...' : 'Update Password'}
-                    </button>
-                </form>
-            )}
+                        {activeTab === 'password' && (
+                            <form onSubmit={handleUpdatePassword} className="space-y-6">
+                                <div className="space-y-1">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        Current Password
+                                    </label>
+                                    <div className="relative">
+                                        <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                                        <input
+                                            type="password"
+                                            value={currentPassword}
+                                            onChange={(e) => setCurrentPassword(e.target.value)}
+                                            placeholder="Enter current password"
+                                            className={inputClass}
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        New Password
+                                    </label>
+                                    <div className="relative">
+                                        <FaKey className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                                        <input
+                                            type="password"
+                                            value={newPassword}
+                                            onChange={(e) => setNewPassword(e.target.value)}
+                                            placeholder="Enter new password"
+                                            className={inputClass}
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                                <button type="submit" disabled={loading} className={buttonClass}>
+                                    {loading ? 'Updating...' : 'Update Password'}
+                                </button>
+                            </form>
+                        )}
 
-            {/* Success Message */}
-            {successMessage && (
-                <div className=" w-full p-2 m-4 text-green-800 border border-green-200 rounded-lg shadow text-center bg-green-50">
-                    <p className="text-sm font-medium">{successMessage}</p>
+                        {/* Messages */}
+                        <div className="mt-6 space-y-4">
+                            {successMessage && (
+                                <div className="p-4 rounded-lg bg-success/10 dark:bg-success-dark/10 border border-success/20 dark:border-success-dark/20">
+                                    <p className="text-sm font-medium text-success-dark dark:text-success-light flex items-center gap-2">
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        {successMessage}
+                                    </p>
+                                </div>
+                            )}
+
+                            {error && (
+                                <div className="p-4 rounded-lg bg-danger/10 dark:bg-danger-dark/10 border border-danger/20 dark:border-danger-dark/20">
+                                    <p className="text-sm font-medium text-danger-dark dark:text-danger-light flex items-center gap-2">
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                        {error}
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
-            )}
-
-            {/* Error Message */}
-            {error && (
-                <div className="max-w-xs w-full p-4 mb-2 danger border border-red-200 rounded-lg shadow text-center">
-                    <p className="text-sm font-medium">{error}</p>
-                </div>
-            )}
-        </AlertContainer>
+            </div>
+        </Layout>
     );
 };
 
