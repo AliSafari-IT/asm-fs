@@ -17,6 +17,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
+      '@assets': path.resolve(__dirname, 'src/assets'),
+      '@mdfiles': path.resolve(__dirname, '../../../docs'),
     },
   },
   server: {

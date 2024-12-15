@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Domain.Entities;
+using Domain.Exceptions;
 using Infrastructure.Mapping;
 using Microsoft.EntityFrameworkCore;
 using SecureCore.Data;
@@ -31,9 +32,7 @@ namespace Infrastructure.Repositories
 
         public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
-            var users = await _context.Users
-                .Where(u => !u.IsDeleted)
-                .ToListAsync();
+            var users = await _context.Users.Where(u => !u.IsDeleted).ToListAsync();
             return users.Select(u => u.ToDomainUser());
         }
 
@@ -71,10 +70,12 @@ namespace Infrastructure.Repositories
             return true;
         }
 
-        Task<User> IUserRepository.GetUserByEmailAsync(string email)
+        async Task<User> IUserRepository.GetUserByEmailAsync(string email)
         {
-            var appUser = _context.Users.FirstOrDefault(u => u.Email == email);
-            return Task.FromResult(appUser?.ToDomainUser());
+            var appUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (appUser == null)
+                throw new NotFoundException($"User with email {email} not found");
+            return appUser.ToDomainUser();
         }
     }
 }

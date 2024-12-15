@@ -1,4 +1,6 @@
-# Changelog 21 Nov 2024
+# Use theme support from the `useTheme` hook
+
+Date: 21 Nov 2024
 
 ### [Unreleased]
 

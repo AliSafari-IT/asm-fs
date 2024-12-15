@@ -1,4 +1,6 @@
-# Changelog 21 Nov 2024
+# Implemented user authentication with JWT
+
+Date: 21 Nov 2024
 
 All notable changes to this project will be documented in this file.
 

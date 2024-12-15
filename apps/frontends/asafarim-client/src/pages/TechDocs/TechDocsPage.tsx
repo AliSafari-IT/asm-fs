@@ -12,6 +12,7 @@ import Header from '@/layout/Header/Header';
 const TechDocsPage: React.FC = () => {
     const { slug } = useParams<{ slug: string }>();
     const currentTechDoc = getMdDocByRelPath(slug);
+    const mdFiles = getMdFileTree();
   
     // Extract git hash from the file path
     const getGitHash = (path: string): string => {
@@ -26,7 +27,7 @@ const TechDocsPage: React.FC = () => {
     };
   
     const pageTitle = currentTechDoc?.content ? getFirstHeading(currentTechDoc.content) : '';
-    const treeviewItems = (getMdFileTree().subMenu ?? []).map(log => ({
+    const treeviewItems = (mdFiles.subMenu ?? []).map(log => ({
       ...log,
       title: log.content ? getFirstHeading(log.content) : 'No title',
       icon: <RecentChangesSvg />,

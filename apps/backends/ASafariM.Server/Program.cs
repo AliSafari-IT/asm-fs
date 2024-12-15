@@ -1,6 +1,8 @@
 using System.Text;
 using Application.Interfaces;
 using ASafariM.Server.ConfServices;
+using Domain.Repositories;
+using Infrastructure.Data;
 using Infrastructure.Repositories;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -18,7 +20,12 @@ builder.Logging.AddConsole();
 // Add services to the container.
 var conn = builder.Configuration.GetConnectionString("DefaultConnection");
 var sv = ServerVersion.AutoDetect(conn);
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(conn, sv));
+builder.Services.AddDbContext<Infrastructure.Data.ApplicationDbContext>(options =>
+    options.UseMySql(conn, sv)
+);
+builder.Services.AddDbContext<SecureCore.Data.ApplicationDbContext>(options =>
+    options.UseMySql(conn, sv)
+);
 
 // Configure Identity with secure settings
 ConfServices.ConfigureServices(builder.Services);
@@ -29,6 +36,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 
 // Register the UserRepository with the DI container
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserDataChangeLogRepository, UserDataChangeLogRepository>();
+
 builder.Services.AddHttpContextAccessor();
 builder
     .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -39,10 +48,17 @@ builder
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
+            ValidIssuer =
+                builder.Configuration["Jwt:Issuer"]
+                ?? throw new InvalidOperationException("JWT Issuer is not configured"),
+            ValidAudience =
+                builder.Configuration["Jwt:Audience"]
+                ?? throw new InvalidOperationException("JWT Audience is not configured"),
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])
+                Encoding.UTF8.GetBytes(
+                    builder.Configuration["Jwt:Key"]
+                        ?? throw new InvalidOperationException("JWT Key is not configured")
+                )
             ),
         };
     });

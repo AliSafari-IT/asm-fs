@@ -1,11 +1,13 @@
-# **Analysis of our Workspace**
+# Asafarim Workspace
+Date: 2024-12-14
+
 
 ## **General Information**
 
 - **Workspace Name**: `asm-fs`
 - **Package Manager**: Yarn 4.5.1
 - **NX Version**: 18.3.5
-- **Repository**: [GitHub Repo](https://github.com/asm-fs/asm-fs)
+- **Repository**: [GitHub Repo](https://github.com/AliSafari-IT/asm-fs)
 - **Description**: Fullstack project/task manager application.
 
 ## **Workspace Structure**
@@ -66,18 +68,55 @@
 ## **Workspace Scripts**
 
 ```json
-"scripts": {
-    "dev:backend": "yarn nx serve ASafariM.Server",
-    "dev:frontend": "yarn nx serve asafarim-client",
-    "build:backend": "yarn nx build ASafariM.Server",
-    "build:frontend": "yarn nx build asafarim-client",
-    "test:unit": "yarn nx run-many --target=test --projects=UnitTests",
-    "test:integration": "yarn nx run-many --target=test --projects=IntegrationTests",
-    "lint": "yarn nx lint",
-    "format": "yarn nx format:write",
-    "migrate:db": "dotnet ef database update --project=apps/backends/ASafariM.Server",
-    "generate:crud": "yarn nx g @nx-dotnet/core:app <name>"
+{
+  "name": "@asm-fs/asafarim",
+  "packageManager": "yarn@4.5.1",
+  "version": "0.0.1",
+  "description": "Fullstack ASM-Project/Task Manager Application using NX Workspace",
+  "repository": "https://github.com/AliSafari-IT/asm-fs",
+  "author": "Ali Safari",
+  "nxVersion": "18.3.5",
+  "devDependencies": {
+    "@fluentui/react": "^8.121.11",
+    "@fluentui/react-components": "^9.56.2",
+    "@vitest/ui": "^1.3.1",
+    "vite": "~5.0.0",
+    "vitest": "^1.3.1"
+  },
+  "scripts": {
+    "clean": "rm -rf node_modules && rm -rf .yarn/cache",
+    "reset:yarn": "rm -rf .yarn && rm -rf node_modules && rm -rf yarn.lock && yarn install",
+    "dev:backend": "yarn workspace @asm-fs/asafarim-server start",
+    "dev:frontend": "yarn copy-changelogs && yarn workspace @asm-fs/asafarim-client dev",
+    "build:backend": "yarn workspace @asm-fs/asafarim-server build",
+    "build:frontend": "yarn copy-changelogs && yarn workspace @asm-fs/asafarim-client build",
+    "test:backend": "yarn workspace @asm-fs/asafarim-server test",
+    "test:frontend": "yarn workspace @asm-fs/asafarim-client test",
+    "test": "yarn test:backend && yarn test:frontend",
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
+    "copy-changelogs": "xcopy /Y /I \"E:\\asm-fs\\docs\\ChangeLogs\\*.md\" \"E:\\asm-fs\\apps\\frontends\\asafarim-client\\src\\pages\\Changelog\\changelogMds\""
+  },
+  "dependencies": {
+    "@heroicons/react": "^2.2.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "axios": "^1.7.7",
+    "jest": "^29.7.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "node": ">=16.14.0"
+  },
+  "workspaces": [
+    "apps/backends/ASafariM.Server",
+    "apps/frontends/asafarim-client"
+  ]
 }
+
 ```
 
 ---

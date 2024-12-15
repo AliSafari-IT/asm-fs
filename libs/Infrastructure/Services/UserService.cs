@@ -1,9 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Application.Interfaces;
 using Domain.Entities;
+using Domain.Exceptions;
+using Domain.Repositories;
 using Infrastructure.Mapping;
+using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using SecureCore.Data;
 
@@ -11,10 +15,18 @@ namespace Infrastructure.Services
 {
     public class UserService : IUserService
     {
+        private readonly IUserRepository _userRepository;
+        private readonly IUserDataChangeLogRepository _userDataChangeLogRepository;
         private readonly ApplicationDbContext _context;
 
-        public UserService(ApplicationDbContext context)
+        public UserService(
+            IUserRepository userRepository,
+            IUserDataChangeLogRepository userDataChangeLogRepository,
+            ApplicationDbContext context
+        )
         {
+            _userRepository = userRepository;
+            _userDataChangeLogRepository = userDataChangeLogRepository;
             _context = context;
         }
 
@@ -50,26 +62,63 @@ namespace Infrastructure.Services
             return applicationUser.ToDomainUser();
         }
 
-        // Update an existing user
+        // Update an existing user with GDPR compliance
         public async Task<User> UpdateUserAsync(User user)
         {
-            var existingUser = await _context.Users.FirstOrDefaultAsync(u =>
-                u.Id.Equals(user.Id) && !u.IsDeleted
-            ); // Only update non-deleted users
-
+            var existingUser = await _userRepository.GetUserByIdAsync(user.Id);
             if (existingUser == null)
             {
-                return null; // Return null if user is not found or is deleted
+                throw new NotFoundException("User not found");
             }
 
-            existingUser.UserName = user.FullName; // Map FullName to UserName
-            existingUser.Email = user.Email;
-            existingUser.IsAdmin = user.IsAdmin;
-            existingUser.UpdatedAt = DateTime.UtcNow;
-            _context.Users.Update(existingUser);
-            await _context.SaveChangesAsync();
+            // Log the changes
+            var changes = new Dictionary<string, object>();
+            if (existingUser.Email != user.Email)
+            {
+                if (!IsValidEmail(user.Email))
+                {
+                    throw new ValidationException("Invalid email format");
+                }
+                changes.Add("Email", new { Old = existingUser.Email, New = user.Email });
+            }
+            if (existingUser.UserName != user.FullName)
+            {
+                changes.Add(
+                    "DisplayName",
+                    new { Old = existingUser.UserName, New = user.FullName }
+                );
+            }
 
-            return existingUser.ToDomainUser();
+            var updatedUser = await _userRepository.UpdateUserAsync(user);
+
+            // Create change log entry
+            if (changes.Count != 0)
+            {
+                var changeLog = new Domain.Entities.UserDataChangeLog
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = user.Id.ToString(),
+                    Action = "UpdateUserData",
+                    Changes = System.Text.Json.JsonSerializer.Serialize(changes),
+                    Timestamp = DateTime.UtcNow,
+                };
+                await _userDataChangeLogRepository.AddAsync(changeLog);
+            }
+
+            return updatedUser;
+        }
+
+        private bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         // Mark a user as deleted
