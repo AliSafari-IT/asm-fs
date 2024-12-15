@@ -1,4 +1,8 @@
 # Resolving Migrations Assembly Mismatch in .NET Core with EF
+Date: 2023-08-31
+
+
+Documentation for resolving migrations assembly mismatch in .NET Core with Entity Framework Core (EF).
 
 ## Problem
 
@@ -86,9 +90,7 @@ This ensures the migration is correctly applied to the database.
 
 By following these steps, you should be able to resolve the migrations assembly mismatch error and successfully apply migrations to your database in .NET Core. Make sure to double-check the project paths and configurations to ensure everything aligns correctly across different projects in your solution.
 
-```
-
 ### How to Use This Article:
 - **Save it as a markdown file** (e.g., `Resolving_Migrations_Assembly_Mismatch.md`) for future reference.
 - **Customize** any specific paths or details related to your project structure if needed.
-```
+

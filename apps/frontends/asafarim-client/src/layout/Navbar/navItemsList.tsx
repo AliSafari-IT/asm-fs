@@ -15,7 +15,7 @@ import {
 import { IChapter } from '../../interfaces/IChapter';
 import { IMenuItem } from '../../interfaces/IMenuItem';
 import { INavItem } from '../../interfaces/INavItem';
-import {  getChangelogFiles } from '@/utils/mdFilesUtils';
+import {  getMdFiles } from '@/utils/mdFilesUtils';
 
 // Home Dropdown
 const homeDD: IMenuItem = {
@@ -495,7 +495,7 @@ export const legalDocs: INavItem = {
   ],
 };
 
-const changelogDocs: INavItem = getChangelogFiles();
+const mdFiles = getMdFiles();
 
 const navItems: INavItem[] = [
   homeDD,
@@ -505,7 +505,8 @@ const navItems: INavItem[] = [
   dashboardDD,
   learn,
   legalDocs,
-  changelogDocs,
+  mdFiles.changelogs,
+  mdFiles.techDocs
 ];
 
 export default navItems;

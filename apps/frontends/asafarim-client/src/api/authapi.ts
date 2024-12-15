@@ -48,6 +48,11 @@ export const login = async (model: ILoginModel) => {
     // First, authenticate the user
     const response = await axios.post(`${API_Auth_URL}/login`, model);
     const userData = response.data;
+    console.debug("authapi.login - userData is:", userData);
+    // Check if the authentication was successful
+    if (!userData.token) {
+      throw new Error('Login failed! Please check your credentials.');
+    }
 
     try {
       // Try to get additional user info, but don't fail if it's not available

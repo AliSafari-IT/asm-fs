@@ -1,6 +1,7 @@
 # Features List of ASafariM.Project/Task Manager App
 
-Here's an **extended list of features** for our fullstack web application.
+Date: 22 Nov 2024
+Updated: 22 Nov 2024
 
 ## **1. General Features**
 

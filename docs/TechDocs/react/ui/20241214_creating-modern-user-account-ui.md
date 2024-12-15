@@ -1,5 +1,8 @@
 # Creating a Modern User Account UI in React TypeScript
 
+Date: 2024-11-10 
+Updated: 2024-12-15
+
 A step-by-step guide to building a responsive and theme-aware user account settings interface.
 
 ## Table of Contents

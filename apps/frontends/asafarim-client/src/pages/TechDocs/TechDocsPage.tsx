@@ -5,14 +5,14 @@ import { getFirstHeading } from '@/utils/mdUtils';
 import { Link, useParams } from 'react-router-dom';
 import DisplayMd from '@/components/DisplayMd';
 import Wrapper from '@/layout/Wrapper/Wrapper';
-import { getMdDocByRelPath, getMdFileTree } from '@/utils/mdFilesUtils';
+import { getMdDocByRelPath, getMdFiles } from '@/utils/mdFilesUtils';
 import { RecentChangesSvg, RecentChangesSvgIcon } from '@/assets/SvgIcons/RecentChangesSvg';
 import Header from '@/layout/Header/Header';
 
 const TechDocsPage: React.FC = () => {
     const { slug } = useParams<{ slug: string }>();
     const currentTechDoc = getMdDocByRelPath(slug);
-    const mdFiles = getMdFileTree();
+    const mdFiles = getMdFiles();
   
     // Extract git hash from the file path
     const getGitHash = (path: string): string => {
@@ -27,7 +27,7 @@ const TechDocsPage: React.FC = () => {
     };
   
     const pageTitle = currentTechDoc?.content ? getFirstHeading(currentTechDoc.content) : '';
-    const treeviewItems = (mdFiles.subMenu ?? []).map(log => ({
+    const treeviewItems = (mdFiles.techDocs.subMenu ?? []).map(log => ({
       ...log,
       title: log.content ? getFirstHeading(log.content) : 'No title',
       icon: <RecentChangesSvg />,
@@ -40,7 +40,20 @@ const TechDocsPage: React.FC = () => {
           Recent TechDocs
         </h2>
         <SidebarNavItem
-          sidebarNavData={(getMdFileTree().subMenu ?? []).map(log => ({
+          sidebarNavData={(mdFiles.techDocs.subMenu ?? [])
+            .map(item => {
+              const mostRecentDate = item.updatedAt ?? item.createdAt;
+              return {
+                ...item,
+                mostRecentDate
+              };
+            })
+            .sort((a, b) => {
+              const dateA = a.mostRecentDate?.getTime() || 0;
+              const dateB = b.mostRecentDate?.getTime() || 0;
+              return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+            })
+            .map(log => ({
             ...log,
             title: log.content ? getFirstHeading(log.content) : 'No title',
             icon: <RecentChangesSvg />,
@@ -134,9 +147,9 @@ const TechDocsPage: React.FC = () => {
                           };
                         })
                         .sort((a, b) => {
-                          const aTime = a.mostRecentDate?.getTime() || 0;
-                          const bTime = b.mostRecentDate?.getTime() || 0;
-                          return sortOrder === 'desc' ? bTime - aTime : aTime - bTime;
+                          const dateA = a.mostRecentDate?.getTime() || 0;
+                          const dateB = b.mostRecentDate?.getTime() || 0;
+                          return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
                         })
                         .map((log, index) => (
                           <tr key={log.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200">

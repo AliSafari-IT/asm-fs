@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import DisplayMd from '../../components/DisplayMd';
 import Wrapper from '../../layout/Wrapper/Wrapper';
-import { getChangelogFiles, getChangelogByRelPath } from '../../utils/mdFilesUtils';
+import { getMdFiles,  getChangelogByRelPath } from '../../utils/mdFilesUtils';
 import Header from '@/layout/Header/Header';
 import { RecentChangesSvg, RecentChangesSvgIcon } from '@/assets/SvgIcons/RecentChangesSvg';
 import SidebarNavItem from '../../layout/Navbar/SidebarNavItem';
@@ -26,7 +26,7 @@ const ChangelogPage: React.FC = () => {
   };
 
   const pageTitle = currentChangelog?.content ? getFirstHeading(currentChangelog.content) : '';
-  const treeviewItems = (getChangelogFiles().subMenu ?? []).map(log => ({
+  const treeviewItems = (getMdFiles().changelogs.subMenu ?? []).map(log => ({
     ...log,
     title: log.content ? getFirstHeading(log.content) : 'No title',
     icon: <RecentChangesSvg />,
@@ -39,7 +39,7 @@ const ChangelogPage: React.FC = () => {
         Recent Changes
       </h2>
       <SidebarNavItem
-        sidebarNavData={(getChangelogFiles().subMenu ?? []).map(log => ({
+        sidebarNavData={(getMdFiles().changelogs.subMenu ?? []).map(log => ({
           ...log,
           title: log.content ? getFirstHeading(log.content) : 'No title',
           icon: <RecentChangesSvg />,

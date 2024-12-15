@@ -11,7 +11,7 @@ const changelogFiles = {
 
 // import technical documentations using Vite's glob import syntax and return them as an object
 const techDocs = {
-  ...import.meta.glob('@mdfiles/TechDocs/*.md', {
+  ...import.meta.glob('@mdfiles/TechDocs/**/*.md', {
     as: 'raw',
     eager: true,
   }),
@@ -21,29 +21,28 @@ const changeLogs: INavItem = getTreeViewObject(changelogFiles, 'changelogs', 'Ch
 const techdocsTree: INavItem = getTreeViewObject(techDocs, 'tech-docs', 'Tech Docs', ChangeLogSvgIcon, '/tech-docs');
 
 
-export const getChangelogFiles = (): INavItem => {
-  return changeLogs;
-};
-
-export const getMdFileTree = (): INavItem => {
-  return techdocsTree;
+export const getMdFiles = (): { changelogs: INavItem; techDocs: INavItem } => {
+  return {
+    changelogs: changeLogs,
+    techDocs: techdocsTree,
+  };
 };
 
 export const getChangelogByRelPath = (to?: string): INavItem | undefined => {
   if (!to) return undefined;
   const fullPath = `/changelogs/${to}`;
-  return getChangelogFiles().subMenu?.find(doc => doc.to === fullPath);
+  return getMdFiles().changelogs.subMenu?.find(doc => doc.to === fullPath);
 };
 
 export const getMdDocByRelPath = (to?: string): INavItem | undefined => {
   if (!to) return undefined;
   const fullPath = `/tech-docs/${to}`;
-  return getMdFileTree().subMenu?.find(doc => doc.to === fullPath);
+  return getMdFiles().techDocs.subMenu?.find(doc => doc.to === fullPath);
 };
 
 export const getMdDocByFilePath = (filePath?: string): INavItem | undefined => {
   if (!filePath) return undefined;
-  return getMdFileTree().subMenu?.find(doc => doc.filepath === filePath);
+  return getMdFiles().techDocs.subMenu?.find(doc => doc.filepath === filePath);
 };
 
 function getTreeViewObject(mdFiles: Record<string, string>, name?: string, label?: string, icon?: JSX.Element, docurl?: string): INavItem {
@@ -60,7 +59,7 @@ function getTreeViewObject(mdFiles: Record<string, string>, name?: string, label
     subMenu: Object.entries(mdFiles).map(([path, content]) => {
       const parts = path.split('/');
       const slug = parts.pop()?.replace('.md', '') || '';
-      const isDirectory = !slug;
+      const isDirectory = parts.length > 0 && !slug;
       const type = slug.split('_')[0];
       const title = slug.split('_').slice(1).join('-');
       const to = `${baseurl}/${slug}`;
@@ -72,7 +71,10 @@ function getTreeViewObject(mdFiles: Record<string, string>, name?: string, label
       const nameValue = `${name}-${slug}`;
 
       if (isDirectory) {
-        return getTreeViewObject(mdFiles, name, label, icon, docurl);
+        const subMdFiles = Object.fromEntries(
+          Object.entries(mdFiles).filter(([subPath]) => subPath.startsWith(path))
+        );
+        return getTreeViewObject(subMdFiles, name, label, icon, docurl);
       }
 
       return {
@@ -113,11 +115,10 @@ function getUpdateDate(content: string): Date | undefined {
 
 
 export default {
-  getChangelogFiles,
+  getMdFiles,
   getChangelogByRelPath,
   getCreationDate,
   getUpdateDate,
   getMdDocByRelPath,
   getMdDocByFilePath,
-  getMdFileTree,
 };
