@@ -16,6 +16,7 @@ import { IChapter } from '../../interfaces/IChapter';
 import { IMenuItem } from '../../interfaces/IMenuItem';
 import { INavItem } from '../../interfaces/INavItem';
 import {  getMdFiles } from '@/utils/mdFilesUtils';
+import LegalDocsSvgIcon from '@/assets/SvgIcons/LegalDocsSvgIcon';
 
 // Home Dropdown
 const homeDD: IMenuItem = {
@@ -454,47 +455,6 @@ const learn: INavItem = {
   subMenu: mdBooks,
 };
 
-// Legal Docs
-export const legalDocs: INavItem = {
-  id: 'legal',
-  title: 'Legal',
-  label: 'Legal',
-  name: 'asafarim-legal',
-  to: '#',
-  icon: <IconLegal />,
-  subMenu: [
-    {
-      id: 'privacy-policy',
-      title: 'Privacy Policy',
-      to: '/legal/privacy-policy',
-      filepath: '/src/pages/Privacy/privacy-policy.md',
-      icon: <IconLegal />,
-      subMenu: []
-    },
-    {
-      id: 'terms-of-service',
-      title: 'Terms of Service',
-      to: '/legal/terms-of-service',
-      icon: <IconLegal />,
-      filepath: '/src/pages/Privacy/terms-of-service.md'
-    },
-    {
-      id: 'disclaimer',
-      title: 'Disclaimer',
-      to: '/legal/legal-disclaimer',
-      icon: <IconLegal />,
-      filepath: '/src/pages/Privacy/legal-disclaimer.md'
-    },
-    {
-      id: 'cookie-policy',
-      title: 'Cookie Policy',
-      to: '/legal/cookie-policy',
-      icon: <IconLegal />,
-      filepath: '/src/pages/Privacy/cookie-policy.md'
-    },
-  ],
-};
-
 const mdFiles = getMdFiles();
 
 const navItems: INavItem[] = [
@@ -504,7 +464,7 @@ const navItems: INavItem[] = [
   books,
   dashboardDD,
   learn,
-  legalDocs,
+  mdFiles.legalDocs,
   mdFiles.changelogs,
   mdFiles.techDocs
 ];

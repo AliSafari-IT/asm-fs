@@ -17,12 +17,24 @@ const techDocs = {
   }),
 };
 
+const legalDocsFiles = {
+  ...import.meta.glob('@mdfiles/LegalDocs/**/*.md', {
+    as: 'raw',
+    eager: true,
+  }),
+};
+
+
 const changeLogs: INavItem = getTreeViewObject(changelogFiles, 'changelogs', 'Change Logs', ChangeLogSvgIcon, '/changelogs');
 const techdocsTree: INavItem = getTreeViewObject(techDocs, 'tech-docs', 'Tech Docs', ChangeLogSvgIcon, '/tech-docs');
+const legalDocs: INavItem = getTreeViewObject(legalDocsFiles, 'legal-docs', 'Legal Docs', ChangeLogSvgIcon, '/legal-docs');
 
 
-export const getMdFiles = (): { changelogs: INavItem; techDocs: INavItem } => {
+export const getMdFiles = (): {
+  legalDocs: INavItem; changelogs: INavItem; techDocs: INavItem 
+} => {
   return {
+    legalDocs: legalDocs,
     changelogs: changeLogs,
     techDocs: techdocsTree,
   };

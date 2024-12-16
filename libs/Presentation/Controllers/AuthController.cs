@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -46,6 +47,20 @@ public class AuthController : ControllerBase
 
         if (result.Succeeded)
         {
+            // Generate email confirmation token
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            // Send email confirmation link
+            var confirmationLink = Url.Action(
+                "ConfirmEmail",
+                "Auth",
+                new { userId = user.Id, token },
+                Request.Scheme
+            );
+            await _userManager.SetEmailAsync(
+                user,
+                "Confirm your email" + " <a href='" + confirmationLink + "'>here</a>"
+            );
             return Ok(new { Message = "User registered successfully" });
         }
 
@@ -148,20 +163,47 @@ public class AuthController : ControllerBase
     [HttpPost("update-username")]
     public async Task<IActionResult> UpdateUsername([FromBody] UpdateUsernameModel model)
     {
+        // Check if the new username is valid
         var user = await _userManager.FindByIdAsync(model.UserId);
         if (user == null)
         {
             return NotFound("User not found.");
         }
+        if (!Regex.IsMatch(model.NewUsername, "^[a-zA-Z0-9_]{3,20}$"))
+        {
+            return BadRequest(
+                "Username must be alphanumeric, can include underscores, and be 3-20 characters long."
+            );
+        }
+        if (
+            string.IsNullOrWhiteSpace(model.NewUsername)
+            || user.UserName == model.NewUsername
+            || user.Email == model.NewUsername
+            || model.NewUsername.Length < 3
+            || model.NewUsername.Length > 20
+        )
+        {
+            return BadRequest("Invalid username.");
+        }
 
-        user.UserName = model.NewUsername;
-        var result = await _userManager.UpdateAsync(user);
+        // Update the username
+        var result = await _userManager.SetUserNameAsync(user, model.NewUsername);
+        if (result.Errors.Any(e => e.Code == "DuplicateUserName"))
+        {
+            return BadRequest("Username already exists.");
+        }
 
         if (result.Succeeded)
         {
+            // Update the user in localstorage
+            var userData = await _userManager.FindByIdAsync(model.UserId);
+            if (userData != null)
+            {
+                userData.UserName = model.NewUsername;
+                await _userManager.UpdateAsync(userData);
+            }
             return Ok(new { Message = "Username updated successfully!" });
         }
-        // throw new Exception("Failed to update username.");
         return BadRequest(result.Errors);
     }
 
@@ -346,11 +388,18 @@ public class AuthController : ControllerBase
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key is not configured")));
+        var key = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(
+                _configuration["Jwt:Key"]
+                    ?? throw new InvalidOperationException("JWT Key is not configured")
+            )
+        );
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var token = new JwtSecurityToken(
-            _configuration["Jwt:Issuer"] ?? throw new InvalidOperationException("JWT Issuer is not configured"),
-            _configuration["Jwt:Audience"] ?? throw new InvalidOperationException("JWT Audience is not configured"),
+            _configuration["Jwt:Issuer"]
+                ?? throw new InvalidOperationException("JWT Issuer is not configured"),
+            _configuration["Jwt:Audience"]
+                ?? throw new InvalidOperationException("JWT Audience is not configured"),
             claims,
             expires: DateTime.Now.AddDays(1),
             signingCredentials: creds

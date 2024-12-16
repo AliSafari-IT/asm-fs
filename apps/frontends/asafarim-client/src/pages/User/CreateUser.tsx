@@ -41,6 +41,12 @@ const CreateUser: React.FC = () => {
     }
   };
 
+  const handleCancel = () => {
+    navigate('/users'); // Redirect to the user list
+  };
+
+  const textfieldStyle = 'px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)] ';
+
   return (
     <Wrapper
       header={<Header children={<h1 className="text-2xl font-semibold text-[var(--text-info)]">Create User</h1>} />}
@@ -60,7 +66,7 @@ const CreateUser: React.FC = () => {
                   placeholder="Full Name"
                   value={user.fullName}
                   onChange={handleInputChange}
-                  className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)]"
+                  className={textfieldStyle + ' w-full'}
                   required
                 />
               </div>
@@ -73,7 +79,7 @@ const CreateUser: React.FC = () => {
                   name="email"
                   value={user.email}
                   onChange={handleInputChange}
-                  className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)]"
+                  className={textfieldStyle + ' w-full'}
                   required
                 />
               </div>
@@ -87,37 +93,51 @@ const CreateUser: React.FC = () => {
                 value={user.remark}
                 onChange={handleInputChange}
                 rows={4}
-                className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)]"
+                className={textfieldStyle + ' w-full'}
                 required
               />
             </div>
 
             {/* Admin Status */}
-            <div>
-              <label className="block text-[var(--text-info)] text-sm sm:text-base mb-2">Is Admin</label>
-              <select
-                name="isAdmin"
-                value={user.isAdmin ? 'true' : 'false'}
-                onChange={(e) => setUser({ ...user, isAdmin: e.target.value === 'true' })}
-                className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--info)]"
-              >
-                <option value="false">No</option>
-                <option value="true">Yes</option>
-              </select>
+            <div className="flex flex-col sm:flex-row text-[var(--text-info)] gap-18 sm:gap-9 ">
+              <label className="block text-[var(--text-info)] text-sm sm:text-base mb-2">Is Admin?</label>
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="isAdminNo"
+                  name="isAdmin"
+                  value="false"
+                  checked={!user.isAdmin}
+                  onChange={() => setUser({ ...user, isAdmin: false })}
+                  className={textfieldStyle + 'w-4 h-4 mr-2'}
+                />
+                <label htmlFor="isAdminNo" className="ml-2">No</label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="isAdminYes"
+                  name="isAdmin"
+                  value="true"
+                  checked={user.isAdmin}
+                  onChange={() => setUser({ ...user, isAdmin: true })}
+                  className={textfieldStyle + 'w-4 h-4 mr-2'}
+                />
+                <label htmlFor="isAdminYes" className="ml-2">Yes</label>
+              </div>
             </div>
 
-            {/* Submit and Cancel Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6">
               <button
                 type="submit"
-                className="btn-info py-2 px-4 rounded-lg hover:bg-blue-700 w-full sm:w-auto"
+                className="btn-approve py-2 px-4 w-full sm:w-auto"
               >
                 Create User
               </button>
               <button
                 type="button"
-                onClick={() => navigate('/users')}
-                className="btn-danger py-2 px-4 rounded-lg w-full sm:w-auto"
+                onClick={handleCancel}
+                className="btn-reject py-2 px-4 w-full sm:w-auto"
               >
                 Cancel
               </button>

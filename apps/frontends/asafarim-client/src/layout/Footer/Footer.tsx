@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { legalDocs } from '../Navbar/navItemsList';
+import { getMdFiles } from '@/utils/mdFilesUtils';
 
 const Footer: React.FC = () => {
+    const { legalDocs } = getMdFiles();
     return (
         <footer className="w-full bg-[var(--bg-secondary)] text-[var(--text-secondary)] py-6">
             <div className="container mx-auto px-4">
