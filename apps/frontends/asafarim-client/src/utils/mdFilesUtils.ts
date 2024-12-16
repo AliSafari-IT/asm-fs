@@ -46,10 +46,17 @@ export const getChangelogByRelPath = (to?: string): INavItem | undefined => {
   return getMdFiles().changelogs.subMenu?.find(doc => doc.to === fullPath);
 };
 
-export const getMdDocByRelPath = (to?: string): INavItem | undefined => {
+export const getMdDocByRelPath = (to?: string, type: 'tech-docs' | 'legal-docs' | 'changelogs' = 'tech-docs'): INavItem | undefined => {
   if (!to) return undefined;
-  const fullPath = `/tech-docs/${to}`;
-  return getMdFiles().techDocs.subMenu?.find(doc => doc.to === fullPath);
+  
+  const docs = getMdFiles();
+  const docMap = {
+    'tech-docs': docs.techDocs,
+    'legal-docs': docs.legalDocs,
+    'changelogs': docs.changelogs
+  };
+
+  return docMap[type].subMenu?.find(doc => doc.to === `/${type}/${to}`);
 };
 
 export const getMdDocByFilePath = (filePath?: string): INavItem | undefined => {

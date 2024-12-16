@@ -53,10 +53,10 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route
-            path="/legal-docs/:slug"
+            path="/legal-docs/:slug?"
             element={
-              <MarkdownPage data={mds.legalDocs} title="Legal Docs" description="Privacy Policy" />
-            }
+              <MarkdownPage data={mds.legalDocs} title="Legal Docs" description="Legal Documentation" />
+            } 
           />
 
           <Route path="/posts/:slug" element={<PostDetail />} />

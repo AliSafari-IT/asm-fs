@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SidebarNavItem from '@/layout/Navbar/SidebarNavItem';
 import SortArray, { SortOrder } from '@/components/SortArray';
 import { getFirstHeading } from '@/utils/mdUtils';
@@ -12,9 +12,13 @@ import { INavItem } from '@/interfaces/INavItem';
 
 const MarkdownPage: React.FC<{ data: INavItem, title?: string, description?: string }> = ({ data, title = '', description = '' }) => {
     const { slug } = useParams<{ slug: string }>();
-    const currentTechDoc = getMdDocByRelPath(slug);
+    const [currentDoc, setCurrentDoc] = useState(getMdDocByRelPath(slug, data.name as 'tech-docs' | 'legal-docs' | 'changelogs'));
     const mdFiles = data;
   
+    useEffect(() => {
+      setCurrentDoc(getMdDocByRelPath(slug, data.name as 'tech-docs' | 'legal-docs' | 'changelogs'));
+    }, [slug, data.name]);
+
     // Extract git hash from the file path
     const getGitHash = (path: string): string => {
       const match = path?.match(/_([a-f0-9]+)$/);
@@ -27,7 +31,7 @@ const MarkdownPage: React.FC<{ data: INavItem, title?: string, description?: str
       setSortOrder(newOrder);
     };
   
-    const pageTitle = currentTechDoc?.content ? getFirstHeading(currentTechDoc.content) : '';
+    const pageTitle = currentDoc?.content ? getFirstHeading(currentDoc.content) : '';
     const treeviewItems = (mdFiles.subMenu ?? []).map(log => ({
       ...log,
       title: log.content ? getFirstHeading(log.content) : 'No title',
@@ -91,9 +95,9 @@ const MarkdownPage: React.FC<{ data: INavItem, title?: string, description?: str
                     {pageTitle || 'Tech Docs'}
                   </span>
                 </h1>
-                {currentTechDoc && (
+                {currentDoc && (
                   <Link
-                    to="/tech-docs"
+                    to={`/${data.name}`}
                     className="inline-flex items-center gap-2 text-info-dark hover:text-info transition-colors duration-200"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -108,9 +112,9 @@ const MarkdownPage: React.FC<{ data: INavItem, title?: string, description?: str
         }
         sidebar={asideBlock}
       >
-        {currentTechDoc ? (
+        {currentDoc ? (
           <div className="prose dark:prose-invert max-w-none">
-            <DisplayMd id={currentTechDoc.id} markdownContent={`${currentTechDoc?.content}`} />
+            <DisplayMd id={currentDoc.id} markdownContent={`${currentDoc?.content}`} />
           </div>
         ) : (
           <div className="text-center py-8 px-4">
@@ -157,7 +161,7 @@ const MarkdownPage: React.FC<{ data: INavItem, title?: string, description?: str
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{index + 1}</td>
                             <td className="px-6 py-4">
                               <Link
-                                to={log.to || '#'}
+                                to={log.to || ''}
                                 className="text-info-dark hover:text-info transition-colors duration-200"
                               >
                                 {log.title}
