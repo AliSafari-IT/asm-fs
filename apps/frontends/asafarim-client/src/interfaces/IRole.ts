@@ -1,8 +1,8 @@
 export enum IRoleEnum {
     Guest,
     StandardUser,
-    Admin
-  }
+    Admin,
+    SuperAdmin}
 
   export interface IRole {
     id: string;       // Guid type as a string

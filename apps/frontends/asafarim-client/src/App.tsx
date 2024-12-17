@@ -36,15 +36,14 @@ import AccountSettings from "./pages/Accountpage/AccountSettings";
 import TechDocsPage from './pages/TechDocs/TechDocsPage';
 import { getMdFiles } from "./utils/mdFilesUtils";
 
-
 function App() {
   const user = useAuth()?.user;
   const mds = getMdFiles();
- 
+
+
   useEffect(() => {
     if (!user) {
-      console.log('No user found in localStorage');
-    }
+      console.log('No user found in localStorage');    }
   }, [user]);
 
   return (
@@ -109,9 +108,7 @@ function App() {
           <Route
             path="/logout"
             element={
-              <PrivateRoute>
-                <LogoutPage />
-              </PrivateRoute>
+              <LogoutPage />
             }
           />
           <Route path="/users" element={<UsersList />} />

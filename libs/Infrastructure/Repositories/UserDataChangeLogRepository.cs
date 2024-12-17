@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Domain.Entities;
 using Domain.Repositories;
-using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using SecureCore.Data;
 
 namespace Infrastructure.Repositories
 {

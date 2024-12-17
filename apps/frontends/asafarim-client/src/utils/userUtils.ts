@@ -22,8 +22,11 @@ export const getUserInfo = async (userId: string) => {
 
 
 export const getUserFullInfo = async (email: string) => {
-  try {
-    const response = await axios.get(`${API_FULLINFO_URL}/${email}`);
+  const url = `${API_FULLINFO_URL}/by-email/${email}`;
+  console.debug('Fetching user full info from:', url);
+  
+    try {
+    const response = await axios.get(url);
     return response.data; // Returns the combined user data
   } catch (error) {
     console.error('Error fetching user info:', error);

@@ -1,4 +1,4 @@
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import useAuth from '../hooks/useAuth';
 
@@ -10,6 +10,7 @@ interface PrivateRouteProps {
 const PrivateRoute = ({ children, requireAdmin = false }: PrivateRouteProps) => {
   const auth = useAuth();
   const navigate = useNavigate();
+
   
   useEffect(() => {
     // If user is deleted, log them out and redirect to login
@@ -23,6 +24,7 @@ const PrivateRoute = ({ children, requireAdmin = false }: PrivateRouteProps) => 
 
   // If user is not authenticated, redirect to login
   if (!auth?.user) {
+
     return <Navigate to="/login" />;
   }
 

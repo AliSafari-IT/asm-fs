@@ -9,7 +9,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 
 @import './styles/theme-variables.css';
-
+@import './styles/sitemap-page.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -483,4 +483,8 @@
 /* Custom CSS for alerts in light and dark mode: info, warning, success, primary, secondary, danger and error messages */
 .alert {
   @apply rounded-md p-4 mb-4;
+}
+
+.primary{
+  color: #0f5132;
 }

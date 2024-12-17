@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-const UserDropdown: React.FC<{ auth: any }> = ({ auth: { user } }) => {
+const UserDropdown: React.FC<{ auth: any, themeToggler?: React.ReactNode }> = ({ auth: { user }, themeToggler }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -40,6 +40,9 @@ const UserDropdown: React.FC<{ auth: any }> = ({ auth: { user } }) => {
 
       {isOpen && (
         <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-1 z-50 border border-gray-200 dark:border-gray-700">
+          {themeToggler && <div className="px-4 py-2 flex justify-between items-center">
+            Change Theme  {themeToggler}
+          </div>}
           <Link
             to="/user-profile"
             className="block px-4 py-2 text-sm  hover:bg-[var(--info-light)] dark:hover:bg-gray-700 transition-colors duration-200"
@@ -55,7 +58,7 @@ const UserDropdown: React.FC<{ auth: any }> = ({ auth: { user } }) => {
           <hr className="my-1 border-gray-200 dark:border-gray-700" />
           <Link
             to="/logout"
-            className="block px-4 py-2 text-sm text-[var(--danger-dark)] hover:bg-[var(--danger-light)] dark:hover:bg-red-900/20 transition-colors duration-200"
+            className="block px-4 py-2 text-sm text-[var(--danger-dark)] bg-[var(--danger-light)] hover:text-[var(--danger-dark)] hover:font-extrabold transition-colors duration-200"
           >
             Logout
           </Link>
