@@ -25,7 +25,7 @@ const Dashboard = () => {
             Home
           </a></li>
           <li className="text-lg">
-            <Link href="/about">About</Link>
+            <Link href="/about-asafarim">About</Link>
           </li>
           <li className="text-lg">
             <Link href="/manage-sitemap-content" target="_self">Sitemap Page</Link>

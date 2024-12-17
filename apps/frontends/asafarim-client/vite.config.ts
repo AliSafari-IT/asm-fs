@@ -6,7 +6,6 @@ import path from 'path';
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
-    
     react(),
     vitePluginMd({
       markdownItOptions: {
@@ -20,6 +19,12 @@ export default defineConfig({
       '@assets': path.resolve(__dirname, 'src/assets'),
       '@mdfiles': path.resolve(__dirname, '../../../docs'),
     },
+  },
+  define: {
+    'process.env': {
+      NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+      VITE_API_URL: JSON.stringify('http://localhost:5000')
+    }
   },
   server: {
     proxy: {

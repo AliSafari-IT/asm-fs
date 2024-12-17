@@ -6,7 +6,7 @@ import { SidebarWrapper } from './SidebarWrapper';
 import { useTheme } from '../../hooks/useTheme';
 import MainContent from './MainContent';
 import useAuth from '@/hooks/useAuth';
-
+import { useLocation } from 'react-router-dom';
 interface LayoutProps {
   pageTitle?: string;
   pageDescription?: string;
@@ -32,6 +32,7 @@ const Wrapper: React.FC<LayoutProps> = ({
   const buttonRef = useRef<HTMLButtonElement>(null);
   const pt = pageTitle ? `${pageTitle} | ASafariM` : 'ASafariM';
   const auth = useAuth();
+  const location = useLocation();
 
   if (!footer) {
     footer = <Footer />;
@@ -39,6 +40,17 @@ const Wrapper: React.FC<LayoutProps> = ({
   if (!header) {
     header = <Header />;
   }
+
+  useEffect(() => {
+    // Don't save location for auth-related pages
+    const skipPaths = ['/login', '/logout', '/register'];
+    if (skipPaths.includes(location.pathname)) {
+      return;
+    }
+
+    // Save the current location for non-auth pages
+    localStorage.setItem('returnTo', location.pathname + location.search);
+  }, [location]);
 
   useEffect(() => {
     document.title = pt;
@@ -56,6 +68,7 @@ const Wrapper: React.FC<LayoutProps> = ({
   }, [theme]);
 
   useEffect(() => {
+    // Update the returnTo value in localStorage
     const handleClickOutside = (event: MouseEvent) => {
       if (
         isMobileMenuOpen &&
@@ -101,17 +114,16 @@ const Wrapper: React.FC<LayoutProps> = ({
       </Navbar>
       {/* Mobile Sidebar Overlay */}
       {isMobileMenuOpen && (
-        <div 
+        <div
           className="fixed inset-0 "
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
-      <SidebarWrapper 
+      <SidebarWrapper
         ref={sidebarRef}
-        sidebar={sidebar} 
-        className={`fixed top-[var(--navbar-height)] left-0 w-64 z-50 transition-transform duration-300 ease-in-out bg-[var(--bg-secondary)] border-r border-[var(--border-secondary)] ${
-          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-        }`} 
+        sidebar={sidebar}
+        className={`fixed top-[var(--navbar-height)] left-0 w-64 z-50 transition-transform duration-300 ease-in-out bg-[var(--bg-secondary)] border-r border-[var(--border-secondary)] ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
       />
       <div className="flex flex-1 pt-[var(--navbar-height)]">
         {/* Main Content */}

@@ -8,12 +8,12 @@ const LoginPage = () => {
   const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [successMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showDeletedMessage, setShowDeletedMessage] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!usernameOrEmail || !password) {
@@ -21,18 +21,17 @@ const LoginPage = () => {
       return;
     }
 
+    setError('');
     setLoading(true);
-    setError(null);
-    setSuccessMessage(null);
-    setShowDeletedMessage(false);
 
     try {
       const user = await login({ usernameOrEmail, password });
       if (user.token) {
         localStorage.setItem('user', JSON.stringify(user));
         console.log('Logged in successfully, token saved');
-        setSuccessMessage('Login successful!');
-        navigate('/');
+        const returnTo = localStorage.getItem('returnTo') || '/';
+        localStorage.removeItem('returnTo');
+        navigate(returnTo);
       }
     } catch (error) {
       console.error('Login error:', error);

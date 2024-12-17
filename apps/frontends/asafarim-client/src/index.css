@@ -9,7 +9,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 
 @import './styles/theme-variables.css';
-
+@import './styles/sitemap-page.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -73,6 +73,130 @@
            transition-all duration-200 ease-in-out;
   }
 
+  .btn-danger {
+    @apply bg-danger text-white 
+           hover:bg-[var(--danger-light)]
+           active:bg-[var(--danger-dark)]
+           disabled:opacity-50 disabled:cursor-not-allowed
+           px-4 py-2 rounded-md font-medium
+           shadow-sm
+           transition-all duration-200 ease-in-out;
+  }
+
+  .btn-warning {
+    @apply bg-warning text-white 
+           hover:bg-[var(--warning-light)]
+           active:bg-[var(--warning-dark)]
+           disabled:opacity-50 disabled:cursor-not-allowed
+           px-4 py-2 rounded-md font-medium
+           shadow-sm
+           transition-all duration-200 ease-in-out;
+  }
+
+  .btn-success {
+    @apply bg-success text-white 
+           hover:bg-[var(--success-light)]
+           active:bg-[var(--success-dark)]
+           disabled:opacity-50 disabled:cursor-not-allowed
+           px-4 py-2 rounded-md font-medium
+           shadow-sm
+           transition-all duration-200 ease-in-out;
+  }
+
+  .btn-info {
+    @apply bg-info text-white 
+           hover:bg-[var(--info-light)]
+           active:bg-[var(--info-dark)]
+           disabled:opacity-50 disabled:cursor-not-allowed
+           px-4 py-2 rounded-md font-medium
+           shadow-sm
+           transition-all duration-200 ease-in-out;
+  }
+
+  .btn-inverted {
+    @apply bg-inverted text-primary 
+           hover:bg-inverted-light 
+           active:bg-inverted-dark
+           disabled:opacity-50 disabled:cursor-not-allowed
+           px-4 py-2 rounded-md font-medium
+           shadow-sm
+           transition-all duration-200 ease-in-out;
+  }
+
+  .btn-approve {
+    @apply bg-success text-white 
+           hover:bg-[var(--success-light)]
+           active:bg-[var(--success-dark)]
+           disabled:opacity-50 disabled:cursor-not-allowed
+           px-4 py-2 rounded-md font-medium
+           shadow-sm
+           transition-all duration-200 ease-in-out;
+  }
+
+  .btn-cancel {
+    @apply bg-danger text-white 
+           hover:bg-[var(--danger-light)]
+           active:bg-[var(--danger-dark)]
+           disabled:opacity-50 disabled:cursor-not-allowed
+           px-4 py-2 rounded-md font-medium
+           shadow-sm
+           transition-all duration-200 ease-in-out;
+  }
+
+  .btn-delete {
+    @apply bg-danger text-white 
+           hover:bg-[var(--danger-light)]
+           active:bg-[var(--danger-dark)]
+           disabled:opacity-50 disabled:cursor-not-allowed
+           px-4 py-2 rounded-md font-medium
+           shadow-sm
+           transition-all duration-200 ease-in-out;
+  }
+
+  .btn-edit {
+    @apply bg-info text-white 
+           hover:bg-[var(--info-light)]
+           active:bg-[var(--info-dark)]
+           disabled:opacity-50 disabled:cursor-not-allowed
+           px-4 py-2 rounded-md font-medium
+           shadow-sm
+           transition-all duration-200 ease-in-out;
+  }
+
+  .btn-create {
+    @apply bg-teams-purple text-white 
+           hover:bg-teams-purple-light 
+           active:bg-teams-purple-dark
+           disabled:opacity-50 disabled:cursor-not-allowed
+           px-4 py-2 rounded-md font-medium
+           shadow-sm
+           transition-all duration-200 ease-in-out;
+  }
+
+  .btn-accept {
+    @apply bg-success text-white 
+           hover:bg-[var(--success-light)]
+           active:bg-[var(--success-dark)]
+           disabled:opacity-50 disabled:cursor-not-allowed
+           px-4 py-2 rounded-md font-medium
+           shadow-sm
+           transition-all duration-200 ease-in-out;
+  }
+
+  .btn-reject {
+    @apply bg-danger text-white 
+           hover:bg-[var(--danger-light)]
+           active:bg-[var(--danger-dark)]
+           disabled:opacity-50 disabled:cursor-not-allowed
+           px-4 py-2 rounded-md font-medium
+           shadow-sm
+           transition-all duration-200 ease-in-out;
+  }
+
+  .btn-link {
+    @apply text-[var(--text-primary)];
+  }
+
   /* Text Utilities */
   .text-default {
     @apply text-[var(--text-primary)];
@@ -80,6 +204,26 @@
 
   .text-muted {
     @apply text-[var(--text-secondary)];
+  }
+
+  .text-danger {
+    @apply text-[var(--text-danger)];
+  }
+
+  .text-warning {
+    @apply text-[var(--text-warning)];
+  }
+
+  .text-success {
+    @apply text-[var(--text-success)];
+  }
+
+  .text-info {
+    @apply text-[var(--text-info)];
+  }
+
+  .text-inverted {
+    @apply text-[var(--text-inverted)];
   }
 
   /* Background Utilities */
@@ -91,6 +235,58 @@
     @apply bg-[var(--bg-secondary)];
   }
 
+  .bg-muted {
+    @apply bg-[var(--bg-tertiary)];
+  }
+
+  .bg-danger {
+    @apply bg-[var(--bg-danger)];
+  }
+
+  .bg-warning {
+    @apply bg-[var(--bg-warning)];
+  }
+
+  .bg-success {
+    @apply bg-[var(--bg-success)];
+  }
+
+  .bg-info {
+    @apply bg-[var(--bg-info)];
+  }
+
+  .bg-inverted {
+    @apply bg-[var(--bg-inverted)];
+  }
+
+  /* Border Utilities */
+  .border-default {
+    @apply border-[var(--border-primary)];
+  }
+
+  .border-muted {
+    @apply border-[var(--border-secondary)];
+  }
+
+  .border-danger {
+    @apply border-[var(--border-danger)];
+  }
+
+  .border-warning {
+    @apply border-[var(--border-warning)];
+  }
+
+  .border-success {
+    @apply border-[var(--border-success)];
+  }
+
+  .border-info {
+    @apply border-[var(--border-info)];
+  }
+
+  .border-inverted {
+    @apply border-[var(--border-inverted)];
+  }
   /* Layout Components */
   .navbar {
     @apply sticky top-0 z-50 bg-[var(--bg-navbar)] border-b border-[var(--navbar-border)] text-[var(--navbar-text)];
@@ -289,26 +485,113 @@
   @apply rounded-md p-4 mb-4;
 }
 
-.info {
-  @apply  text-info-dark;
+.primary{
+  color: #0f5132;
 }
 
-.warning {
-  @apply  text-warning-dark;
+.secondary{
+  color: #664d03;
 }
 
-.success {
-  @apply  text-success-dark;
+.danger{
+  color: #842029;
 }
 
-.primary {
-  @apply  text-primary;
+.error{
+  color: #842029;
 }
 
-.secondary {
-  @apply  text-secondary;
+.info{
+  color: #055160;
 }
 
-.danger, .error {
-  @apply  text-danger-dark;
+.warning{
+  color: #664d03;
+}
+
+.success{
+  color: #0f5132;
+}
+
+/* markdown-body  */
+.markdown-body {
+  @apply max-w-none p-6 rounded-lg;
+  h1 {
+    @apply text-4xl font-extrabold mb-8 pb-4 relative;
+    color: var(--markdown-header-text);
+    line-height: normal;
+    border-bottom: 2px solid var(--markdown-header-border);
+  }
+  h2 {
+    @apply text-3xl font-bold mt-8 mb-4;
+    color: var(--markdown-header-text);
+  }
+  h3 {
+    @apply text-2xl font-semibold mt-6 mb-3;
+    color: var(--markdown-header-text);
+  }
+  p {
+    @apply text-lg leading-relaxed mb-6;
+    color: var(--markdown-text);
+  }
+  strong {
+    @apply font-bold;
+    color: var(--text-primary);
+  }
+  a {
+    @apply font-medium transition-colors duration-200;
+    color: var(--teams-blue);
+  }
+  a:hover {
+    @apply underline;
+    color: var(--teams-purple);
+  }
+  blockquote {
+    @apply pl-4 py-1 my-6 border-l-4;
+    background-color: var(--markdown-quote-bg);
+    border-color: var(--teams-purple);
+  }
+  ul {
+    @apply list-disc list-inside mb-6 space-y-2;
+  }
+  ol {
+    @apply list-decimal list-inside mb-6 space-y-2;
+  }
+  code {
+    @apply px-2 py-1 rounded text-sm font-mono;
+    background-color: var(--markdown-code-bg);
+    color: var(--markdown-code-text);
+    border: 1px solid var(--markdown-code-border);
+  }
+  pre {
+    @apply p-4 rounded-lg my-6 overflow-x-auto;
+    background-color: var(--markdown-code-bg);
+  }
+  pre code {
+    @apply p-0 border-0 bg-transparent;
+    color: var(--markdown-code-text);
+  }
+  table {
+    @apply w-full my-6 border-collapse;
+  }
+  table th {
+    @apply px-4 py-3 text-left font-semibold;
+    background-color: var(--markdown-table-header-bg);
+    border: 1px solid var(--markdown-table-border);
+  }
+  table td {
+    @apply px-4 py-3 border;
+    border-color: var(--markdown-table-border);
+  }
+  table tr:nth-child(even) {
+    background-color: var(--markdown-table-row-bg);
+  }
+  hr {
+    @apply my-8 border-t-2;
+    border-color: var(--markdown-border);
+  }
+  time {
+    @apply block text-sm font-medium mb-8;
+    color: var(--text-secondary);
+  }
 }

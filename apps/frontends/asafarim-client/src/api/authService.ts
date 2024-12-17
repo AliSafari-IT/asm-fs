@@ -34,10 +34,11 @@ export const updateUsername = async (model: { userId: string; newUsername: strin
     return response.data;
   } catch (error) {
     // Use the centralized error handler
+    console.log("error is:", error);
     const err = error as AxiosError;
     const message = handleError(err); 
     console.log('Error message when updating username:', message);
-    return { message };
+    return { error: message };
   }
 };
 

@@ -2,7 +2,6 @@ using System.Text;
 using Application.Interfaces;
 using ASafariM.Server.ConfServices;
 using Domain.Repositories;
-using Infrastructure.Data;
 using Infrastructure.Repositories;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -20,12 +19,7 @@ builder.Logging.AddConsole();
 // Add services to the container.
 var conn = builder.Configuration.GetConnectionString("DefaultConnection");
 var sv = ServerVersion.AutoDetect(conn);
-builder.Services.AddDbContext<Infrastructure.Data.ApplicationDbContext>(options =>
-    options.UseMySql(conn, sv)
-);
-builder.Services.AddDbContext<SecureCore.Data.ApplicationDbContext>(options =>
-    options.UseMySql(conn, sv)
-);
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(conn, sv));
 
 // Configure Identity with secure settings
 ConfServices.ConfigureServices(builder.Services);

@@ -11,10 +11,9 @@ namespace SecureCore.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }
 
-        public override DbSet<ApplicationUser> Users { get; set; }
-        public override DbSet<IdentityUserRole<string>> UserRoles { get; set; }
         public DbSet<TaskItem> TaskItems { get; set; }
         public DbSet<UserReactivationRequest> UserReactivationRequests { get; set; }
+        public DbSet<UserDataChangeLog> UserDataChangeLogs { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

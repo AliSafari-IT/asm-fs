@@ -17,15 +17,14 @@
     "clean": "rm -rf node_modules && rm -rf .yarn/cache",
     "reset:yarn": "rm -rf .yarn && rm -rf node_modules && rm -rf yarn.lock && yarn install",
     "dev:backend": "yarn workspace @asm-fs/asafarim-server start",
-    "dev:frontend": "yarn copy-changelogs && yarn workspace @asm-fs/asafarim-client dev",
+    "dev:frontend": "yarn && yarn workspace @asm-fs/asafarim-client dev",
     "build:backend": "yarn workspace @asm-fs/asafarim-server build",
-    "build:frontend": "yarn copy-changelogs && yarn workspace @asm-fs/asafarim-client build",
+    "build:frontend": "yarn workspace @asm-fs/asafarim-client build",
     "test:backend": "yarn workspace @asm-fs/asafarim-server test",
     "test:frontend": "yarn workspace @asm-fs/asafarim-client test",
     "test": "yarn test:backend && yarn test:frontend",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
-    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
-    "copy-changelogs": "xcopy /Y /I \"E:\\asm-fs\\docs\\ChangeLogs\\*.md\" \"E:\\asm-fs\\apps\\frontends\\asafarim-client\\src\\pages\\Changelog\\changelogMds\""
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",

@@ -1,28 +1,26 @@
 import { useEffect, useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
 import Layout from "@/layout/Layout";
+import useAuth from '@/hooks/useAuth';
 
 const SERVICE_ID = "service_9m1uuup";
 const TEMPLATE_ID = "template_2ie8whg";
 const PUBLIC_KEY = "vVlEiwNEj0k6uzMt3";
 
 export const ContactUs = () => {
-  const [loggedInUserName, setLoggedInUserName] = useState<any>(null);
+  const { user } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const form = useRef<HTMLFormElement | null>(null); // Initialize to null
 
-  // if the user is logged in, from hook useAuth
   useEffect(() => {
-    const currentUser = localStorage.getItem("user");
-    const userName = currentUser ? JSON.parse(currentUser).user.userName : null;
-    if (userName) {
-      setLoggedInUserName({ userName });
+    if (user) {
+      setName(user.userName || '');
+      setEmail(user.email || '');
     }
-  }, []);
-
+  }, [user]);
 
   // Utility function to validate email
   const validateEmail = (email: string) => {
@@ -32,21 +30,14 @@ export const ContactUs = () => {
 
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
-    if (name === "from_name") setName(value);
-    if (name === "from_email") setEmail(value);
     if (name === "message") setMessage(value);
   };
 
   const sendEmail = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
 
-    if (!name || !email || !message) {
+    if (!message) {
       setErrorMessage("Please fill in all fields.");
-      return;
-    }
-
-    if (!validateEmail(email)) {
-      setErrorMessage("Please enter a valid email address.");
       return;
     }
 
@@ -67,8 +58,6 @@ export const ContactUs = () => {
         .then(() => {
           alert("Message Sent, We will get back to you shortly!");
           console.log("Email sent successfully...");
-          setName("");
-          setEmail("");
           setMessage("");
         }, (error) => {
           console.error("Email send failed...", error.text);
@@ -86,14 +75,6 @@ export const ContactUs = () => {
         <div className="w-full max-w-lg px-4">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-semibold text-gray-800 dark:text-white mb-2">Contact Us</h1>
-            {loggedInUserName && (
-              <div className="inline-flex items-center bg-gray-100 dark:bg-gray-800 rounded-full px-3 py-1">
-                <span className="text-sm text-gray-600 dark:text-gray-300">{loggedInUserName.userName}</span>
-                <div className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center ml-2">
-                  <span className="text-sm text-blue-600 dark:text-blue-400">{loggedInUserName.userName.charAt(0).toUpperCase()}</span>
-                </div>
-              </div>
-            )}
           </div>
 
           {errorMessage && (
@@ -114,9 +95,7 @@ export const ContactUs = () => {
                   type="text"
                   name="from_name"
                   value={name}
-                  onChange={handleChange}
-                  placeholder="Enter your name"
-                  required
+                  disabled
                 />
               </div>
 
@@ -129,9 +108,7 @@ export const ContactUs = () => {
                   type="email"
                   name="from_email"
                   value={email}
-                  onChange={handleChange}
-                  placeholder="Enter your email"
-                  required
+                  disabled
                 />
               </div>
 
@@ -148,16 +125,6 @@ export const ContactUs = () => {
                   placeholder="Type your message here"
                   required
                 />
-              </div>
-
-              <div className="flex justify-end">
-                {/** Add the "to_name" field with the value "ASafariM Team" */}
-                <input
-                  type="hidden"
-                  name="to_name"
-                  value="ASafariM Team"
-                />
-
               </div>
 
               <div className="mt-6">

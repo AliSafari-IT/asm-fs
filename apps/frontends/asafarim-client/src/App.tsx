@@ -30,16 +30,16 @@ import RTNav from "./pages/Project/projects/react/tailwind/navbar/RTNav";
 //import UserAccountSettings from "./pages/User/UserAccountSettings";
 import Contact from "./pages/Contact";
 import MarkdownPage from "./components/MarkdownPage/MarkdownPage";
-import { legalDocs } from './layout/Navbar/navItemsList';
 import { ThemeProvider } from './contexts/ThemeContext';
 import ChangelogPage from './pages/Changelog/ChangelogPage';
 import AccountSettings from "./pages/Accountpage/AccountSettings";
 import TechDocsPage from './pages/TechDocs/TechDocsPage';
+import { getMdFiles } from "./utils/mdFilesUtils";
 
 function App() {
-  const user = useAuth().user;
-  const currentPath = window.location.pathname;
-  const mdFileName = currentPath.split('/').pop();
+  const user = useAuth()?.user;
+  const mds = getMdFiles();
+
 
   useEffect(() => {
     if (!user) {
@@ -53,12 +53,21 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route
-            path="/legal/:slug"
+            path="/legal-docs/:slug?"
             element={
-              <MarkdownPage
-                filepath={legalDocs.subMenu?.find(doc => doc.filepath?.includes(mdFileName ?? ''))?.filepath ?? ''}
-                title={legalDocs.subMenu?.find(doc => doc.filepath?.includes(mdFileName ?? ''))?.title ?? 'Not Found'}
-              />
+              <MarkdownPage data={mds.legalDocs} title="Legal Docs" description="Legal Documentation" />
+            }
+          />
+          <Route
+            path="/changelogs/:slug?"
+            element={
+              <MarkdownPage data={mds.changelogs} title="Changelogs" description="Changelogs" />
+            }
+          />
+          <Route
+            path="/tech-docs/:slug?"
+            element={
+              <MarkdownPage data={mds.techDocs} title="Tech Docs" description="Tech Documentation" />
             }
           />
 
@@ -112,9 +121,7 @@ function App() {
           <Route
             path="/logout"
             element={
-              <PrivateRoute>
-                <LogoutPage />
-              </PrivateRoute>
+              <LogoutPage />
             }
           />
           <Route path="/users" element={<UsersList />} />
@@ -128,14 +135,7 @@ function App() {
             }
           />
           <Route path="/health-ui" element={<Navigate to="/health-ui" />} />
-          <Route
-            path="/changelogs/:slug?"
-            element={<ChangelogPage />}
-          />
-          <Route
-            path="/tech-docs/:slug?"
-            element={<TechDocsPage />}
-          />
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

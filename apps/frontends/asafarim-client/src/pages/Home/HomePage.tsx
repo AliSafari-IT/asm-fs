@@ -2,6 +2,7 @@ import Layout from "../../layout/Layout";
 import NotAuthenticated from "../../components/NotAuthenticated";
 import HomePanels from "./HomePanels";
 import useAuth from "../../hooks/useAuth";
+import StacksPage from "../AboutMe/Stacks/StacksPage";
 
 export const Home = () => {
   const user = useAuth(); 
@@ -18,6 +19,7 @@ export const Home = () => {
 
   return (
     <Layout  header={<></>} pageTitle="Home">
+      <StacksPage />
       <HomePanels />
     </Layout>
   );
