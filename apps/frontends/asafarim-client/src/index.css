@@ -488,3 +488,110 @@
 .primary{
   color: #0f5132;
 }
+
+.secondary{
+  color: #664d03;
+}
+
+.danger{
+  color: #842029;
+}
+
+.error{
+  color: #842029;
+}
+
+.info{
+  color: #055160;
+}
+
+.warning{
+  color: #664d03;
+}
+
+.success{
+  color: #0f5132;
+}
+
+/* markdown-body  */
+.markdown-body {
+  @apply max-w-none p-6 rounded-lg;
+  h1 {
+    @apply text-4xl font-extrabold mb-8 pb-4 relative;
+    color: var(--markdown-header-text);
+    line-height: normal;
+    border-bottom: 2px solid var(--markdown-header-border);
+  }
+  h2 {
+    @apply text-3xl font-bold mt-8 mb-4;
+    color: var(--markdown-header-text);
+  }
+  h3 {
+    @apply text-2xl font-semibold mt-6 mb-3;
+    color: var(--markdown-header-text);
+  }
+  p {
+    @apply text-lg leading-relaxed mb-6;
+    color: var(--markdown-text);
+  }
+  strong {
+    @apply font-bold;
+    color: var(--text-primary);
+  }
+  a {
+    @apply font-medium transition-colors duration-200;
+    color: var(--teams-blue);
+  }
+  a:hover {
+    @apply underline;
+    color: var(--teams-purple);
+  }
+  blockquote {
+    @apply pl-4 py-1 my-6 border-l-4;
+    background-color: var(--markdown-quote-bg);
+    border-color: var(--teams-purple);
+  }
+  ul {
+    @apply list-disc list-inside mb-6 space-y-2;
+  }
+  ol {
+    @apply list-decimal list-inside mb-6 space-y-2;
+  }
+  code {
+    @apply px-2 py-1 rounded text-sm font-mono;
+    background-color: var(--markdown-code-bg);
+    color: var(--markdown-code-text);
+    border: 1px solid var(--markdown-code-border);
+  }
+  pre {
+    @apply p-4 rounded-lg my-6 overflow-x-auto;
+    background-color: var(--markdown-code-bg);
+  }
+  pre code {
+    @apply p-0 border-0 bg-transparent;
+    color: var(--markdown-code-text);
+  }
+  table {
+    @apply w-full my-6 border-collapse;
+  }
+  table th {
+    @apply px-4 py-3 text-left font-semibold;
+    background-color: var(--markdown-table-header-bg);
+    border: 1px solid var(--markdown-table-border);
+  }
+  table td {
+    @apply px-4 py-3 border;
+    border-color: var(--markdown-table-border);
+  }
+  table tr:nth-child(even) {
+    background-color: var(--markdown-table-row-bg);
+  }
+  hr {
+    @apply my-8 border-t-2;
+    border-color: var(--markdown-border);
+  }
+  time {
+    @apply block text-sm font-medium mb-8;
+    color: var(--text-secondary);
+  }
+}

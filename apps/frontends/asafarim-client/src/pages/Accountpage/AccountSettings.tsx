@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaUndo, FaEnvelope, FaUser, FaLock, FaKey } from 'react-icons/fa';
 import authService from '../../api/authService';
 import Layout from '@/layout/Layout';
+import { useNavigate } from 'react-router-dom';
 
 const AccountSettings: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -14,6 +15,8 @@ const AccountSettings: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [activeTab, setActiveTab] = useState('email');
     const [userId, setUserId] = useState('');
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         const userData = localStorage.getItem('user');
@@ -25,6 +28,18 @@ const AccountSettings: React.FC = () => {
             setUpdatedUsername(user.userName);
         }
     }, []);
+
+    useEffect(() => {
+        if (successMessage) {
+            const timer = setTimeout(() => {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.dispatchEvent(new Event('authStateChange'));
+                navigate('/login', { replace: true });
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [successMessage]);
 
     const handleResetEmailUsername = () => {
         const userData = localStorage.getItem('user');
@@ -133,18 +148,16 @@ const AccountSettings: React.FC = () => {
             } else {
                 setSuccessMessage(response.message);
                 setOriginalUsername(updatedUsername);
-                // Update local storage
-                const userData = localStorage.getItem('user');
-                if (!userData) {
-                    throw new Error('User data not found in local storage.');
-                }
-                const user = JSON.parse(userData).user;
-                user.userName = updatedUsername;
-                localStorage.setItem('user', JSON.stringify(user));
+                // Reset form fields
+                setUpdatedUsername('');
+                setCurrentPassword('');
+                setNewPassword('');
             }
         } catch (error) {
             setLoading(false);
             setError('An unexpected error occurred.');
+        } finally {
+            setLoading(false);
         }
     };
 

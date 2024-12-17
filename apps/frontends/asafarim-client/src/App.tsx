@@ -43,7 +43,8 @@ function App() {
 
   useEffect(() => {
     if (!user) {
-      console.log('No user found in localStorage');    }
+      console.log('No user found in localStorage');
+    }
   }, [user]);
 
   return (
@@ -55,7 +56,19 @@ function App() {
             path="/legal-docs/:slug?"
             element={
               <MarkdownPage data={mds.legalDocs} title="Legal Docs" description="Legal Documentation" />
-            } 
+            }
+          />
+          <Route
+            path="/changelogs/:slug?"
+            element={
+              <MarkdownPage data={mds.changelogs} title="Changelogs" description="Changelogs" />
+            }
+          />
+          <Route
+            path="/tech-docs/:slug?"
+            element={
+              <MarkdownPage data={mds.techDocs} title="Tech Docs" description="Tech Documentation" />
+            }
           />
 
           <Route path="/posts/:slug" element={<PostDetail />} />
@@ -122,14 +135,7 @@ function App() {
             }
           />
           <Route path="/health-ui" element={<Navigate to="/health-ui" />} />
-          <Route
-            path="/changelogs/:slug?"
-            element={<ChangelogPage />}
-          />
-          <Route
-            path="/tech-docs/:slug?"
-            element={<TechDocsPage />}
-          />
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
