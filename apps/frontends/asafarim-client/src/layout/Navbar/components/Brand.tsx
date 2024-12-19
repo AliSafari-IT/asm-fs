@@ -3,14 +3,14 @@
 import React from "react";
 import logo from './logoT.svg'; // Ensure the path is correct
 
-interface AsmLogoProps {
+interface BrandProps {
   logoPath?: string;
   to?: string;
   className?: string;
   brandName?: string;
 }
 
-const AsmLogo: React.FC<AsmLogoProps> = ({ logoPath, to = "/", className = "", brandName }) => {
+const Brand: React.FC<BrandProps> = ({ logoPath, to = "/", className = "", brandName }) => {
   return (
     <div className={`flex items-center shrink-0 ${className}`}>
      <a href={to} target="_self" rel="noopener noreferrer" 
@@ -30,4 +30,4 @@ const AsmLogo: React.FC<AsmLogoProps> = ({ logoPath, to = "/", className = "", b
   );
 };
 
-export default AsmLogo;
+export default Brand;

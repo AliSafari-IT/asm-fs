@@ -1,24 +1,74 @@
 .stacks-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
   padding: 20px;
 }
 
-.stack-card {
-  width: 200px;
-  padding: 10px;
-  border-radius: 5px;
-  color: var(--info);
+.search-bar {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.stacks-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: var(--bg-secondary);
+  border-radius: 10px;
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 20px;
+  color: var(--text-primary);
+  
+}
+
+.category-section {
+  margin-bottom: 30px;
+}
+
+.category-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
   text-align: center;
-  background-color: var(--secondary);
+}
+
+.stack-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+.stack-card {
+  padding: 20px;
+  text-align: center;
+  border-radius: 10px;
+  transition: transform 0.2s, box-shadow 0.2s;
   cursor: pointer;
-  transition: background-color 0.2s;
+  position: relative;
+  z-index: 1;
 }
 
 .stack-card:hover {
-  background-color: var(--primary);
+  transform: scale(1.05);
+  box-shadow: var(--shadow-lg);
+}
+
+[data-tooltip] {
+  position: relative;
+  z-index: 50;
+}
+
+div[role="tooltip"] {
+  z-index: 1000 !important;
+  position: relative;
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+  font-size: 0.875rem !important;
+  max-width: 300px !important;
+  word-wrap: break-word !important;
+  box-shadow: var(--shadow-lg) !important;
 }
 
 .modal {

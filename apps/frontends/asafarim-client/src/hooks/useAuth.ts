@@ -36,8 +36,19 @@ function useAuth(): IAuthState {
         window.removeEventListener('authStateChange', checkAuthState);
       };
     }, [checkAuthState]);
+
+    useEffect(() => {
+      // Check if user is deleted
+      if (user?.isDeleted) {
+        localStorage.removeItem('user');
+        setUser(null);
+      }
+    }, [user]);
+
+    
   
     return { user, logout, checkAuthState };
   }
   
+
   export default useAuth;

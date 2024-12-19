@@ -3,10 +3,10 @@ import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 import Navbar from '../Navbar/Navbar';
 import { SidebarWrapper } from './SidebarWrapper';
-import { useTheme } from '../../hooks/useTheme';
 import MainContent from './MainContent';
 import useAuth from '@/hooks/useAuth';
 import { useLocation } from 'react-router-dom';
+import { useTheme } from '@/contexts/ThemeContext';
 interface LayoutProps {
   pageTitle?: string;
   pageDescription?: string;
@@ -93,7 +93,7 @@ const Wrapper: React.FC<LayoutProps> = ({
         <button
           ref={buttonRef}
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="p-2 rounded-lg hover:bg-[var(--hover-bg)] -ml-2"
+          className="p-2 rounded-lg hover:bg-[var(--hover-bg)] -ml-2 mr-2 md:hidden"
           aria-label="Toggle mobile menu"
         >
           <svg

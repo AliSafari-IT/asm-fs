@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { FaCompass, FaHome } from "react-icons/fa";
 import Layout from "../layout/Layout";
-import ToggleTheme from "../layout/Theme/ToggleTheme";
+import ToggleThemeDesktop from "../layout/Theme/ToggleThemeDesktop";
 
 const NotFound: React.FC = () => {
   return (
@@ -10,7 +10,7 @@ const NotFound: React.FC = () => {
       <div className="min-h-screen w-full bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-indigo-950 flex flex-col items-center justify-center relative overflow-hidden">
         {/* Theme Toggle */}
         <div className="absolute top-4 right-4">
-          <ToggleTheme className="scale-75" />
+          <ToggleThemeDesktop className="scale-75" />
         </div>
 
         {/* Decorative Elements */}

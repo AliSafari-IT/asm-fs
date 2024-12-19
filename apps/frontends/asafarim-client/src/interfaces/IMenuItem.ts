@@ -14,6 +14,9 @@ export interface IMenuItem extends INavBase {
   isMobile?: boolean;
   isSidebarOpen?: boolean;
   isReadonly?: boolean;
-  isDisabled?: boolean;  
+  isDisabled?: boolean; 
+  isForNavbar?: boolean; 
   subMenu?: IMenuItem[];
+  filepath?: string;
+  content?: string;
 };

@@ -1,6 +1,5 @@
+import { IMenuItem } from '@/interfaces/IMenuItem';
 import { ChangeLogSvgIcon } from '../assets/SvgIcons/ChangeLogSvgIcon';
-import { INavItem } from '@/interfaces/INavItem';
-
 // Import changelog files using Vite's glob import syntax and return them as an object
 const changelogFiles = {
   ...import.meta.glob('@mdfiles/ChangeLogs/*.md', {
@@ -25,13 +24,13 @@ const legalDocsFiles = {
 };
 
 
-const changeLogs: INavItem = getTreeViewObject(changelogFiles, 'changelogs', 'Change Logs', ChangeLogSvgIcon, '/changelogs');
-const techdocsTree: INavItem = getTreeViewObject(techDocs, 'tech-docs', 'Tech Docs', ChangeLogSvgIcon, '/tech-docs');
-const legalDocs: INavItem = getTreeViewObject(legalDocsFiles, 'legal-docs', 'Legal Docs', ChangeLogSvgIcon, '/legal-docs');
+const changeLogs: IMenuItem = {...getTreeViewObject(changelogFiles, 'changelogs', 'Change Logs', ChangeLogSvgIcon, '/changelogs'), isForNavbar: false};
+const techdocsTree: IMenuItem = {...getTreeViewObject(techDocs, 'tech-docs', 'Tech Docs', ChangeLogSvgIcon, '/tech-docs'), isForNavbar: true};
+const legalDocs: IMenuItem = {...getTreeViewObject(legalDocsFiles, 'legal-docs', 'Legal Docs', ChangeLogSvgIcon, '/legal-docs'), isForNavbar: false};
 
 
 export const getMdFiles = (): {
-  legalDocs: INavItem; changelogs: INavItem; techDocs: INavItem 
+  legalDocs: IMenuItem; changelogs: IMenuItem; techDocs: IMenuItem 
 } => {
   return {
     legalDocs: legalDocs,
@@ -40,13 +39,13 @@ export const getMdFiles = (): {
   };
 };
 
-export const getChangelogByRelPath = (to?: string): INavItem | undefined => {
+export const getChangelogByRelPath = (to?: string): IMenuItem | undefined => {
   if (!to) return undefined;
   const fullPath = `/changelogs/${to}`;
   return getMdFiles().changelogs.subMenu?.find(doc => doc.to === fullPath);
 };
 
-export const getMdDocByRelPath = (to?: string, type: 'tech-docs' | 'legal-docs' | 'changelogs' = 'tech-docs'): INavItem | undefined => {
+export const getMdDocByRelPath = (to?: string, type: 'tech-docs' | 'legal-docs' | 'changelogs' = 'tech-docs'): IMenuItem | undefined => {
   if (!to) return undefined;
   
   const docs = getMdFiles();
@@ -59,12 +58,12 @@ export const getMdDocByRelPath = (to?: string, type: 'tech-docs' | 'legal-docs' 
   return docMap[type].subMenu?.find(doc => doc.to === `/${type}/${to}`);
 };
 
-export const getMdDocByFilePath = (filePath?: string): INavItem | undefined => {
+export const getMdDocByFilePath = (filePath?: string): IMenuItem | undefined => {
   if (!filePath) return undefined;
   return getMdFiles().techDocs.subMenu?.find(doc => doc.filepath === filePath);
 };
 
-function getTreeViewObject(mdFiles: Record<string, string>, name?: string, label?: string, icon?: JSX.Element, docurl?: string): INavItem {
+function getTreeViewObject(mdFiles: Record<string, string>, name?: string, label?: string, icon?: JSX.Element, docurl?: string): IMenuItem {
   // remove trailing slash
   const baseurl = docurl?.replace(/\/$/, '');
   return {
@@ -111,7 +110,7 @@ function getTreeViewObject(mdFiles: Record<string, string>, name?: string, label
         updatedAt,
         subMenu: []
       };
-    }) as unknown as INavItem[],
+    }) as unknown as IMenuItem[],
   };
 }
 

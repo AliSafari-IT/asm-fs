@@ -25,14 +25,12 @@ const TreeViewItem: React.FC<{
         const handleDropdownToggle = (e: CustomEvent) => {
             const toggledId = e.detail.itemId;
             const toggledParentId = e.detail.parentId;
+            const isToggling = e.detail.isToggling;
             
-            // Only close if:
-            // 1. This item is not the toggled item
-            // 2. This item is not a parent of the toggled item
-            // 3. This item is not a child of the toggled item
             if (toggledId !== itemId && 
                 !toggledId.startsWith(itemId) && 
-                (!toggledParentId || !itemId?.startsWith(toggledParentId))) {
+                (!toggledParentId || !itemId?.startsWith(toggledParentId)) && 
+                !isToggling) {
                 setIsOpen(false);
             }
         };
@@ -43,42 +41,56 @@ const TreeViewItem: React.FC<{
         };
     }, [itemId]);
 
-    const handleClick = useCallback((e: React.MouseEvent) => {
-        if (hasSubMenu) {
-            e.preventDefault();
-            e.stopPropagation();
-            setIsOpen(!isOpen);
-            // Dispatch custom event when dropdown is toggled
-            const event = new CustomEvent(DROPDOWN_TOGGLE_EVENT, {
-                detail: { 
-                    itemId,
-                    parentId
-                }
-            });
-            window.dispatchEvent(event);
-        } else {
-            if (item.to && !item.to.startsWith('#')) {
+    const handleClick = useCallback(
+        (e: React.MouseEvent) => {
+            e.stopPropagation(); // Stop bubbling
+            if (hasSubMenu) {
                 e.preventDefault();
+                setIsOpen((prev) => !prev);
+                
+                // Dispatch event with both itemId and parentId
+                const event = new CustomEvent(DROPDOWN_TOGGLE_EVENT, {
+                    detail: { 
+                        itemId,
+                        parentId,
+                        isToggling: true 
+                    },
+                });
+                window.dispatchEvent(event);
+            } else if (item.to && !item.to.startsWith('#')) {
                 navigate(item.to);
             }
-        }
-        if (item.onClick) {
-            item.onClick();
-        }
-    }, [hasSubMenu, isOpen, itemId, parentId, item, navigate]);
-
-    if (!item) {
-        return null;
-    }
+            item.onClick?.();
+        },
+        [hasSubMenu, item.to, itemId, parentId, navigate, item]
+    );
+    
+    useEffect(() => {
+        const handleDropdownToggle = (e: CustomEvent) => {
+            const toggledId = e.detail.itemId;
+    
+            // Keep the current dropdown open if it's the parent or a descendant
+            if (toggledId === itemId || toggledId.startsWith(itemId)) {
+                return;
+            }
+            setIsOpen(false); // Close only unrelated dropdowns
+        };
+    
+        window.addEventListener(DROPDOWN_TOGGLE_EVENT, handleDropdownToggle as EventListener);
+        return () => {
+            window.removeEventListener(DROPDOWN_TOGGLE_EVENT, handleDropdownToggle as EventListener);
+        };
+    }, [itemId]);
+    
 
     return (
-        <div className="py-0.5">
+        <div className="relative">
             <div
                 className={`group flex items-center px-3 py-2 cursor-pointer 
                     text-[var(--text-secondary)] hover:text-[var(--text-primary)]
                     hover:bg-[var(--bg-tertiary)] active:bg-[var(--bg-secondary)]
                     rounded-lg transition-all duration-200 
-                    ${level > 0 ? 'ml-6' : ''}
+                    ${level > 0 ? 'pl-4 w-full' : ''}
                     ${isEmphasized ? 'bg-[var(--bg-emphasized)] font-semibold' : ''}`}
                 onClick={handleClick}
             >
@@ -99,20 +111,18 @@ const TreeViewItem: React.FC<{
                         {item.icon}
                     </span>
                 )}
-                <Link
-                    to={item.to || '#'}
-                    onClick={handleClick}
-                    className={`flex-auto text-sm font-medium flex-wrap
+                <span
+                    className={`flex-auto whitespace-nowrap text-sm font-medium
                         group-hover:text-[var(--text-primary)]
                         ${isEmphasized ? 'text-[var(--text-emphasized)]' : ''}`}
                     title={item.title}
                 >
                     {item.title}
-                </Link>
+                </span>
             </div>
             {hasSubMenu && isOpen && (
-                <div className={`mt-1 border-l border-[var(--border-primary)]
-                    ${level > 0 ? 'ml-6' : ''}`}
+                <div 
+                    className={`${level === 0 ? 'navbar-dropdown min-w-[200px]' : 'navbar-submenu'}`}
                 >
                     {item.subMenu?.map((subItem, index) => (
                         <TreeViewItem 
@@ -128,19 +138,29 @@ const TreeViewItem: React.FC<{
     );
 };
 
-const SidebarNavItem: React.FC<{
+const NavItemComponent: React.FC<{
     children?: React.ReactNode;
-    sidebarNavData?: INavItem[];
+    topbarNavData?: INavItem[];
     className?: string;
-}> = ({ children, sidebarNavData, className = '' }) => {
+}> = ({ children, topbarNavData, className = '' }) => {
+    // Reset TreeViewItem state when topbarNavData changes
+    const [key, setKey] = useState(0);
+
+    useEffect(() => {
+        setKey(prev => prev + 1);
+    }, [topbarNavData]);
+
     return (
-        <div className={`py-2 overflow-y-auto ${className}`}>
-            {sidebarNavData?.map((item, index) => (
-                <TreeViewItem key={index} item={item} />
+        <div className={className}>
+            {topbarNavData?.map((item, index) => (
+                <TreeViewItem 
+                    key={`${key}-${index}-${item.id}`} 
+                    item={item} 
+                />
             ))}
             {children}
         </div>
     );
 };
 
-export default React.memo(SidebarNavItem);
+export default NavItemComponent;

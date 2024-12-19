@@ -1,7 +1,7 @@
+import { useTheme } from '@/contexts/ThemeContext';
 import React from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus, oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { useTheme } from '@/hooks/useTheme';
 
 interface CodeProps {
   node?: unknown;

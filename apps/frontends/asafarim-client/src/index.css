@@ -10,6 +10,8 @@
 
 @import './styles/theme-variables.css';
 @import './styles/sitemap-page.css';
+@import './styles/custom.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -52,145 +54,68 @@
 }
 
 @layer components {
+  .btn-submit {
+    @apply bg-teams-purple text-white hover:bg-success active:bg-teams-purple-dark disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-md font-medium shadow-sm transition-all duration-200 ease-in-out;
+  }
+
   .btn-primary {
-    @apply bg-teams-purple text-white 
-           hover:bg-teams-purple-light 
-           active:bg-teams-purple-dark
-           disabled:opacity-50 disabled:cursor-not-allowed
-           px-4 py-2 rounded-md font-medium
-           shadow-sm
-           transition-all duration-200 ease-in-out;
+    @apply bg-teams-purple text-white hover:bg-teams-purple-light active:bg-teams-purple-dark disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-md font-medium shadow-sm transition-all duration-200 ease-in-out;
   }
 
   .btn-secondary {
-    @apply bg-tertiary text-primary 
-           hover:bg-secondary
-           active:bg-primary
-           border border-secondary
-           disabled:opacity-50 disabled:cursor-not-allowed
-           px-4 py-2 rounded-md font-medium
-           shadow-sm
-           transition-all duration-200 ease-in-out;
+    @apply bg-tertiary text-primary hover:bg-secondary active:bg-primary border border-secondary disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-md font-medium shadow-sm transition-all duration-200 ease-in-out;
   }
 
   .btn-danger {
-    @apply bg-danger text-white 
-           hover:bg-[var(--danger-light)]
-           active:bg-[var(--danger-dark)]
-           disabled:opacity-50 disabled:cursor-not-allowed
-           px-4 py-2 rounded-md font-medium
-           shadow-sm
-           transition-all duration-200 ease-in-out;
+    @apply bg-danger text-white hover:bg-[var(--danger-light)] active:bg-[var(--danger-dark)] disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-md font-medium shadow-sm transition-all duration-200 ease-in-out;
   }
 
   .btn-warning {
-    @apply bg-warning text-white 
-           hover:bg-[var(--warning-light)]
-           active:bg-[var(--warning-dark)]
-           disabled:opacity-50 disabled:cursor-not-allowed
-           px-4 py-2 rounded-md font-medium
-           shadow-sm
-           transition-all duration-200 ease-in-out;
+    @apply bg-warning text-white hover:bg-[var(--warning-light)] active:bg-[var(--warning-dark)] disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-md font-medium shadow-sm transition-all duration-200 ease-in-out;
   }
 
   .btn-success {
-    @apply bg-success text-white 
-           hover:bg-[var(--success-light)]
-           active:bg-[var(--success-dark)]
-           disabled:opacity-50 disabled:cursor-not-allowed
-           px-4 py-2 rounded-md font-medium
-           shadow-sm
-           transition-all duration-200 ease-in-out;
+    @apply bg-success text-white hover:bg-[var(--success-light)] active:bg-[var(--success-dark)] disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-md font-medium shadow-sm transition-all duration-200 ease-in-out;
   }
 
   .btn-info {
-    @apply bg-info text-white 
-           hover:bg-[var(--info-light)]
-           active:bg-[var(--info-dark)]
-           disabled:opacity-50 disabled:cursor-not-allowed
-           px-4 py-2 rounded-md font-medium
-           shadow-sm
-           transition-all duration-200 ease-in-out;
+    @apply bg-info text-white hover:bg-[var(--info-light)] active:bg-[var(--info-dark)] disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-md font-medium shadow-sm transition-all duration-200 ease-in-out;
   }
 
   .btn-inverted {
-    @apply bg-inverted text-primary 
-           hover:bg-inverted-light 
-           active:bg-inverted-dark
-           disabled:opacity-50 disabled:cursor-not-allowed
-           px-4 py-2 rounded-md font-medium
-           shadow-sm
-           transition-all duration-200 ease-in-out;
+    @apply bg-inverted text-primary hover:bg-inverted-light active:bg-inverted-dark disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-md font-medium shadow-sm transition-all duration-200 ease-in-out;
   }
 
   .btn-approve {
-    @apply bg-success text-white 
-           hover:bg-[var(--success-light)]
-           active:bg-[var(--success-dark)]
-           disabled:opacity-50 disabled:cursor-not-allowed
-           px-4 py-2 rounded-md font-medium
-           shadow-sm
-           transition-all duration-200 ease-in-out;
+    @apply bg-success text-white hover:bg-[var(--success-light)] active:bg-[var(--success-dark)] disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-md font-medium shadow-sm transition-all duration-200 ease-in-out;
   }
 
   .btn-cancel {
-    @apply bg-danger text-white 
-           hover:bg-[var(--danger-light)]
-           active:bg-[var(--danger-dark)]
-           disabled:opacity-50 disabled:cursor-not-allowed
-           px-4 py-2 rounded-md font-medium
-           shadow-sm
-           transition-all duration-200 ease-in-out;
+    @apply bg-danger text-white hover:bg-[var(--danger-light)] active:bg-[var(--danger-dark)] disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-md font-medium shadow-sm transition-all duration-200 ease-in-out;
+  }
+
+  .btn-close {
+    @apply bg-danger text-white hover:bg-[var(--danger-light)] active:bg-[var(--danger-dark)] disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-md font-medium shadow-sm transition-all duration-200 ease-in-out;
   }
 
   .btn-delete {
-    @apply bg-danger text-white 
-           hover:bg-[var(--danger-light)]
-           active:bg-[var(--danger-dark)]
-           disabled:opacity-50 disabled:cursor-not-allowed
-           px-4 py-2 rounded-md font-medium
-           shadow-sm
-           transition-all duration-200 ease-in-out;
+    @apply bg-danger text-white hover:bg-[var(--danger-light)] active:bg-[var(--danger-dark)] disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-md font-medium shadow-sm transition-all duration-200 ease-in-out;
   }
 
   .btn-edit {
-    @apply bg-info text-white 
-           hover:bg-[var(--info-light)]
-           active:bg-[var(--info-dark)]
-           disabled:opacity-50 disabled:cursor-not-allowed
-           px-4 py-2 rounded-md font-medium
-           shadow-sm
-           transition-all duration-200 ease-in-out;
+    @apply bg-info text-white hover:bg-[var(--info-light)] active:bg-[var(--info-dark)] disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-md font-medium shadow-sm transition-all duration-200 ease-in-out;
   }
 
   .btn-create {
-    @apply bg-teams-purple text-white 
-           hover:bg-teams-purple-light 
-           active:bg-teams-purple-dark
-           disabled:opacity-50 disabled:cursor-not-allowed
-           px-4 py-2 rounded-md font-medium
-           shadow-sm
-           transition-all duration-200 ease-in-out;
+    @apply bg-teams-purple text-white hover:bg-teams-purple-light active:bg-teams-purple-dark disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-md font-medium shadow-sm transition-all duration-200 ease-in-out;
   }
 
   .btn-accept {
-    @apply bg-success text-white 
-           hover:bg-[var(--success-light)]
-           active:bg-[var(--success-dark)]
-           disabled:opacity-50 disabled:cursor-not-allowed
-           px-4 py-2 rounded-md font-medium
-           shadow-sm
-           transition-all duration-200 ease-in-out;
+    @apply bg-success text-white hover:bg-[var(--success-light)] active:bg-[var(--success-dark)] disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-md font-medium shadow-sm transition-all duration-200 ease-in-out;
   }
 
   .btn-reject {
-    @apply bg-danger text-white 
-           hover:bg-[var(--danger-light)]
-           active:bg-[var(--danger-dark)]
-           disabled:opacity-50 disabled:cursor-not-allowed
-           px-4 py-2 rounded-md font-medium
-           shadow-sm
-           transition-all duration-200 ease-in-out;
+    @apply bg-danger text-white hover:bg-[var(--danger-light)] active:bg-[var(--danger-dark)] disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2 rounded-md font-medium shadow-sm transition-all duration-200 ease-in-out;
   }
 
   .btn-link {
@@ -287,9 +212,18 @@
   .border-inverted {
     @apply border-[var(--border-inverted)];
   }
+
   /* Layout Components */
   .navbar {
-    @apply sticky top-0 z-50 bg-[var(--bg-navbar)] border-b border-[var(--navbar-border)] text-[var(--navbar-text)];
+      @apply sticky top-0 z-50 bg-[var(--bg-navbar)] border-b border-[var(--navbar-border)] text-[var(--navbar-text)] max-h-[var(--navbar-height)];
+  }
+
+  .header {
+    @apply bg-[var(--bg-header)] border-b border-[var(--border-primary)] py-12;
+  }
+
+  .brand-asafarim {
+    @apply h-10 w-10 ml-2;
   }
 
   .footer {
@@ -297,25 +231,70 @@
   }
 
   /* Font Utilities */
-  .font-sans { @apply font-[var(--font-sans)]; }
-  .font-segoe { @apply font-[var(--font-segoe)]; }
-  .font-playfair { @apply font-[var(--font-playfair)]; }
-  .font-quicksand { @apply font-[var(--font-quicksand)]; }
-  .font-cormorant { @apply font-[var(--font-cormorant)]; }
-  .font-montserrat { @apply font-[var(--font-montserrat)]; }
-  .font-josefin { @apply font-[var(--font-josefin)]; }
-  .font-roboto { @apply font-[var(--font-roboto)]; }
+  .font-sans {
+    @apply font-[var(--font-sans)];
+  }
+
+  .font-segoe {
+    @apply font-[var(--font-segoe)];
+  }
+
+  .font-playfair {
+    @apply font-[var(--font-playfair)];
+  }
+
+  .font-quicksand {
+    @apply font-[var(--font-quicksand)];
+  }
+
+  .font-cormorant {
+    @apply font-[var(--font-cormorant)];
+  }
+
+  .font-montserrat {
+    @apply font-[var(--font-montserrat)];
+  }
+
+  .font-josefin {
+    @apply font-[var(--font-josefin)];
+  }
+
+  .font-roboto {
+    @apply font-[var(--font-roboto)];
+  }
 
   /* Teams-specific Utilities */
-  .bg-teams-purple { @apply bg-[var(--teams-purple)]; }
-  .bg-teams-red { @apply bg-[var(--teams-red)]; }
-  .bg-teams-green { @apply bg-[var(--teams-green)]; }
-  .bg-teams-blue { @apply bg-[var(--teams-blue)]; }
+  .bg-teams-purple {
+    @apply bg-[var(--teams-purple)];
+  }
 
-  .text-teams-purple { @apply text-[var(--teams-purple)]; }
-  .text-teams-red { @apply text-[var(--teams-red)]; }
-  .text-teams-green { @apply text-[var(--teams-green)]; }
-  .text-teams-blue { @apply text-[var(--teams-blue)]; }
+  .bg-teams-red {
+    @apply bg-[var(--teams-red)];
+  }
+
+  .bg-teams-green {
+    @apply bg-[var(--teams-green)];
+  }
+
+  .bg-teams-blue {
+    @apply bg-[var(--teams-blue)];
+  }
+
+  .text-teams-purple {
+    @apply text-[var(--teams-purple)];
+  }
+
+  .text-teams-red {
+    @apply text-[var(--teams-red)];
+  }
+
+  .text-teams-green {
+    @apply text-[var(--teams-green)];
+  }
+
+  .text-teams-blue {
+    @apply text-[var(--teams-blue)];
+  }
 }
 
 /* Markdown Content Styling */
@@ -459,9 +438,17 @@
 }
 
 @keyframes gradient {
-  0% { background-position: 0% center; }
-  50% { background-position: 100% center; }
-  100% { background-position: 0% center; }
+  0% {
+    background-position: 0% center;
+  }
+
+  50% {
+    background-position: 100% center;
+  }
+
+  100% {
+    background-position: 0% center;
+  }
 }
 
 /* Dark mode styles */
@@ -485,113 +472,199 @@
   @apply rounded-md p-4 mb-4;
 }
 
-.primary{
+.primary {
   color: #0f5132;
 }
 
-.secondary{
+.secondary {
   color: #664d03;
 }
 
-.danger{
+.danger {
   color: #842029;
 }
 
-.error{
+.error {
   color: #842029;
 }
 
-.info{
+.info {
   color: #055160;
 }
 
-.warning{
+.warning {
   color: #664d03;
 }
 
-.success{
+.success {
   color: #0f5132;
 }
 
 /* markdown-body  */
 .markdown-body {
   @apply max-w-none p-6 rounded-lg;
+
   h1 {
     @apply text-4xl font-extrabold mb-8 pb-4 relative;
     color: var(--markdown-header-text);
     line-height: normal;
     border-bottom: 2px solid var(--markdown-header-border);
   }
+
   h2 {
     @apply text-3xl font-bold mt-8 mb-4;
     color: var(--markdown-header-text);
   }
+
   h3 {
     @apply text-2xl font-semibold mt-6 mb-3;
     color: var(--markdown-header-text);
   }
+
   p {
     @apply text-lg leading-relaxed mb-6;
     color: var(--markdown-text);
   }
+
   strong {
     @apply font-bold;
     color: var(--text-primary);
   }
+
   a {
     @apply font-medium transition-colors duration-200;
     color: var(--teams-blue);
   }
+
   a:hover {
     @apply underline;
     color: var(--teams-purple);
   }
+
   blockquote {
     @apply pl-4 py-1 my-6 border-l-4;
     background-color: var(--markdown-quote-bg);
     border-color: var(--teams-purple);
   }
+
   ul {
     @apply list-disc list-inside mb-6 space-y-2;
   }
+
   ol {
     @apply list-decimal list-inside mb-6 space-y-2;
   }
+
   code {
     @apply px-2 py-1 rounded text-sm font-mono;
     background-color: var(--markdown-code-bg);
     color: var(--markdown-code-text);
     border: 1px solid var(--markdown-code-border);
   }
+
   pre {
     @apply p-4 rounded-lg my-6 overflow-x-auto;
     background-color: var(--markdown-code-bg);
   }
+
   pre code {
     @apply p-0 border-0 bg-transparent;
     color: var(--markdown-code-text);
   }
+
   table {
     @apply w-full my-6 border-collapse;
   }
+
   table th {
     @apply px-4 py-3 text-left font-semibold;
     background-color: var(--markdown-table-header-bg);
     border: 1px solid var(--markdown-table-border);
   }
+
   table td {
     @apply px-4 py-3 border;
     border-color: var(--markdown-table-border);
   }
+
   table tr:nth-child(even) {
     background-color: var(--markdown-table-row-bg);
   }
+
   hr {
     @apply my-8 border-t-2;
     border-color: var(--markdown-border);
   }
+
   time {
     @apply block text-sm font-medium mb-8;
     color: var(--text-secondary);
   }
+}
+
+/** topbar-container */
+.topbar-container {
+  @apply flex items-center justify-between w-full px-4;
+}
+
+.left-container {
+  @apply flex items-center space-x-4;
+}
+
+.right-container {
+  @apply flex items-center space-x-4 ml-auto;
+}
+
+/** navbar-tree-container */
+.navbar-tree-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.5rem;
+  border: 1px solid var(--border-primary);
+  border-radius: 0.5rem;
+  background-color: var(--bg-primary);
+  max-width: 100%;
+}
+
+.navbar-tree-container > div {
+  position: relative;
+}
+
+/* Style for dropdown items in navbar */
+/* Dropdown positioning */
+.navbar-tree-container .group {
+  position: relative; /* Anchor point for dropdowns */
+}
+
+.navbar-tree-container .group + div {
+  position: absolute;
+  top: 100%; /* Place submenu below the parent */
+  left: 0;
+  min-width: 200px;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  z-index: 999; /* Ensure it stacks properly */
+  margin-top: 0.2rem; /* Add slight spacing */
+}
+
+.navbar-tree-container .navbar-submenu {
+  display: none;
+}
+
+.navbar-tree-container .group:hover > .navbar-submenu,
+.navbar-tree-container .group:focus-within > .navbar-submenu {
+  display: block; /* Show submenu when hovering or focusing */
+}
+
+
+
+/* Ensure submenus don't overflow */
+.navbar-tree-container .group + div > div {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
 }

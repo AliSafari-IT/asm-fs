@@ -1,6 +1,6 @@
 import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
-import { ThemeProvider } from './hooks/useTheme';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 const AppWithRouter = () => (
   <ThemeProvider>

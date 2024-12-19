@@ -3,7 +3,7 @@ import React, { createContext, useContext,  useState } from 'react';
 
 type Theme = 'light' | 'dark';
 
-interface ThemeContextProps {
+export interface ThemeContextProps {
   theme: Theme;
   toggleTheme: () => void;
 }
@@ -31,12 +31,12 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-export const useTheme = (): ThemeContextProps => {
+export const useTheme1 = (): ThemeContextProps => {
   const context = useContext(ThemeContext);
   if (!context) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
-  //console.log('useTheme', context.theme);
+  console.log('useTheme', context.theme);
   return context;
 };
 
