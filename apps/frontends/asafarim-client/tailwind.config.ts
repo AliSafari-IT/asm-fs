@@ -10,6 +10,14 @@ const config = {
     "./app/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
+    screens: {
+      'dark-mode': { 'raw': '(prefers-color-scheme: dark)' },
+    },
+    variants: {
+      extend: {
+        opacity: ['disabled', 'group-hover', 'responsive'],
+      },
+    },
     extend: {
       fontFamily: {
         mono: ['Consolas', 'Monaco', 'Courier New', 'monospace'],
@@ -57,7 +65,7 @@ const config = {
           light: 'var(--bg-tertiary-light)',
           DEFAULT: 'var(--bg-tertiary)',
           dark: 'var(--bg-tertiary-dark)',
-        },            
+        },
       },
       backgroundColor: {
         primary: 'var(--bg-primary)',

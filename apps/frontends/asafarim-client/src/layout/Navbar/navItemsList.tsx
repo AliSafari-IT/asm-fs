@@ -116,7 +116,6 @@ const mdSections: INavItem[] = [
     style: {},
     icon: <IconTeaching />,
     subMenu: [mdChapters[0], mdChapters[1]],
-    to: '#',
   },
   {
     id: 'responsive-design',
@@ -128,7 +127,6 @@ const mdSections: INavItem[] = [
     style: {},
     icon: <IconTeaching />,
     subMenu: [mdChapters[2]],
-    to: '#',
   },
   {
     id: 'components',
@@ -140,7 +138,6 @@ const mdSections: INavItem[] = [
     style: {},
     icon: <IconTeaching />,
     subMenu: [mdChapters[3]],
-    to: '#',
   },
 ];
 
@@ -157,7 +154,7 @@ const mdBooks: INavItem[] = [
   },
 ];
 
-const blog: IChapter = {
+const blog: IMenuItem = {
   id: 'blog',
   title: 'Blog',
   className: '',
@@ -167,7 +164,8 @@ const blog: IChapter = {
   name: 'asafarim-blog',
   to: '//https://techdocs.asafarim.com/blog',
   icon: <IconBlog />,
-  docs: [],
+  isForNavbar: false,
+  subMenu: [],
 };
 
 const techdocs: IMenuItem = {
@@ -180,8 +178,7 @@ const techdocs: IMenuItem = {
   name: 'asafarim-techdocs',
   to: '//techdocs.asafarim.com',
   icon: <IconTeaching />,
-  isForNavbar: true,
-
+  isForNavbar: false,
   subMenu: [],
 };
 
@@ -192,7 +189,7 @@ const books: IMenuItem = {
   description: '',
   label: 'Books',
   style: {},
-  isForNavbar: true,
+  isForNavbar: false,
 
   name: 'asafarim-books',
   to: '//books.asafarim.com',
@@ -202,7 +199,7 @@ const books: IMenuItem = {
 
 const learn: IMenuItem = {
   id: 'learning',
-  isForNavbar: false,
+  isForNavbar: true,
   title: 'Learning Projects',
   className: '',
   description: '',

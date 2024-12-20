@@ -183,13 +183,11 @@ const useNavItems = () => {
 
   // Directly return the computed nav items
   return [
-    ...navItems,
     homeDD,
+    
+    ...navItems,
     dashboardDD,
-    userAccountDD,
-    mdFiles.legalDocs,
-    mdFiles.changelogs,
-    mdFiles.techDocs,
+    userAccountDD
   ];
 };
 

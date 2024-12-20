@@ -214,16 +214,9 @@
   }
 
   /* Layout Components */
-  .navbar {
-      @apply sticky top-0 z-50 bg-[var(--bg-navbar)] border-b border-[var(--navbar-border)] text-[var(--navbar-text)] max-h-[var(--navbar-height)];
-  }
 
   .header {
     @apply bg-[var(--bg-header)] border-b border-[var(--border-primary)] py-12;
-  }
-
-  .brand-asafarim {
-    @apply h-10 w-10 ml-2;
   }
 
   .footer {
@@ -295,6 +288,15 @@
   .text-teams-blue {
     @apply text-[var(--teams-blue)];
   }
+}
+
+/* Center alignment helper */
+.flex-grow {
+  flex-grow: 1;
+}
+
+.justify-center {
+  justify-content: center;
 }
 
 /* Markdown Content Styling */
@@ -602,69 +604,108 @@
   }
 }
 
+
+/* navbar */
+.navbar {
+  @apply sticky top-0 z-50 flex flex-wrap items-center justify-between px-4 py-2 lg:py-0;
+  background-color: var(--bg-navbar);
+  border-bottom: 1px solid var(--navbar-border);
+  color: var(--navbar-text);
+  min-height: var(--navbar-height);
+}
+
+.navbar .brand-asafarim {
+  @apply flex items-center space-x-2 py-2;
+}
+
+.navbar .brand-asafarim img {
+  @apply w-10 h-10 transition-transform duration-200;
+}
+
+.navbar .brand-asafarim span {
+  @apply text-xl font-bold text-[var(--navbar-text)] transition-colors duration-200;
+}
+
+/* Responsive menu button animation */
+.navbar button svg {
+  @apply transition-transform duration-200;
+}
+
+.navbar button:hover svg {
+  @apply scale-110;
+}
+
+/* Dropdown menu transitions */
+.navbar [role="menu"] {
+  @apply transition-all duration-200 ease-in-out transform origin-top-right;
+}
+
+.navbar [role="menu"].enter {
+  @apply opacity-0 scale-95;
+}
+
+.navbar [role="menu"].enter-active {
+  @apply opacity-100 scale-100;
+}
+
+.navbar [role="menu"].exit {
+  @apply opacity-100 scale-100;
+}
+
+.navbar [role="menu"].exit-active {
+  @apply opacity-0 scale-95;
+}
+
+/* navbar-tree-container */
+.navbar-tree-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  max-width: 100%;
+  transition: all 0.3s ease;
+}
+
+@media (min-width: 1024px) {
+  .navbar-tree-container {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+/* Responsive behavior for navbar items */
+@media (max-width: 1024px) {
+  .navbar-tree-container > div {
+    width: 100%;
+  }
+  
+  .navbar-tree-container .group ul {
+    position: static;
+    width: 100%;
+    margin-left: 1.25rem;
+  }
+}
+
+.navbar-tree-container .group ul {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  z-index: 999;
+}
+
 /** topbar-container */
 .topbar-container {
   @apply flex items-center justify-between w-full px-4;
 }
 
 .left-container {
-  @apply flex items-center space-x-4;
+  @apply flex items-center space-x-4 mr-2 flex-shrink-0
 }
 
 .right-container {
   @apply flex items-center space-x-4 ml-auto;
-}
-
-/** navbar-tree-container */
-.navbar-tree-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin: 0;
-  padding: 0.5rem;
-  border: 1px solid var(--border-primary);
-  border-radius: 0.5rem;
-  background-color: var(--bg-primary);
-  max-width: 100%;
-}
-
-.navbar-tree-container > div {
-  position: relative;
-}
-
-/* Style for dropdown items in navbar */
-/* Dropdown positioning */
-.navbar-tree-container .group {
-  position: relative; /* Anchor point for dropdowns */
-}
-
-.navbar-tree-container .group + div {
-  position: absolute;
-  top: 100%; /* Place submenu below the parent */
-  left: 0;
-  min-width: 200px;
-  background-color: var(--bg-primary);
-  border: 1px solid var(--border-primary);
-  border-radius: 0.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  z-index: 999; /* Ensure it stacks properly */
-  margin-top: 0.2rem; /* Add slight spacing */
-}
-
-.navbar-tree-container .navbar-submenu {
-  display: none;
-}
-
-.navbar-tree-container .group:hover > .navbar-submenu,
-.navbar-tree-container .group:focus-within > .navbar-submenu {
-  display: block; /* Show submenu when hovering or focusing */
-}
-
-
-
-/* Ensure submenus don't overflow */
-.navbar-tree-container .group + div > div {
-  max-height: calc(100vh - 200px);
-  overflow-y: auto;
 }
