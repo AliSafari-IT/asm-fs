@@ -211,6 +211,45 @@ const learn: IMenuItem = {
   subMenu: mdBooks,
 };
 
+const essentialInsights: IMenuItem = {
+  id: 'essential-insights',
+  isForNavbar: true,
+  title: 'Essential Insights',
+  className: '',
+  description: '',
+  label: 'Essential Insights',
+  style: {},
+  name: 'asafarim-essential-insights',
+  to: '#',
+  icon: <IconTeaching />,
+  subMenu: [
+    {
+      id: 'console-applications',
+      title: 'Console Applications',
+      className: '',
+      description: '',
+      label: 'Console Applications',
+      style: {},
+      isForNavbar: true,
+      name: 'asafarim-console-applications',
+      icon: <IconTeaching />,
+      subMenu: [{
+        id: 'csharp-recursive-factorial-list',
+        title: 'C# Recursive Factorial List',
+        className: '',
+        description: '',
+        label: 'C# Recursive Factorial List',
+        style: {},
+        isForNavbar: true,
+        name: 'asafarim-csharp-recursive-factorial-list',
+        to: '/essential-insights/console-applications/csharp-recursive-factorial-list',
+        icon: <IconTeaching />
+      }],
+    },
+  ],
+};
+
+
 const mdFiles = getMdFiles();
 
 const navItems: IMenuItem[] = [
@@ -218,6 +257,7 @@ const navItems: IMenuItem[] = [
   techdocs,
   books,
   learn,
+  essentialInsights,
   mdFiles.legalDocs,
   mdFiles.changelogs,
   mdFiles.techDocs,

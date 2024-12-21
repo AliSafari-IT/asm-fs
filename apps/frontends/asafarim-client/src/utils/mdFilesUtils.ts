@@ -27,15 +27,16 @@ const legalDocsFiles = {
 const changeLogs: IMenuItem = {...getTreeViewObject(changelogFiles, 'changelogs', 'Change Logs', ChangeLogSvgIcon, '/changelogs'), isForNavbar: false};
 const techdocsTree: IMenuItem = {...getTreeViewObject(techDocs, 'tech-docs', 'Tech Docs', ChangeLogSvgIcon, '/tech-docs'), isForNavbar: true};
 const legalDocs: IMenuItem = {...getTreeViewObject(legalDocsFiles, 'legal-docs', 'Legal Docs', ChangeLogSvgIcon, '/legal-docs'), isForNavbar: false};
-
+const essentialInsights: IMenuItem = {...getTreeViewObject(techDocs, 'essential-insights', 'Essential Insights', ChangeLogSvgIcon, '/essential-insights'), isForNavbar: true};
 
 export const getMdFiles = (): {
-  legalDocs: IMenuItem; changelogs: IMenuItem; techDocs: IMenuItem 
+  legalDocs: IMenuItem; changelogs: IMenuItem; techDocs: IMenuItem; essentialInsights: IMenuItem
 } => {
   return {
     legalDocs: legalDocs,
     changelogs: changeLogs,
     techDocs: techdocsTree,
+    essentialInsights: essentialInsights
   };
 };
 

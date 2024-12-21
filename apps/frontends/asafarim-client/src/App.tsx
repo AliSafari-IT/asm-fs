@@ -68,6 +68,16 @@ function App() {
               <MarkdownPage data={mds.techDocs} title="Tech Docs" description="Tech Documentation" />
             }
           />
+          <Route
+            path="/essential-insights/:slug?"
+            element={
+              <MarkdownPage
+                data={mds.essentialInsights}
+                title="C# Recursive Factorial List"
+                description="C# Recursive Factorial List"
+              />
+            }
+          />
 
           <Route path="/posts/:slug" element={<PostDetail />} />
           <Route path="/:model/add" element={<AddForm />} />
