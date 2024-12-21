@@ -23,7 +23,6 @@ import CreateUser from "./pages/User/CreateUser";
 import EditUser from "./pages/User/EditUser";
 import Footer from "./layout/Footer/Footer";
 import UserProfile from "./pages/User/UserProfile";
-import useAuth from "./hooks/useAuth"; // Custom hook for user state
 import { Suspense, useEffect } from "react";
 import Layout from "./layout/Layout";
 import RTNav from "./pages/Project/projects/react/tailwind/navbar/RTNav";
@@ -31,10 +30,9 @@ import RTNav from "./pages/Project/projects/react/tailwind/navbar/RTNav";
 import Contact from "./pages/Contact";
 import MarkdownPage from "./components/MarkdownPage/MarkdownPage";
 import { ThemeProvider } from './contexts/ThemeContext';
-import ChangelogPage from './pages/Changelog/ChangelogPage';
 import AccountSettings from "./pages/Accountpage/AccountSettings";
-import TechDocsPage from './pages/TechDocs/TechDocsPage';
 import { getMdFiles } from "./utils/mdFilesUtils";
+import useAuth from "./hooks/useAuth";
 
 function App() {
   const user = useAuth()?.user;
@@ -88,7 +86,12 @@ function App() {
           <Route path="/projects/react/tailwind/navbar-with-dynamic-nav-items" element={<RTNav />} />
           <Route path="/[...notfound]" element={<NotFound />} />
           <Route path="/about-asafarim" element={<About />} />
-          <Route path="/about/akkodis-targeted-resume" element={<AkkodisTargetedResume />} />
+          <Route path="/logout" element={<LogoutPage />} />
+          {user &&
+            <>
+              <Route path="/about/akkodis-targeted-resume" element={<AkkodisTargetedResume />} />
+            </>
+          }
           <Route path="/contact-asafarim" element={<Contact />} />
           <Route
             path="/user-account-settings"
@@ -118,12 +121,7 @@ function App() {
           />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<Register />} />
-          <Route
-            path="/logout"
-            element={
-              <LogoutPage />
-            }
-          />
+
           <Route path="/users" element={<UsersList />} />
           <Route path="/users/create" element={<CreateUser />} />
           <Route

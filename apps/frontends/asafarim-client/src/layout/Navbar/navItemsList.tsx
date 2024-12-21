@@ -1,260 +1,14 @@
+// E:\asm-fs\apps\frontends\asafarim-client\src\layout\Navbar\navItemsList.tsx
 import {
   Teaching24Regular as IconTeaching,
   ProjectionScreenText24Regular as IconProject,
-  PhoneVibrate24Regular as IconContact,
-  Board24Regular as IconDashboard,
-  Settings24Regular as IconSettings,
-  Home24Regular as IconHome,
-  Person24Regular as IconProfile,
-  Accessibility24Regular as IconAccount,
   Bluetooth28Regular as IconBlog,
-  SignOut24Regular as IconLogout,
-  LearningApp24Regular as IconLearning,
-  Gauge24Regular as IconLegal 
+  LearningApp24Regular as IconLearning
 } from '@fluentui/react-icons';
 import { IChapter } from '../../interfaces/IChapter';
 import { IMenuItem } from '../../interfaces/IMenuItem';
 import { INavItem } from '../../interfaces/INavItem';
-import {  getMdFiles } from '@/utils/mdFilesUtils';
-import LegalDocsSvgIcon from '@/assets/SvgIcons/LegalDocsSvgIcon';
-
-// Home Dropdown
-const homeDD: IMenuItem = {
-  id: 'home',
-  title: 'Home',
-  to: '#',
-  icon: <IconHome />,
-  label: 'Home',
-  subMenu: [
-    {
-      id: 'brand-asafarim',
-      title: 'ASafariM',
-      to: '/',
-      className: 'asafarim-brand',
-      description: 'ASafariM is a free and open source project for learning web development.',
-      icon: <IconTeaching />,
-      label: 'ASafariM'
-    },
-    {
-      id: 'about',
-      title: 'About',
-      to: '/about-asafarim',
-      icon: <IconProject />,
-      label: 'About',
-      subMenu: [],
-      description: 'ASafariM is a free and open source project for learning web development.',
-      name: 'About',
-      className: ''
-    },
-    {
-      id: 'contact',
-      title: 'Contact',
-      icon: <IconContact />,
-      label: 'Contact',
-      description: 'Contact ASafariM for any questions or feedback.',
-      name: 'Contact',
-      subMenu: [
-        {
-          id: 'contact-us',
-          title: 'Contact Us',
-          to: '/contact-asafarim',
-          icon: <IconContact />,
-          label: 'Contact Us',
-          description: 'Contact ASafariM for any questions or feedback.',
-          name: 'Contact Us',
-          className: ''
-        },
-        {
-          id: 'email',
-          title: 'Email',
-          to: 'mailto:YtK5H@example.com',
-          icon: <IconContact />,
-          label: 'Email',
-          subMenu: [],
-          description: 'Email ASafariM for any questions or feedback.',
-          name: 'Email',
-          className: ''
-        },
-        {
-          id: 'phone',
-          title: 'Phone',
-          to: 'tel:123-456-7890',
-          icon: <IconContact />,
-          label: 'Phone',
-          subMenu: [],
-          description: 'Call ASafariM for any questions or feedback.',
-          name: 'Phone',
-          className: ''
-        },
-      ]
-    },
-  ]
-};
-
-// Dashboard Dropdown
-const dashboardDD: IMenuItem = {
-  id: 'dashboard',
-  title: 'Dashboard',
-  label: 'Dashboard',
-  to: '#',
-  icon: <IconDashboard />,
-  className: '',
-  style: {},
-  subMenu: [
-    {
-      id: 'user-dashboard',
-      title: 'Dashboard',
-      label: 'Dashboard',
-      to: '/dashboard',
-      icon: <IconDashboard />,
-      className: '',
-      style: {},
-      subMenu: []
-    },
-    {
-      id: 'auth',
-      title: 'Account',
-      label: 'Account',
-      to: '#',
-      icon: <IconAccount />,
-      className: '',
-      style: {},
-      subMenu: [
-        {
-          id: 'logout',
-          title: 'Logout',
-          label: 'Logout',
-          to: '/logout',
-          icon: <IconLogout />,
-          className: '',
-          style: {},
-          subMenu: []
-        },
-        {
-          id: 'login',
-          title: 'Login',
-          label: 'Login',
-          to: '/login',
-          icon: <IconProfile />,
-          className: '',
-          style: {},
-          subMenu: []
-        },
-        {
-          id: 'register',
-          title: 'Register',
-          label: 'Register',
-          to: '/register',
-          icon: <IconProfile />,
-          className: '',
-          style: {},
-          subMenu: []
-        },
-      ]
-    },
-    {
-      id: 'settings',
-      title: 'Settings',
-      label: 'Settings',
-      to: '#',
-      icon: <IconSettings />,
-      className: '',
-      style: {},
-      subMenu: [
-        {
-          id: 'account-settings',
-          title: 'Account Settings',
-          label: 'Account Settings',
-          to: '/user-account-settings',
-          icon: <IconSettings />,
-          className: '',
-          style: {},
-          subMenu: []
-        },
-        {
-          id: 'user-profile',
-          title: 'User Profile',
-          label: 'User Profile',
-          to: '/user-profile',
-          icon: <IconProfile />,
-          className: '',
-          style: {},
-          subMenu: [
-            {
-              id: 'profile-security',
-              title: 'Security Settings',
-              label: 'Security Settings',
-              to: '/user-profile/security',
-              icon: <IconSettings />,
-              className: '',
-              style: {},
-              subMenu: []
-            },
-            {
-              id: 'profile-privacy',
-              title: 'Privacy Settings',
-              label: 'Privacy Settings',
-              to: '/user-profile/privacy',
-              icon: <IconSettings />,
-              className: '',
-              style: {}
-            },
-            {
-              id: 'profile-notifications',
-              title: 'Notification Settings',
-              label: 'Notification Settings',
-              to: '/user-profile/notifications',
-              icon: <IconSettings />,
-              className: '',
-              style: {}
-            },
-          ]
-        },
-        {
-          id: 'advanced-settings',
-          title: 'Advanced Settings',
-          label: 'Advanced Settings',
-          to: '/advanced-settings',
-          icon: <IconSettings />,
-          className: '',
-          style: {},
-          subMenu: [
-            {
-              id: 'system-settings',
-              title: 'System Settings',
-              label: 'System Settings',
-              to: '/system-settings',
-              icon: <IconSettings />,
-              className: '',
-              style: {},
-              subMenu: [
-                {
-                  id: 'backup-settings',
-                  title: 'Backup Settings',
-                  label: 'Backup Settings',
-                  to: '/backup-settings',
-                  icon: <IconSettings />,
-                  className: '',
-                  style: {}
-                },
-              ]
-            },
-          ]
-        },
-      ]
-    },
-    {
-      id: 'users',
-      title: 'Users',
-      label: 'Users',
-      to: '/users',
-      icon: <IconProfile />,
-      className: '',
-      style: {},
-      subMenu: []
-    }
-  ]
-};
+import { getMdFiles } from '@/utils/mdFilesUtils';
 
 const mdChapters: INavItem[] = [
   {
@@ -362,7 +116,6 @@ const mdSections: INavItem[] = [
     style: {},
     icon: <IconTeaching />,
     subMenu: [mdChapters[0], mdChapters[1]],
-    to: '#',
   },
   {
     id: 'responsive-design',
@@ -374,7 +127,6 @@ const mdSections: INavItem[] = [
     style: {},
     icon: <IconTeaching />,
     subMenu: [mdChapters[2]],
-    to: '#',
   },
   {
     id: 'components',
@@ -386,7 +138,6 @@ const mdSections: INavItem[] = [
     style: {},
     icon: <IconTeaching />,
     subMenu: [mdChapters[3]],
-    to: '#',
   },
 ];
 
@@ -397,13 +148,13 @@ const mdBooks: INavItem[] = [
     icon: <IconTeaching />,
     subMenu: mdSections,
     topics: [
-      { id: 'tailwind-vs-css', title: 'Tailwind vs Traditional CSS', to: '/md/learning/tailwind-vs-css', icon: <IconTeaching />, description: undefined,name:'tailwind-vs-css' },
-      { id: 'best-practices', title: 'Best Practices in Tailwind', to: '/md/learning/tailwind-best-practices', icon: <IconTeaching />, description: undefined,name:'best-practices' },
+      { id: 'tailwind-vs-css', title: 'Tailwind vs Traditional CSS', to: '/md/learning/tailwind-vs-css', icon: <IconTeaching />, description: undefined, name: 'tailwind-vs-css' },
+      { id: 'best-practices', title: 'Best Practices in Tailwind', to: '/md/learning/tailwind-best-practices', icon: <IconTeaching />, description: undefined, name: 'best-practices' },
     ],
   },
 ];
 
-const blog: IChapter = {
+const blog: IMenuItem = {
   id: 'blog',
   title: 'Blog',
   className: '',
@@ -413,10 +164,11 @@ const blog: IChapter = {
   name: 'asafarim-blog',
   to: '//https://techdocs.asafarim.com/blog',
   icon: <IconBlog />,
-  docs: [],
+  isForNavbar: false,
+  subMenu: [],
 };
 
-const techdocs: INavItem = {
+const techdocs: IMenuItem = {
   id: 'techdocs',
   title: 'Tech Docs',
   className: '',
@@ -426,24 +178,28 @@ const techdocs: INavItem = {
   name: 'asafarim-techdocs',
   to: '//techdocs.asafarim.com',
   icon: <IconTeaching />,
+  isForNavbar: false,
   subMenu: [],
 };
 
-const books: INavItem = {
+const books: IMenuItem = {
   id: 'books',
   title: 'Books',
   className: '',
   description: '',
   label: 'Books',
   style: {},
+  isForNavbar: false,
+
   name: 'asafarim-books',
   to: '//books.asafarim.com',
   icon: <IconTeaching />,
   subMenu: [],
 };
 
-const learn: INavItem = {
+const learn: IMenuItem = {
   id: 'learning',
+  isForNavbar: true,
   title: 'Learning Projects',
   className: '',
   description: '',
@@ -457,16 +213,14 @@ const learn: INavItem = {
 
 const mdFiles = getMdFiles();
 
-const navItems: INavItem[] = [
-  homeDD,
+const navItems: IMenuItem[] = [
   blog,
   techdocs,
   books,
-  dashboardDD,
   learn,
   mdFiles.legalDocs,
   mdFiles.changelogs,
-  mdFiles.techDocs
+  mdFiles.techDocs,
 ];
 
 export default navItems;

@@ -3,16 +3,18 @@ import Footer from '../Footer/Footer';
 import Header from '../Header/Header';
 import Navbar from '../Navbar/Navbar';
 import { SidebarWrapper } from './SidebarWrapper';
-import { useTheme } from '../../hooks/useTheme';
 import MainContent from './MainContent';
 import useAuth from '@/hooks/useAuth';
 import { useLocation } from 'react-router-dom';
+import { useTheme } from '@/contexts/ThemeContext';
+import TopbarWrapper from './TopbarWrapper';
 interface LayoutProps {
   pageTitle?: string;
   pageDescription?: string;
   header?: React.ReactNode;
   footer?: React.ReactNode;
   sidebar?: React.ReactNode;
+  topbar?: React.ReactNode;
   children?: React.ReactNode;
   className?: string;
 }
@@ -23,11 +25,13 @@ const Wrapper: React.FC<LayoutProps> = ({
   header,
   footer,
   sidebar,
+  topbar,
   children,
   className
 }) => {
   const { theme } = useTheme();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const topbarRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const pt = pageTitle ? `${pageTitle} | ASafariM` : 'ASafariM';
@@ -89,29 +93,7 @@ const Wrapper: React.FC<LayoutProps> = ({
 
   return (
     <div className={`flex flex-col min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] ${className}`}>
-      <Navbar auth={auth}>
-        <button
-          ref={buttonRef}
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="p-2 rounded-lg hover:bg-[var(--hover-bg)] -ml-2"
-          aria-label="Toggle mobile menu"
-        >
-          <svg
-            className="w-6 h-6 stroke-[var(--text-primary)]"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
-        </button>
-      </Navbar>
+      <Navbar auth={auth} />
       {/* Mobile Sidebar Overlay */}
       {isMobileMenuOpen && (
         <div
@@ -122,8 +104,7 @@ const Wrapper: React.FC<LayoutProps> = ({
       <SidebarWrapper
         ref={sidebarRef}
         sidebar={sidebar}
-        className={`fixed top-[var(--navbar-height)] left-0 w-64 z-50 transition-transform duration-300 ease-in-out bg-[var(--bg-secondary)] border-r border-[var(--border-secondary)] ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
+        className={`fixed top-[var(--navbar-height)] left-0 w-64 z-50 transition-transform duration-300 ease-in-out bg-[var(--bg-secondary)] border-r border-[var(--border-secondary)] ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
       />
       <div className="flex flex-1 pt-[var(--navbar-height)]">
         {/* Main Content */}

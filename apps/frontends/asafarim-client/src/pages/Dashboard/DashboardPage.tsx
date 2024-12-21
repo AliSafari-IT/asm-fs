@@ -1,16 +1,18 @@
 // src/pages/Dashboard.tsx
+import React from "react";
 import Wrapper from "../../layout/Wrapper/Wrapper";
 import { DashboardHeaderBlock } from "./DashboardHeaderBlock";
 import { FluentProvider, Link, webDarkTheme, webLightTheme } from "@fluentui/react-components";
-import { useTheme } from "../../hooks/useTheme";
 import CardContainer from "../../components/Containers/Card/CardContainer";
+import { useTheme } from "@/contexts/ThemeContext";
 
-const Dashboard = () => {
-  // get current theme
-  const theme = useTheme().theme == 'dark' ? webDarkTheme : webLightTheme;
+const Dashboard: React.FC = () => {
+  const { theme } = useTheme();
+  const currentTheme = theme === 'dark' ? webDarkTheme : webLightTheme;
+  
   return (
     <Wrapper header={<DashboardHeaderBlock />}>
-      <FluentProvider theme={theme}>
+      <FluentProvider theme={currentTheme}>
         <CardContainer />
       </FluentProvider>
 

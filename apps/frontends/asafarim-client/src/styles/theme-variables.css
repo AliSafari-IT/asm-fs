@@ -43,7 +43,7 @@
   /* Navbar */
   --navbar-bg: var(--bg-navbar);
   --navbar-border: var(--border-primary);
-  --navbar-text: var(--text-primary);
+  --navbar-text: var(--text-info);
 
   /* Dropdown */
   --dropdown-bg: var(--bg-secondary);
@@ -198,7 +198,7 @@
   /* Navbar */
   --navbar-bg: var(--bg-navbar);
   --navbar-border: var(--border-primary);
-  --navbar-text: var(--text-primary);
+  --navbar-text: var(--text-warning);
 
   /* Dropdown */
   --dropdown-bg: var(--bg-secondary);

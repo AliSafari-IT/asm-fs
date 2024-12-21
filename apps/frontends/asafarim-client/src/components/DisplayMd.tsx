@@ -3,9 +3,9 @@ import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
 import Toolbar from './Toolbars/Toolbar';
-import { useTheme } from '../hooks/useTheme';
 import FontSizeRadioButtons from './FontSizeRadioButtons';
 import SaveButtons from './SaveButtons';
+import { useTheme } from '@/contexts/ThemeContext';
 
 interface DisplayMdProps {
   markdownContent: string;

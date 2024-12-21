@@ -1,35 +1,71 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { INavItem } from '../../interfaces/INavItem';
 
-const TreeViewItem: React.FC<{ item: INavItem, level?: number }> = ({ item, level = 0 }) => {
+// Create a custom event for dropdown state management
+const DROPDOWN_TOGGLE_EVENT = 'navbar-dropdown-toggle';
+
+const TreeViewItem: React.FC<{ 
+    item: INavItem, 
+    level?: number,
+    parentId?: string 
+}> = ({ 
+    item, 
+    level = 0,
+    parentId 
+}) => {
     const [isOpen, setIsOpen] = useState(false);
     const hasSubMenu = item.subMenu && item.subMenu.length > 0;
     const isEmphasized = item.className?.includes('emphasized');
     const navigate = useNavigate();
+    const itemId = parentId ? `${parentId}-${item.title}` : item.title;
 
-    const handleClick = (e: React.MouseEvent) => {
+    // Handle closing dropdown when another one is opened
+    useEffect(() => {
+        const handleDropdownToggle = (e: CustomEvent) => {
+            const toggledId = e.detail.itemId;
+            const toggledParentId = e.detail.parentId;
+            
+            // Only close if:
+            // 1. This item is not the toggled item
+            // 2. This item is not a parent of the toggled item
+            // 3. This item is not a child of the toggled item
+            if (toggledId !== itemId && 
+                !toggledId.startsWith(itemId) && 
+                (!toggledParentId || !itemId?.startsWith(toggledParentId))) {
+                setIsOpen(false);
+            }
+        };
+
+        window.addEventListener(DROPDOWN_TOGGLE_EVENT, handleDropdownToggle as EventListener);
+        return () => {
+            window.removeEventListener(DROPDOWN_TOGGLE_EVENT, handleDropdownToggle as EventListener);
+        };
+    }, [itemId]);
+
+    const handleClick = useCallback((e: React.MouseEvent) => {
         if (hasSubMenu) {
             e.preventDefault();
+            e.stopPropagation();
             setIsOpen(!isOpen);
+            // Dispatch custom event when dropdown is toggled
+            const event = new CustomEvent(DROPDOWN_TOGGLE_EVENT, {
+                detail: { 
+                    itemId,
+                    parentId
+                }
+            });
+            window.dispatchEvent(event);
         } else {
-            // For non-submenu items, navigate and close all menus
             if (item.to && !item.to.startsWith('#')) {
                 e.preventDefault();
                 navigate(item.to);
-                // Find and close the mobile menu by clicking outside
-                const event = new MouseEvent('mousedown', {
-                    bubbles: true,
-                    cancelable: true,
-                    view: window
-                });
-                document.dispatchEvent(event);
             }
         }
         if (item.onClick) {
             item.onClick();
         }
-    };
+    }, [hasSubMenu, isOpen, itemId, parentId, item, navigate]);
 
     if (!item) {
         return null;
@@ -66,10 +102,10 @@ const TreeViewItem: React.FC<{ item: INavItem, level?: number }> = ({ item, leve
                 <Link
                     to={item.to || '#'}
                     onClick={handleClick}
-                    className={`flex-auto  text-sm font-medium flex-wrap
+                    className={`flex-auto text-sm font-medium flex-wrap
                         group-hover:text-[var(--text-primary)]
                         ${isEmphasized ? 'text-[var(--text-emphasized)]' : ''}`}
-                        title={item.title}
+                    title={item.title}
                 >
                     {item.title}
                 </Link>
@@ -79,7 +115,12 @@ const TreeViewItem: React.FC<{ item: INavItem, level?: number }> = ({ item, leve
                     ${level > 0 ? 'ml-6' : ''}`}
                 >
                     {item.subMenu?.map((subItem, index) => (
-                        <TreeViewItem key={index} item={subItem} level={level + 1} />
+                        <TreeViewItem 
+                            key={index} 
+                            item={subItem} 
+                            level={level + 1} 
+                            parentId={itemId}
+                        />
                     ))}
                 </div>
             )}

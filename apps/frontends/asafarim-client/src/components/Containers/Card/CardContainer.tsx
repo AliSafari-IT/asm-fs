@@ -9,7 +9,6 @@ import {
 } from '@fluentui/react-components';
 import { DashCard } from './DashCard';
 import { TextField } from '@fluentui/react';
-import { useTheme } from '../../../hooks/useTheme';
 import { ArrowLeft24Regular, ArrowRight24Regular } from '@fluentui/react-icons';
 import { ITopic } from '../../../interfaces/ITopic';
 import { ITag } from '../../../interfaces/ITag';
@@ -17,6 +16,8 @@ import { Add24Regular as IconAdd } from "@fluentui/react-icons";
 import { useNavigate } from 'react-router-dom';
 import dashboardServices from '../../../api/entityServices';
 import Loading from '../../Loading/Loading';
+import { useTheme } from '@/contexts/ThemeContext';
+
 const useStyles = makeStyles({
   container: {
     padding: '20px',
