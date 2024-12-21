@@ -65,9 +65,9 @@ const mdChapters: INavItem[] = [
     style: {},
     className: 'react-integration',
     subMenu: [
-      { id: 'create-react-app', title: 'Using Tailwind with Create React App', to: '/md/learning/react/create-react-app', icon: <IconTeaching /> },
-      { id: 'vite-react', title: 'Using Tailwind with Vite', to: '/md/learning/react/vite', icon: <IconTeaching /> },
-      { id: 'postcss-setup', title: 'Configuring PostCSS for Tailwind', to: '/md/learning/react/postcss', icon: <IconTeaching /> },
+      { id: 'create-react-app', name: 'create-react-app',  title: 'Using Tailwind with Create React App', to: '/md/learning/react/create-react-app', icon: <IconTeaching /> },
+      { id: 'vite-react', name: 'vite-react', title: 'Using Tailwind with Vite', to: '/md/learning/react/vite', icon: <IconTeaching /> },
+      { id: 'postcss-setup', name: 'postcss-setup', title: 'Configuring PostCSS for Tailwind', to: '/md/learning/react/postcss', icon: <IconTeaching /> },
     ],
   },
   {
@@ -81,9 +81,9 @@ const mdChapters: INavItem[] = [
     style: {},
     className: 'responsive-design',
     subMenu: [
-      { id: 'responsive-grid', title: 'Responsive Grid System', to: '/md/learning/tailwind/grid', icon: <IconTeaching /> },
-      { id: 'breakpoints', title: 'Using Tailwind Breakpoints', to: '/md/learning/tailwind/breakpoints', icon: <IconTeaching /> },
-      { id: 'flexbox-layout', title: 'Building with Flexbox', to: '/md/learning/tailwind/flexbox', icon: <IconTeaching /> },
+      { id: 'responsive-grid', name: 'responsive-grid', title: 'Responsive Grid System', to: '/md/learning/tailwind/grid', icon: <IconTeaching /> },
+      { id: 'breakpoints', name: 'breakpoints', title: 'Using Tailwind Breakpoints', to: '/md/learning/tailwind/breakpoints', icon: <IconTeaching /> },
+      { id: 'flexbox-layout', name: 'flexbox-layout', title: 'Building with Flexbox', to: '/md/learning/tailwind/flexbox', icon: <IconTeaching /> },
     ],
   },
   {
@@ -97,10 +97,10 @@ const mdChapters: INavItem[] = [
     style: {},
     className: 'tailwind-components',
     subMenu: [
-      { id: 'navbar', title: 'Responsive Navbar', to: '/md/components/navbar', icon: <IconProject /> },
-      { id: 'buttons', title: 'Custom Button Styles', to: '/md/components/buttons', icon: <IconProject /> },
-      { id: 'cards', title: 'Card Layouts', to: '/md/components/cards', icon: <IconProject /> },
-      { id: 'dropdowns', title: 'Dynamic Dropdowns', to: '/md/components/dropdowns', icon: <IconProject /> },
+      { id: 'navbar', name: 'navbar', title: 'Responsive Navbar', to: '/md/components/navbar', icon: <IconProject /> },
+      { id: 'buttons', name: 'buttons', title: 'Custom Button Styles', to: '/md/components/buttons', icon: <IconProject /> },
+      { id: 'cards', name: 'cards', title: 'Card Layouts', to: '/md/components/cards', icon: <IconProject /> },
+      { id: 'dropdowns', name: 'dropdowns', title: 'Dynamic Dropdowns', to: '/md/components/dropdowns', icon: <IconProject /> },
     ],
   }
 ];
@@ -144,6 +144,7 @@ const mdSections: INavItem[] = [
 const mdBooks: INavItem[] = [
   {
     id: 'react-tailwind-guide',
+    name: 'react-tailwind-guide',
     title: 'Building Responsive Apps with React and Tailwind',
     icon: <IconTeaching />,
     subMenu: mdSections,

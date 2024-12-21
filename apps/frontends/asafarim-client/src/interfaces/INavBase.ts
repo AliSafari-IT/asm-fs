@@ -1,10 +1,11 @@
 export interface INavBase {
   id: string;
   title?: string;
-  name?: string;
+  name: string;
   label?: string;
   description?: string;
   to?: string;
+  slug?: string;
   icon?: React.ReactElement;
   className?: string;
   style?: React.CSSProperties;
@@ -62,4 +63,17 @@ export interface INavBase {
   isEditableAtBy?: string;
   isUpdatableAtBy?: string;
   isDeletableAtBy?: string;
-  isArchivableAtBy?: string;}
+  isArchivableAtBy?: string;
+  isPublishedByUserId?: string;
+  isArchivedByUserId?: string;
+  isDeletedByUserId?: string;
+  isDraftByUserId?: string;
+  isHiddenByUserId?: string;
+  isPrivateByUserId?: string;
+  isProtectedByUserId?: string;
+  isRestrictedByUserId?: string;
+  isReadonlyByUserId?: string;
+  isEditableByUserId?: string;
+  isUpdatableByUserId?: string;
+  isDeletableByUserId?: string;
+  isArchivableByUserId?: string;}

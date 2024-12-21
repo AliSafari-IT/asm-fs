@@ -51,6 +51,7 @@ const useAuthStatus = () => {
 const logreg: IMenuItem[] = [
   {
     id: 'login',
+    name: 'login',
     title: 'Login',
     label: 'Login',
     to: '/login',
@@ -58,6 +59,7 @@ const logreg: IMenuItem[] = [
   },
   {
     id: 'register',
+    name: 'register',
     title: 'Register',
     label: 'Register',
     to: '/register',
@@ -68,6 +70,7 @@ const logreg: IMenuItem[] = [
 // Home Dropdown
 const homeDD: IMenuItem = {
   id: 'home',
+  name: 'home',
   title: 'Home',
   to: '#',
   icon: <IconHome />,
@@ -76,6 +79,7 @@ const homeDD: IMenuItem = {
   subMenu: [
     {
       id: 'brand-asafarim',
+      name: 'brand-asafarim',
       title: 'ASafariM',
       to: '/',
       className: 'asafarim-brand',
@@ -85,6 +89,7 @@ const homeDD: IMenuItem = {
     },
     {
       id: 'about',
+      name: 'about',
       title: 'About',
       to: '/about-asafarim',
       icon: <IconProject />,
@@ -94,6 +99,7 @@ const homeDD: IMenuItem = {
     },
     {
       id: 'contact',
+      name: 'contact',
       title: 'Contact',
       icon: <IconContact />,
       label: 'Contact',
@@ -101,6 +107,7 @@ const homeDD: IMenuItem = {
       subMenu: [
         {
           id: 'contact-us',
+          name: 'contact-us',
           title: 'Contact Us',
           to: '/contact-asafarim',
           icon: <IconContact />,
@@ -109,6 +116,7 @@ const homeDD: IMenuItem = {
         },
         {
           id: 'email',
+          name: 'email',
           title: 'Email',
           to: 'mailto:YtK5H@example.com',
           icon: <IconContact />,
@@ -116,6 +124,7 @@ const homeDD: IMenuItem = {
         },
         {
           id: 'phone',
+          name: 'phone',
           title: 'Phone',
           to: 'tel:123-456-7890',
           icon: <IconContact />,
@@ -129,6 +138,7 @@ const homeDD: IMenuItem = {
 // Dashboard Dropdown
 const dashboardDD: IMenuItem = {
   id: 'dashboard',
+  name: 'dashboard',
   title: 'Dashboard',
   label: 'Dashboard',
   isForNavbar: true,
@@ -137,6 +147,7 @@ const dashboardDD: IMenuItem = {
   subMenu: [
     {
       id: 'user-dashboard',
+      name: 'user-dashboard',
       title: 'Dashboard',
       label: 'Dashboard',
       to: '/dashboard',
@@ -144,6 +155,7 @@ const dashboardDD: IMenuItem = {
     },
     {
       id: 'users',
+      name: 'users',
       title: 'Users',
       label: 'Users',
       to: '/users',
@@ -163,6 +175,7 @@ const useNavItems = () => {
   // User Account Dropdown - only this needs to change based on auth state
   const userAccountDD: IMenuItem = {
     id: 'user-account',
+    name: 'user-account',
     isForNavbar: true,
     title: 'Account',
     to: '#',
@@ -172,6 +185,7 @@ const useNavItems = () => {
       ? [
         {
           id: 'logout',
+          name: 'logout',
           title: 'Logout',
           label: 'Logout',
           to: '/logout',
@@ -184,7 +198,6 @@ const useNavItems = () => {
   // Directly return the computed nav items
   return [
     homeDD,
-    
     ...navItems,
     dashboardDD,
     userAccountDD
