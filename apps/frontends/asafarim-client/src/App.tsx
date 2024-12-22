@@ -33,6 +33,7 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import AccountSettings from "./pages/Accountpage/AccountSettings";
 import { getMdFiles } from "./utils/mdFilesUtils";
 import useAuth from "./hooks/useAuth";
+import React from "react";
 
 function App() {
   const user = useAuth()?.user;
@@ -45,61 +46,47 @@ function App() {
     }
   }, [user]);
 
+  const dropdownItems = [
+    { name: 'legal-docs', label: 'Legal Docs', data: mds.legalDocs, baseUrl: '/legal-docs', description: 'Legal Documentation' },
+    { name: 'changelogs', label: 'Changelogs', data: mds.changelogs, baseUrl: '/changelogs', description: 'Changelogs' },
+    { name: 'tech-docs', label: 'Tech Docs', data: mds.techDocs, baseUrl: '/tech-docs', description: 'Technical Documentation' },
+    { name: 'essential-insights', label: 'Essential Insights', data: mds.essentialInsights, baseUrl: '/essential-insights', description: 'Essential Insights Documentation' },
+  ];
+
   return (
     <ThemeProvider>
       <div className="min-h-screen bg-default text-default">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route
-            path="/legal-docs/:slug?"
-            element={
-              <MarkdownPage data={mds.legalDocs} title="Legal Docs" description="Legal Documentation" />
-            }
-          />
-          <Route
-            path="/changelogs/:slug?"
-            element={
-              <MarkdownPage data={mds.changelogs} title="Changelogs" description="Changelogs" />
-            }
-          />
-          {/* Base route for Tech Docs */}
-          <Route
-            path="/tech-docs"
-            element={
-              <MarkdownPage
-                data={mds.techDocs}
-                title="Tech Docs"
-                description="Technical Documentation"
+
+          {dropdownItems.map((item) => (
+            <React.Fragment key={item.name}>
+              <Route
+                path={item.baseUrl}
+                element={
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <MarkdownPage
+                      data={item.data}
+                      title={item.label}
+                      description={item.description}
+                    />
+                  </Suspense>
+                }
               />
-            }
-          />
-          {/* Dynamic route for Tech Docs  with/out category */}
-          <Route
-            path="/tech-docs/:category?/:slug?"
-            element={<MarkdownPage data={mds.techDocs} title="Tech Docs" description="Technical Documentation" />}
-          />
-          {/* Base route for Essential Insights */}
-          <Route
-            path="/essential-insights"
-            element={
-              <MarkdownPage
-                data={mds.essentialInsights}
-                title="Essential Insights"
-                description="Essential Insights Documentation"
+              <Route
+                path={`${item.baseUrl}/:category?/:slug?`}
+                element={
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <MarkdownPage
+                      data={item.data}
+                      title={item.label}
+                      description={item.description}
+                    />
+                  </Suspense>
+                }
               />
-            }
-          />
-          {/* Dynamic route for Essential Insights with/out category */}
-          <Route
-            path="/essential-insights/:category?/:slug?"
-            element={
-              <MarkdownPage
-                data={mds.essentialInsights}
-                title="Essential Insights"
-                description="Essential Insights Documentation"
-              />
-            }
-          />
+            </React.Fragment>
+          ))}
 
 
           <Route path="/posts/:slug" element={<PostDetail />} />

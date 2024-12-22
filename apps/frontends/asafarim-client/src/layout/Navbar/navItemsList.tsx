@@ -168,20 +168,6 @@ const blog: IMenuItem = {
   subMenu: [],
 };
 
-const techdocs: IMenuItem = {
-  id: 'techdocs',
-  title: 'Tech Docs',
-  className: '',
-  description: '',
-  label: 'Tech Docs',
-  style: {},
-  name: 'asafarim-techdocs',
-  to: '//techdocs.asafarim.com',
-  icon: <IconTeaching />,
-  isForNavbar: false,
-  subMenu: [],
-};
-
 const books: IMenuItem = {
   id: 'books',
   title: 'Books',
