@@ -2,22 +2,26 @@ import React, { useState, useEffect } from 'react';
 import SidebarNavItem from '@/layout/Navbar/SidebarNavItem';
 import SortArray, { SortOrder } from '@/components/SortArray';
 import { getFirstHeading } from '@/utils/mdUtils';
-import {  useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import DisplayMd from '@/components/DisplayMd';
 import Wrapper from '@/layout/Wrapper/Wrapper';
 import { RecentChangesSvg, RecentChangesSvgIcon } from '@/assets/SvgIcons/RecentChangesSvg';
 import Header from '@/layout/Header/Header';
-import { INavItem } from '@/interfaces/INavItem';
 import { IMenuItem } from '@/interfaces/IMenuItem';
 import { Link } from '@fluentui/react/lib/Link';
 
-const MarkdownPage: React.FC<{ data: INavItem, title?: string, description?: string }> = ({ data, title = '', description = '' }) => {
+const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: string }> = ({ data, title = '', description = '' }) => {
   const { category, slug } = useParams<{ category: string; slug?: string }>();
   const navigate = useNavigate();
   const [currentCategory, setCurrentCategory] = useState<IMenuItem | undefined>();
   const [currentDoc, setCurrentDoc] = useState<IMenuItem | undefined>();
   const [pageTitle, setPageTitle] = useState('');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
+
+  useEffect(() => {
+    console.log('Current Data:', data);
+    console.log('Current SubMenu:', data.subMenu);
+  }, [data]);
 
   useEffect(() => {
     setPageTitle(title);
@@ -27,19 +31,40 @@ const MarkdownPage: React.FC<{ data: INavItem, title?: string, description?: str
     if (!category && !slug) {
       setCurrentCategory(undefined);
       setCurrentDoc(undefined);
+    } else if (slug && !category) {
+      const rootFile = data.subMenu?.find(
+        (item) => item.type === 'file' && item.name.toLowerCase() === slug.toLowerCase()
+      );
+      if (rootFile) {
+        setCurrentDoc(rootFile);
+        setCurrentCategory(undefined);
+      }
     } else if (category) {
       const foundCategory = data.subMenu?.find(
-        (item) => item.name.toLowerCase() === category.toLowerCase()
+        (item) => item.type === 'category' && item.name.toLowerCase() === category.toLowerCase()
       );
-      setCurrentCategory(foundCategory);
 
-      if (slug && foundCategory) {
-        const foundDoc = foundCategory.subMenu?.find(
-          (doc) => doc.name.toLowerCase() === slug.toLowerCase()
-        );
-        setCurrentDoc(foundDoc);
+      if (foundCategory) {
+        setCurrentCategory(foundCategory);
+        if (slug) {
+          const foundDoc = foundCategory.subMenu?.find(
+            (doc) => doc.type === 'file' && doc.name.toLowerCase() === slug.toLowerCase()
+          );
+          setCurrentDoc(foundDoc);
+        } else {
+          setCurrentDoc(undefined);
+        }
       } else {
-        setCurrentDoc(undefined);
+        const rootFile = data.subMenu?.find(
+          (item) => item.type === 'file' && item.name.toLowerCase() === category.toLowerCase()
+        );
+        if (rootFile) {
+          setCurrentDoc(rootFile);
+          setCurrentCategory(undefined);
+        } else {
+          setCurrentCategory(undefined);
+          setCurrentDoc(undefined);
+        }
       }
     }
   }, [category, slug, data]);
@@ -70,10 +95,17 @@ const MarkdownPage: React.FC<{ data: INavItem, title?: string, description?: str
           <tr>
             {columns.map((col) => (
               <th
-                key={col.key as string}
+                key={String(col.key)}
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
               >
                 {col.label}
+                {col.key === 'title' && (
+                  <SortArray
+                    sortOrder={sortOrder}
+                    onSortChange={handleSortChange}
+                    className="ml-2 inline-block"
+                  />
+                )}
               </th>
             ))}
           </tr>
@@ -83,7 +115,7 @@ const MarkdownPage: React.FC<{ data: INavItem, title?: string, description?: str
             <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
               {columns.map((col) => (
                 <td
-                  key={col.key as string}
+                  key={String(col.key)}
                   className="px-6 py-4 text-sm text-gray-900 dark:text-gray-200 whitespace-nowrap"
                 >
                   {col.key === 'title' ? (
@@ -93,12 +125,16 @@ const MarkdownPage: React.FC<{ data: INavItem, title?: string, description?: str
                     >
                       {String(item[col.key])}
                     </Link>
-                  ) : col.key === 'createdAt' || col.key === 'updatedAt' ? (
-                    item[col.key] instanceof Date
-                      ? (item[col.key] as Date).toLocaleString()
-                      : String(item[col.key] || '-')
                   ) : (
-                    String(item[col.key] || '-')
+                    Array.isArray(item[col.key])
+                      ? (item[col.key] as unknown[]).map((subItem, index) => (
+                          <span key={index}>{String(subItem)}</span>
+                        ))
+                      : item[col.key] instanceof Date
+                      ? (item[col.key] as Date).toLocaleString()
+                      : typeof item[col.key] === 'object'
+                      ? JSON.stringify(item[col.key])
+                      : String(item[col.key] || '-')
                   )}
                 </td>
               ))}
@@ -108,12 +144,17 @@ const MarkdownPage: React.FC<{ data: INavItem, title?: string, description?: str
       </table>
     </div>
   );
-  
+
   const renderCategoryList = () => (
     <div className="py-8 px-4">
       <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{title}</h2>
-      {renderTable(data.subMenu || [], [
+      {renderTable(data.subMenu?.filter(item => item.type === 'category') || [], [
         { key: 'title', label: 'Category' },
+        { key: 'description', label: 'Description' },
+      ])}
+      <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 mt-8">Files</h3>
+      {renderTable(data.subMenu?.filter(item => item.type === 'file') || [], [
+        { key: 'title', label: 'File' },
         { key: 'description', label: 'Description' },
       ])}
     </div>

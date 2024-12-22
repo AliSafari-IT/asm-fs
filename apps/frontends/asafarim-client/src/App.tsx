@@ -62,50 +62,46 @@ function App() {
               <MarkdownPage data={mds.changelogs} title="Changelogs" description="Changelogs" />
             }
           />
-           {/* Base route for Tech Docs */}
-      <Route
-        path="/tech-docs"
-        element={
-          <MarkdownPage
-            data={mds.techDocs}
-            title="Tech Docs"
-            description="Technical Documentation"
+          {/* Base route for Tech Docs */}
+          <Route
+            path="/tech-docs"
+            element={
+              <MarkdownPage
+                data={mds.techDocs}
+                title="Tech Docs"
+                description="Technical Documentation"
+              />
+            }
           />
-        }
-      />
-      {/* Dynamic route for Tech Docs */}
-      <Route
-        path="/tech-docs/:category/:slug?"
-        element={
-          <MarkdownPage
-            data={mds.techDocs}
-            title="Tech Docs"
-            description="Technical Documentation"
+          {/* Dynamic route for Tech Docs  with/out category */}
+          <Route
+            path="/tech-docs/:category?/:slug?"
+            element={<MarkdownPage data={mds.techDocs} title="Tech Docs" description="Technical Documentation" />}
           />
-        }
-      />
-      {/* Base route for Essential Insights */}
-      <Route
-        path="/essential-insights"
-        element={
-          <MarkdownPage
-            data={mds.essentialInsights}
-            title="Essential Insights"
-            description="Essential Insights Documentation"
+          {/* Base route for Essential Insights */}
+          <Route
+            path="/essential-insights"
+            element={
+              <MarkdownPage
+                data={mds.essentialInsights}
+                title="Essential Insights"
+                description="Essential Insights Documentation"
+              />
+            }
           />
-        }
-      />
-      {/* Dynamic route for Essential Insights */}
-      <Route
-        path="/essential-insights/:category/:slug?"
-        element={
-          <MarkdownPage
-            data={mds.essentialInsights}
-            title="Essential Insights"
-            description="Essential Insights Documentation"
+          {/* Dynamic route for Essential Insights with/out category */}
+          <Route
+            path="/essential-insights/:category?/:slug?"
+            element={
+              <MarkdownPage
+                data={mds.essentialInsights}
+                title="Essential Insights"
+                description="Essential Insights Documentation"
+              />
+            }
           />
-        }
-      />
+
+
           <Route path="/posts/:slug" element={<PostDetail />} />
           <Route path="/:model/add" element={<AddForm />} />
           <Route path="/:model/delete/:id" element={<DelCard />} />

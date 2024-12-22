@@ -1,4 +1,5 @@
 import { INavBase } from "./INavBase";
+import { ITopic } from "./ITopic";
 
 export interface IMenuItem extends INavBase {
   target?: "_blank" | "_self" | "_parent" | "_top";
@@ -19,4 +20,7 @@ export interface IMenuItem extends INavBase {
   subMenu?: IMenuItem[];
   filepath?: string;
   content?: string;
+  topics?: ITopic[];
+  type?: 'category' | 'file';
+  isExpanded?: boolean
 };

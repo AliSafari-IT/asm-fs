@@ -5,7 +5,6 @@ import {
   Bluetooth28Regular as IconBlog,
   LearningApp24Regular as IconLearning
 } from '@fluentui/react-icons';
-import { IChapter } from '../../interfaces/IChapter';
 import { IMenuItem } from '../../interfaces/IMenuItem';
 import { INavItem } from '../../interfaces/INavItem';
 import { getMdFiles } from '@/utils/mdFilesUtils';
@@ -255,13 +254,12 @@ const mdFiles = getMdFiles();
 
 const navItems: IMenuItem[] = [
   blog,
-  techdocs,
+  mdFiles.techDocs,
   books,
   learn,
   essentialInsights,
   mdFiles.legalDocs,
   mdFiles.changelogs,
-  mdFiles.techDocs,
 ];
 
 export default navItems;
