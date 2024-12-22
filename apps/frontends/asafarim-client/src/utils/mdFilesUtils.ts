@@ -1,12 +1,6 @@
 import { IMenuItem } from '@/interfaces/IMenuItem';
 import { ChangeLogSvgIcon } from '../assets/SvgIcons/ChangeLogSvgIcon';
-// Import changelog files using Vite's glob import syntax and return them as an object
-const changelogFiles = {
-  ...import.meta.glob('@mdfiles/ChangeLogs/*.md', {
-    as: 'raw',
-    eager: true,
-  }),
-};
+
 
 // import technical documentations using Vite's glob import syntax and return them as an object
 const techDocsBranchInfo = {
@@ -16,6 +10,18 @@ const techDocsBranchInfo = {
   label: 'Tech Docs',
   name: 'tech-docs',
   to: '/tech-docs',
+  icon: ChangeLogSvgIcon,
+  subMenu: [],  
+  content: '',
+};
+
+const legalDocsBranchInfo = {
+  folderName: 'LegalDocs',
+  id: 'legal-docs',
+  title: 'Legal Docs',
+  label: 'Legal Docs',
+  name: 'legal-docs',
+  to: '/legal-docs',
   icon: ChangeLogSvgIcon,
   subMenu: [],
   content: '',
@@ -33,17 +39,27 @@ const essentialInsightsBranchInfo = {
   content: '',
 };
 
-const legalDocsFiles = {
-  ...import.meta.glob('@mdfiles/LegalDocs/**/*.md', {
-    as: 'raw',
-    eager: true,
-  }),
+const changeLogBranchInfo = {
+  folderName: 'ChangeLogs',
+  id: 'changelogs',
+  title: 'Change Logs',
+  label: 'Change Logs',
+  name: 'changelogs',
+  to: '/changelogs',
+  icon: ChangeLogSvgIcon,
+  subMenu: [],
+  content: '',
 };
 
-const changeLogs: IMenuItem = {
-  ...getTreeViewObject(changelogFiles, 'changelogs', 'Change Logs', ChangeLogSvgIcon, '/changelogs'),
-  isForNavbar: false,
-};
+const changeLogs: IMenuItem = getTree(
+  {
+    ...import.meta.glob('@mdfiles/ChangeLogs/**/*.md', {
+      as: 'raw',
+      eager: true,
+    }),
+  },
+  changeLogBranchInfo
+);
 
 const techdocsTree: IMenuItem = getTree(
   {
@@ -55,10 +71,15 @@ const techdocsTree: IMenuItem = getTree(
   techDocsBranchInfo
 );
 
-const legalDocs: IMenuItem = {
-  ...getTreeViewObject(legalDocsFiles, 'legal-docs', 'Legal Docs', ChangeLogSvgIcon, '/legal-docs'),
-  isForNavbar: false,
-};
+const legalDocs: IMenuItem = getTree(
+  {
+    ...import.meta.glob('@mdfiles/LegalDocs/**/*.md', {
+      as: 'raw',
+      eager: true,
+    }),
+  },
+  legalDocsBranchInfo
+);
 
 const essentialInsightsTree: IMenuItem = getTree(
   {
@@ -71,7 +92,7 @@ const essentialInsightsTree: IMenuItem = getTree(
 );
 
 /**
- * Parses the EssentialInsights folder to structure categories and files.
+ * Parses folder to structure categories and files.
  */
 // Utility function to get tree structure for Markdown files
 function getTree(
@@ -165,144 +186,53 @@ export const getChangelogByRelPath = (to?: string): IMenuItem | undefined => {
   return getMdFiles().changelogs.subMenu?.find((doc) => doc.to === fullPath);
 };
 
-export const getMdDocByRelPath = (
-  to: string,
-  type: 'tech-docs' | 'legal-docs' | 'changelogs' | 'essential-insights' = 'tech-docs'
-): IMenuItem | undefined => {
+export const getMdDocByRelPath = (to: string): IMenuItem | undefined => {
   if (!to) return undefined;
 
   const docs = getMdFiles();
-  const eIDocMap = {
-    'essential-insights': docs.essentialInsights,
-    'tech-docs': docs.techDocs,
-  };
+  const allDocs = [
+    docs.essentialInsights,
+    docs.techDocs,
+    docs.changelogs,
+    docs.legalDocs,
+  ];
 
-  // For tech docs, legal docs, and changelogs
-  const docMap = {
-    'tech-docs': docs.techDocs,
-    'changelogs': docs.changelogs,
-    'legal-docs': docs.legalDocs,
-  };
-
-  if (type === 'essential-insights' || type === 'tech-docs') {
+  // Iterate over all document trees to find the matching file or category
+  for (const docTree of allDocs) {
     const parts = to.split('/');
 
     if (parts.length === 1) {
-      // Root level file
-      return eIDocMap[type].subMenu?.find(
-        (item) => !item.subMenu && (item.to === `/essential-insights/${parts[0]}` || item.to === `/tech-docs/${parts[0]}`)
+      // Check root-level files
+      const rootFile = docTree.subMenu?.find(
+        (item) => item.type === 'file' && item.to!.endsWith(`/${parts[0]}`)
       );
+      if (rootFile) return rootFile;
     } else {
-      // Category file
+      // Handle nested files in categories
       const [category, ...rest] = parts;
       const fileName = rest.join('/');
 
-      // Find the category
-      const categoryItem = eIDocMap[type].subMenu?.find(
-        (cat) => cat.title?.toLowerCase().replace(/ /g, '-') === category.toLowerCase()
+      const categoryItem = docTree.subMenu?.find(
+        (item) => item.type === 'category' && item.name.toLowerCase() === category.toLowerCase()
       );
 
-      if (!categoryItem?.subMenu) return undefined;
-
-      // Find the file within the category
-      return categoryItem.subMenu.find(
-        (doc) => doc.to === (`/essential-insights/${category}/${fileName}` || `/tech-docs/${category}/${fileName}`)
+      const fileItem = categoryItem?.subMenu?.find(
+        (file) => file.type === 'file' && file.to!.endsWith(`/${fileName}`)
       );
+
+      if (fileItem) return fileItem;
     }
   }
-  // For tech docs, legal docs, and changelogs
-  const items = docMap[type].subMenu ?? [];
-  console.log(`Looking for ${type} document with slug:`, to);
 
-  // Try to match by URL-friendly slug
-  const result = items.find((doc) => {
-    // Convert the target slug to match our URL-friendly format
-    const targetSlug = to.replace(/-/g, '_').replace('.md', '');
-    const docOriginalName = doc.filepath?.replace('.md', '') || '';
-    const docSlug = doc.slug?.replace('.md', '') || '';
-
-    // Match by either the URL-friendly slug or the original filename
-    return docSlug === to || docOriginalName === targetSlug;
-  });
-
-  return result;
+  return undefined;
 };
+
 
 export const getMdDocByFilePath = (filePath?: string): IMenuItem | undefined => {
   if (!filePath) return undefined;
   return getMdFiles().techDocs.subMenu?.find((doc) => doc.filepath === filePath);
 };
 
-function getTreeViewObject(
-  mdFiles: Record<string, string>,
-  name?: string,
-  label?: string,
-  icon?: JSX.Element,
-  docurl?: string
-): IMenuItem {
-  const baseurl = docurl?.replace(/\/$/, '') || '';
-  const tree: IMenuItem = {
-    id: name || '',
-    title: label || '',
-    label: label || '',
-    name: name || '',
-    to: baseurl,
-    icon,
-    content: '',
-    subMenu: [],
-  };
-
-  const categories: Record<string, IMenuItem> = {};
-
-  Object.entries(mdFiles).forEach(([path, content]) => {
-    const relativePath = path.split('/TechDocs/').pop() || path;
-    const parts = relativePath.split('/');
-
-    if (parts.length === 1) {
-      // Root-level file
-      const fileName = parts[0].replace('.md', '');
-      const fileItem: IMenuItem = {
-        id: `${name}-${fileName}`,
-        title: fileName.replace(/-/g, ' '),
-        label: fileName,
-        name: fileName,
-        to: `${baseurl}/${fileName}`,
-        filepath: path,
-        content,
-      };
-      tree.subMenu!.push(fileItem);
-    } else {
-      // Nested file
-      const category = parts[0];
-      const fileName = parts[parts.length - 1].replace('.md', '');
-
-      if (!categories[category]) {
-        categories[category] = {
-          id: `${name}-${category}`,
-          title: category.replace(/-/g, ' '),
-          label: category,
-          name: category,
-          to: `${baseurl}/${category}`,
-          subMenu: [],
-        };
-        tree.subMenu!.push(categories[category]);
-      }
-
-      const fileItem: IMenuItem = {
-        id: `${name}-${category}-${fileName}`,
-        title: fileName.replace(/-/g, ' '),
-        label: fileName,
-        name: fileName,
-        to: `${baseurl}/${category}/${fileName}`,
-        filepath: path,
-        content,
-      };
-      categories[category].subMenu!.push(fileItem);
-    }
-  });
-
-  return tree;
-}
 
 function getCreationDate(content: string): Date | undefined {
   const match = content?.match(/(?:\*\*Date:?\*\*|Date:) (.+?)(?:\n|$)/m);
