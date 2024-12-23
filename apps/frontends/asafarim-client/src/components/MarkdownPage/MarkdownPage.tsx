@@ -92,6 +92,18 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
     return match ? match[1] : '-';
   };
 
+  const getUpdatedTimeFromContent = (content: string) => {
+    const lines = content.split('\n');
+    const updateLine = lines.find(line => line.toLowerCase().startsWith('updated:'));
+    if (updateLine) {
+      const dateMatch = updateLine.match(/updated:\s*(.+)/i);
+      if (dateMatch) {
+        return new Date(dateMatch[1]);
+      }
+    }
+    return null;
+  };
+
   const handleSortChange = (newOrder: SortOrder, key: keyof IMenuItem) => {
     setSortOrder(newOrder);
     setSortKey(key);
@@ -112,8 +124,17 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
       let aValue = a[sortKey];
       let bValue = b[sortKey];
 
+      // Special handling for updated time from content
+      if (sortKey === 'updatedAt' && a.content && b.content) {
+        const aDate = getUpdatedTimeFromContent(a.content);
+        const bDate = getUpdatedTimeFromContent(b.content);
+        if (aDate && bDate) {
+          aValue = aDate.getTime();
+          bValue = bDate.getTime();
+        }
+      }
       // Special handling for 'name' column to sort by title
-      if (sortKey === 'name') {
+      else if (sortKey === 'name') {
         aValue = a.content ? getFirstHeading(a.content) : a.title || '';
         bValue = b.content ? getFirstHeading(b.content) : b.title || '';
       }
@@ -167,9 +188,16 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
                       {(item.content && col.key === 'name') ? getFirstHeading(item.content || '') : String(item[col.key])}
                     </Link>
                   ) : col.key === 'createdAt' || col.key === 'updatedAt' ? (
-                    item[col.key] instanceof Date
-                      ? (item[col.key] as Date).toLocaleString()
-                      : '-'
+                    col.key === 'updatedAt' && item.content ? (
+                      (() => {
+                        const contentDate = getUpdatedTimeFromContent(item.content);
+                        return contentDate ? contentDate.toLocaleString() : '-';
+                      })()
+                    ) : (
+                      item[col.key] instanceof Date
+                        ? (item[col.key] as Date).toLocaleString()
+                        : '-'
+                    )
                   ) : (
                     item.content ? getFirstHeading(item.content || '') : String(item[col.key])
                   )}
