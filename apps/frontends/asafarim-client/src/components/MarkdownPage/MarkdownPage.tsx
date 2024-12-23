@@ -115,7 +115,7 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
     } else if (category && slug) {
       navigate(`/${data.name}/${category}`);
     } else {
-      navigate(`/${data.name}`);
+      navigate(`/${''}`);
     }
   };
 
@@ -152,13 +152,13 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
 
   const renderTable = (items: IMenuItem[], columns: { key: keyof IMenuItem; label: string }[]) => (
     <div className="overflow-x-auto">
-      <table className="table-auto w-full divide-y divide-orange-500 dark:divide-green-700 bg-white dark:bg-gray-800 shadow rounded-lg">
-        <thead className="hidden md:table-header-group bg-gray-50 dark:bg-gray-700">
-          <tr>
+      <table className="table-auto w-full divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800 shadow rounded-lg">
+      <thead className="hidden sm:table-header-group bg-gray-50 dark:bg-gray-700">
+      <tr>
             {columns.map((col) => (
               <th
                 key={String(col.key)}
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
               >
                 {['name', 'createdAt', 'updatedAt'].includes(col.key) && (
                   <SortArray
@@ -174,12 +174,12 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
         </thead>
         <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
           {sortData(items).map((item) => (
-            <tr key={item.id} className="md:table-row flex flex-col md:flex-row md:items-center">
+            <tr key={item.id} className="sm:table-row flex flex-col sm:flex-row sm:items-center">
               {columns.map((col) => (
                 <>
                   <td
                     key={`header-${col.key}`}
-                    className="block md:hidden px-4 py-2 text-sm font-bold text-gray-500 dark:text-gray-400"
+                    className="block sm:hidden px-4 py-2 text-sm font-bold text-gray-500 dark:text-gray-400"
                   >
                     {['createdAt', 'updatedAt'].includes(col.key) && (
                       <SortArray
@@ -192,7 +192,7 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
                   </td>
                   <td
                     key={String(col.key)}
-                    className="px-6 py-4 text-sm text-gray-900 dark:text-gray-200 whitespace-nowrap"
+                    className="px-4 py-2 text-sm text-gray-900 dark:text-gray-200 break-words"
                   >
                     {['title', 'name'].includes(col.key) ? (
                       <Link
@@ -250,8 +250,8 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
   );
 
   const renderCategoryDocuments = () => (
-    <div className="py-8 px-4">
-      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{currentCategory?.title}</h2>
+    <div className="py-4 px-2 sm:py-8 sm:px-4">
+      <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">{currentCategory?.title}</h2>
       {renderTable(currentCategory?.subMenu || [], [
         { key: 'title', label: 'Document' },
         { key: 'createdAt', label: 'Date' },
@@ -261,9 +261,10 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
     </div>
   );
 
+
   const asideBlock = (
-    <div className="text-left p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
-      <h2 className="text-2xl font-bold mb-6 text-info-dark flex items-center gap-2">
+    <div className="w-full text-left p-6  rounded-lg shadow-sm">
+      <h2 className="w-full text-2xl font-bold mb-6 text-info-dark flex items-center gap-2">
         <RecentChangesSvgIcon />
         {title}
       </h2>
@@ -308,7 +309,7 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
                 </svg>
-                <span className="font-medium">Back to List</span>
+                <span className="font-medium">{(!category && !slug)? " 🏠 " : "Back to List"}</span>
               </button>
             </div>
           </div>
