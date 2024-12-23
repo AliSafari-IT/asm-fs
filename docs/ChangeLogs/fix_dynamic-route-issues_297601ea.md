@@ -1,11 +1,9 @@
 # Fix: Resolve dynamic route issues for MarkdownPage
 
-Date: 23-12-2024  
-Updated: 23-12-2024
+Date: 20-12-2024  
+UpdatedAt: 23-12-2024 17:40:00
 
----
-
-#### Description of Changes:
+## Description of Changes:
 
 - **Fixed Dynamic Route Handling**:
   Resolved issues in rendering nested routes for `MarkdownPage`, ensuring proper handling of `baseUrl`, `category`, and `slug`. Updated logic to dynamically generate correct paths for files and categories.

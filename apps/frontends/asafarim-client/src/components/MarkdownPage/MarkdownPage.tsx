@@ -35,7 +35,7 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
   }, [currentCategory, currentDoc]);
 
   useEffect(() => {
-    if(pageTitle){
+    if (pageTitle) {
       document.title = 'ASafariM | ' + pageTitle;
     }
   }, [pageTitle]);
@@ -85,7 +85,7 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
   useEffect(() => {
     setPageTitle(currentDoc?.title || currentCategory?.title || title);
   }, [currentDoc, currentCategory, title]);
-  
+
 
   const getGitHash = (path: string): string => {
     const match = path?.match(/_([a-f0-9]+)$/);
@@ -152,17 +152,17 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
 
   const renderTable = (items: IMenuItem[], columns: { key: keyof IMenuItem; label: string }[]) => (
     <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800 shadow rounded-lg">
-        <thead className="bg-gray-50 dark:bg-gray-700">
+      <table className="table-auto w-full divide-y divide-orange-500 dark:divide-green-700 bg-white dark:bg-gray-800 shadow rounded-lg">
+        <thead className="hidden md:table-header-group bg-gray-50 dark:bg-gray-700">
           <tr>
             {columns.map((col) => (
               <th
                 key={String(col.key)}
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
               >
-                {col.label}
-                {['name','createdAt', 'updatedAt'].includes(col.key) && (
+                {['name', 'createdAt', 'updatedAt'].includes(col.key) && (
                   <SortArray
+                    label={col.label ?? col.key}
                     sortOrder={sortOrder}
                     onSortChange={(newOrder) => handleSortChange(newOrder, col.key)}
                     className="ml-2 inline-block"
@@ -174,34 +174,49 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
         </thead>
         <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
           {sortData(items).map((item) => (
-            <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+            <tr key={item.id} className="md:table-row flex flex-col md:flex-row md:items-center">
               {columns.map((col) => (
-                <td
-                  key={String(col.key)}
-                  className="px-6 py-4 text-sm text-gray-900 dark:text-gray-200 whitespace-nowrap"
-                >
-                  {['title', 'name'].includes(col.key) ? (
-                    <Link
-                      href={item.to || '#'}
-                      className="text-info hover:underline"
-                    >
-                      {(item.content && col.key === 'name') ? getFirstHeading(item.content || '') : String(item[col.key])}
-                    </Link>
-                  ) : col.key === 'createdAt' || col.key === 'updatedAt' ? (
-                    col.key === 'updatedAt' && item.content ? (
-                      (() => {
-                        const contentDate = getUpdatedTimeFromContent(item.content);
-                        return contentDate ? contentDate.toLocaleString() : '-';
-                      })()
+                <>
+                  <td
+                    key={`header-${col.key}`}
+                    className="block md:hidden px-4 py-2 text-sm font-bold text-gray-500 dark:text-gray-400"
+                  >
+                    {['createdAt', 'updatedAt'].includes(col.key) && (
+                      <SortArray
+                        label={col.label}
+                        sortOrder={sortOrder}
+                        onSortChange={(newOrder) => handleSortChange(newOrder, col.key)}
+                        className="ml-2 inline-block"
+                      />
+                    )}
+                  </td>
+                  <td
+                    key={String(col.key)}
+                    className="px-6 py-4 text-sm text-gray-900 dark:text-gray-200 whitespace-nowrap"
+                  >
+                    {['title', 'name'].includes(col.key) ? (
+                      <Link
+                        href={item.to || '#'}
+                        className="text-info hover:underline"
+                      >
+                        {(item.content && col.key === 'name') ? getFirstHeading(item.content || '') : String(item[col.key])}
+                      </Link>
+                    ) : col.key === 'createdAt' || col.key === 'updatedAt' ? (
+                      col.key === 'updatedAt' && item.content ? (
+                        (() => {
+                          const contentDate = getUpdatedTimeFromContent(item.content);
+                          return contentDate ? contentDate.toLocaleString() : '-';
+                        })()
+                      ) : (
+                        item[col.key] instanceof Date
+                          ? (item[col.key] as Date).toLocaleString()
+                          : '-'
+                      )
                     ) : (
-                      item[col.key] instanceof Date
-                        ? (item[col.key] as Date).toLocaleString()
-                        : '-'
-                    )
-                  ) : (
-                    item.content ? getFirstHeading(item.content || '') : String(item[col.key])
-                  )}
-                </td>
+                      item.content ? getFirstHeading(item.content || '') : String(item[col.key])
+                    )}
+                  </td>
+                </>
               ))}
             </tr>
           ))}
@@ -216,9 +231,6 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
       {renderTable(data.subMenu?.filter(item => item.type === 'category') || [], [
         { key: 'title', label: 'Category' },
         { key: 'name', label: 'Title' },
-        { key: 'createdAt', label: 'Date' },
-        { key: 'updatedAt', label: 'Updated' },
-        { key: 'description', label: 'Description' },
       ])}
       <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 mt-8">Files</h3>
       {renderTable(data.subMenu?.filter(item => item.type === 'file') || [], [
@@ -263,7 +275,7 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
               ...item,
               mostRecentDate,
               title: item.content ? getFirstHeading(item.content) : item.title || 'No title',
-              icon: <RecentChangesSvg />, 
+              icon: <RecentChangesSvg />,
               className: item.name === category ? 'emphasized' : '',
               hash: getGitHash(item.to || '-')
             };
