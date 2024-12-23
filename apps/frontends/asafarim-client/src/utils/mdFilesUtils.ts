@@ -116,6 +116,9 @@ function getTree(
       .replace(/\.md$/, ''); // Remove .md extension
 
     const parts = relativePath.split('/');
+    const createdAt = getCreationDate(content) || new Date(0); // Fallback to Unix epoch
+    const updatedAt = getUpdateDate(content) || createdAt;
+
 
     if (parts.length === 1) {
       // Root level file
@@ -129,6 +132,8 @@ function getTree(
         content,
         type: 'file',
         filepath: filePath,
+        createdAt,
+        updatedAt,
       });
     } else {
       // Nested category or file
@@ -159,9 +164,18 @@ function getTree(
         content,
         type: 'file',
         filepath: filePath,
+        createdAt,
+        updatedAt,
       });
     }
   }
+
+  // Sort files and categories
+  tree.subMenu = tree.subMenu!.sort((a, b) => {
+    const dateA = a.updatedAt?.getTime() || 0;
+    const dateB = b.updatedAt?.getTime() || 0;
+    return dateB - dateA; // Sort descending by updatedAt
+  });
 
   return tree;
 }
@@ -235,7 +249,7 @@ export const getMdDocByFilePath = (filePath?: string): IMenuItem | undefined => 
 
 
 function getCreationDate(content: string): Date | undefined {
-  const match = content?.match(/(?:\*\*Date:?\*\*|Date:) (.+?)(?:\n|$)/m);
+  const match = content?.match(/(?:\*\*Date:?\*\*|Date:|Created:|Created At:|Created On:|Created Date:|Created Time:|Created At|Created On|Created Date|Created Time|Date) (.+?)(?:\n|$)/m);
   if (!match) return undefined;
   const dateStr = match[1].trim();
   const parsedDate = new Date(dateStr);

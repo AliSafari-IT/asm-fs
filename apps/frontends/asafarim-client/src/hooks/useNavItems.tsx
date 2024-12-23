@@ -164,6 +164,7 @@ const dashboardDD: IMenuItem = {
   ],
 };
 
+
 const useNavItems = () => {
   const mdFiles = getMdFiles();
   const isAuthenticated = useAuthStatus();
@@ -194,11 +195,23 @@ const useNavItems = () => {
       ]
       : [...logreg]
   };
+  // Sort Change Logs by Date
+  const sortedChangeLogs = {
+    ...mdFiles.changelogs,
+    subMenu: [...(mdFiles.changelogs.subMenu || [])].sort((a, b) => {
+      const dateA = new Date(a.updatedAt || a.createdAt || 0).getTime();
+      const dateB = new Date(b.updatedAt || b.createdAt || 0).getTime();
+      return dateB - dateA; // Sort descending (newest first)
+    }),
+  };
 
   // Directly return the computed nav items
   return [
     homeDD,
-    ...navItems,
+    {...mdFiles.techDocs, isForNavbar: true },
+    {...mdFiles.legalDocs, isForNavbar: true },
+    {...sortedChangeLogs, isForNavbar: true },
+    { ...mdFiles.essentialInsights, isForNavbar: true },
     dashboardDD,
     userAccountDD
   ];

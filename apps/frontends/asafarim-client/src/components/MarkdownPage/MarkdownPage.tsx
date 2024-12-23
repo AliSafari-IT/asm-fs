@@ -17,6 +17,7 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
   const [currentDoc, setCurrentDoc] = useState<IMenuItem | undefined>();
   const [pageTitle, setPageTitle] = useState('');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
+  const [sortKey, setSortKey] = useState<keyof IMenuItem>('createdAt');
 
   useEffect(() => {
     console.log('Current Data:', data);
@@ -82,22 +83,18 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
   }, [category, slug, data]);
 
   useEffect(() => {
-    if (currentDoc) {
-      setPageTitle(currentDoc.title || '');
-    } else if (currentCategory) {
-      setPageTitle(currentCategory.title || '');
-    } else {
-      setPageTitle(title || '');
-    }
+    setPageTitle(currentDoc?.title || currentCategory?.title || title);
   }, [currentDoc, currentCategory, title]);
+  
 
   const getGitHash = (path: string): string => {
     const match = path?.match(/_([a-f0-9]+)$/);
     return match ? match[1] : '-';
   };
 
-  const handleSortChange = (newOrder: SortOrder) => {
+  const handleSortChange = (newOrder: SortOrder, key: keyof IMenuItem) => {
     setSortOrder(newOrder);
+    setSortKey(key);
   };
 
   const handleBackToList = () => {
@@ -108,6 +105,28 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
     } else {
       navigate(`/${data.name}`);
     }
+  };
+
+  const sortData = (data: IMenuItem[]) => {
+    return data.sort((a, b) => {
+      let aValue = a[sortKey];
+      let bValue = b[sortKey];
+
+      // Special handling for 'name' column to sort by title
+      if (sortKey === 'name') {
+        aValue = a.content ? getFirstHeading(a.content) : a.title || '';
+        bValue = b.content ? getFirstHeading(b.content) : b.title || '';
+      }
+
+      if (!aValue) return 1;
+      if (!bValue) return -1;
+
+      if (sortOrder === 'asc') {
+        return aValue > bValue ? 1 : -1;
+      } else {
+        return aValue < bValue ? 1 : -1;
+      }
+    });
   };
 
   const renderTable = (items: IMenuItem[], columns: { key: keyof IMenuItem; label: string }[]) => (
@@ -121,10 +140,10 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
               >
                 {col.label}
-                {col.key === 'title' && (
+                {['name','createdAt', 'updatedAt'].includes(col.key) && (
                   <SortArray
                     sortOrder={sortOrder}
-                    onSortChange={handleSortChange}
+                    onSortChange={(newOrder) => handleSortChange(newOrder, col.key)}
                     className="ml-2 inline-block"
                   />
                 )}
@@ -133,26 +152,26 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-          {items.map((item) => (
+          {sortData(items).map((item) => (
             <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
               {columns.map((col) => (
                 <td
                   key={String(col.key)}
                   className="px-6 py-4 text-sm text-gray-900 dark:text-gray-200 whitespace-nowrap"
                 >
-                  {col.key === 'title' ? (
+                  {['title', 'name'].includes(col.key) ? (
                     <Link
                       href={item.to || '#'}
                       className="text-info hover:underline"
                     >
-                      {String(item[col.key])}
+                      {(item.content && col.key === 'name') ? getFirstHeading(item.content || '') : String(item[col.key])}
                     </Link>
                   ) : col.key === 'createdAt' || col.key === 'updatedAt' ? (
                     item[col.key] instanceof Date
                       ? (item[col.key] as Date).toLocaleString()
                       : '-'
                   ) : (
-                    String(item[col.key] || '-')
+                    item.content ? getFirstHeading(item.content || '') : String(item[col.key])
                   )}
                 </td>
               ))}
