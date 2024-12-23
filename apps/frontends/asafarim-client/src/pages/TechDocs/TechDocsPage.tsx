@@ -11,7 +11,7 @@ import Header from '@/layout/Header/Header';
 
 const TechDocsPage: React.FC = () => {
     const { slug } = useParams<{ slug: string }>();
-    const currentTechDoc = getMdDocByRelPath(slug);
+    const currentTechDoc = getMdDocByRelPath(`${slug}`);
     const mdFiles = getMdFiles();
   
     // Extract git hash from the file path

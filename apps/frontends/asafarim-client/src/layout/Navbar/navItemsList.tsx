@@ -5,7 +5,6 @@ import {
   Bluetooth28Regular as IconBlog,
   LearningApp24Regular as IconLearning
 } from '@fluentui/react-icons';
-import { IChapter } from '../../interfaces/IChapter';
 import { IMenuItem } from '../../interfaces/IMenuItem';
 import { INavItem } from '../../interfaces/INavItem';
 import { getMdFiles } from '@/utils/mdFilesUtils';
@@ -65,9 +64,9 @@ const mdChapters: INavItem[] = [
     style: {},
     className: 'react-integration',
     subMenu: [
-      { id: 'create-react-app', title: 'Using Tailwind with Create React App', to: '/md/learning/react/create-react-app', icon: <IconTeaching /> },
-      { id: 'vite-react', title: 'Using Tailwind with Vite', to: '/md/learning/react/vite', icon: <IconTeaching /> },
-      { id: 'postcss-setup', title: 'Configuring PostCSS for Tailwind', to: '/md/learning/react/postcss', icon: <IconTeaching /> },
+      { id: 'create-react-app', name: 'create-react-app',  title: 'Using Tailwind with Create React App', to: '/md/learning/react/create-react-app', icon: <IconTeaching /> },
+      { id: 'vite-react', name: 'vite-react', title: 'Using Tailwind with Vite', to: '/md/learning/react/vite', icon: <IconTeaching /> },
+      { id: 'postcss-setup', name: 'postcss-setup', title: 'Configuring PostCSS for Tailwind', to: '/md/learning/react/postcss', icon: <IconTeaching /> },
     ],
   },
   {
@@ -81,9 +80,9 @@ const mdChapters: INavItem[] = [
     style: {},
     className: 'responsive-design',
     subMenu: [
-      { id: 'responsive-grid', title: 'Responsive Grid System', to: '/md/learning/tailwind/grid', icon: <IconTeaching /> },
-      { id: 'breakpoints', title: 'Using Tailwind Breakpoints', to: '/md/learning/tailwind/breakpoints', icon: <IconTeaching /> },
-      { id: 'flexbox-layout', title: 'Building with Flexbox', to: '/md/learning/tailwind/flexbox', icon: <IconTeaching /> },
+      { id: 'responsive-grid', name: 'responsive-grid', title: 'Responsive Grid System', to: '/md/learning/tailwind/grid', icon: <IconTeaching /> },
+      { id: 'breakpoints', name: 'breakpoints', title: 'Using Tailwind Breakpoints', to: '/md/learning/tailwind/breakpoints', icon: <IconTeaching /> },
+      { id: 'flexbox-layout', name: 'flexbox-layout', title: 'Building with Flexbox', to: '/md/learning/tailwind/flexbox', icon: <IconTeaching /> },
     ],
   },
   {
@@ -97,10 +96,10 @@ const mdChapters: INavItem[] = [
     style: {},
     className: 'tailwind-components',
     subMenu: [
-      { id: 'navbar', title: 'Responsive Navbar', to: '/md/components/navbar', icon: <IconProject /> },
-      { id: 'buttons', title: 'Custom Button Styles', to: '/md/components/buttons', icon: <IconProject /> },
-      { id: 'cards', title: 'Card Layouts', to: '/md/components/cards', icon: <IconProject /> },
-      { id: 'dropdowns', title: 'Dynamic Dropdowns', to: '/md/components/dropdowns', icon: <IconProject /> },
+      { id: 'navbar', name: 'navbar', title: 'Responsive Navbar', to: '/md/components/navbar', icon: <IconProject /> },
+      { id: 'buttons', name: 'buttons', title: 'Custom Button Styles', to: '/md/components/buttons', icon: <IconProject /> },
+      { id: 'cards', name: 'cards', title: 'Card Layouts', to: '/md/components/cards', icon: <IconProject /> },
+      { id: 'dropdowns', name: 'dropdowns', title: 'Dynamic Dropdowns', to: '/md/components/dropdowns', icon: <IconProject /> },
     ],
   }
 ];
@@ -144,6 +143,7 @@ const mdSections: INavItem[] = [
 const mdBooks: INavItem[] = [
   {
     id: 'react-tailwind-guide',
+    name: 'react-tailwind-guide',
     title: 'Building Responsive Apps with React and Tailwind',
     icon: <IconTeaching />,
     subMenu: mdSections,
@@ -164,20 +164,6 @@ const blog: IMenuItem = {
   name: 'asafarim-blog',
   to: '//https://techdocs.asafarim.com/blog',
   icon: <IconBlog />,
-  isForNavbar: false,
-  subMenu: [],
-};
-
-const techdocs: IMenuItem = {
-  id: 'techdocs',
-  title: 'Tech Docs',
-  className: '',
-  description: '',
-  label: 'Tech Docs',
-  style: {},
-  name: 'asafarim-techdocs',
-  to: '//techdocs.asafarim.com',
-  icon: <IconTeaching />,
   isForNavbar: false,
   subMenu: [],
 };
@@ -211,16 +197,55 @@ const learn: IMenuItem = {
   subMenu: mdBooks,
 };
 
+const essentialInsights: IMenuItem = {
+  id: 'essential-insights',
+  isForNavbar: true,
+  title: 'Essential Insights',
+  className: '',
+  description: '',
+  label: 'Essential Insights',
+  style: {},
+  name: 'asafarim-essential-insights',
+  to: '#',
+  icon: <IconTeaching />,
+  subMenu: [
+    {
+      id: 'console-applications',
+      title: 'Console Applications',
+      className: '',
+      description: '',
+      label: 'Console Applications',
+      style: {},
+      isForNavbar: true,
+      name: 'asafarim-console-applications',
+      icon: <IconTeaching />,
+      subMenu: [{
+        id: 'csharp-recursive-factorial-list',
+        title: 'C# Recursive Factorial List',
+        className: '',
+        description: '',
+        label: 'C# Recursive Factorial List',
+        style: {},
+        isForNavbar: true,
+        name: 'asafarim-csharp-recursive-factorial-list',
+        to: '/essential-insights/console-applications/csharp-recursive-factorial-list',
+        icon: <IconTeaching />
+      }],
+    },
+  ],
+};
+
+
 const mdFiles = getMdFiles();
 
 const navItems: IMenuItem[] = [
   blog,
-  techdocs,
+  mdFiles.techDocs,
   books,
   learn,
+  essentialInsights,
   mdFiles.legalDocs,
   mdFiles.changelogs,
-  mdFiles.techDocs,
 ];
 
 export default navItems;

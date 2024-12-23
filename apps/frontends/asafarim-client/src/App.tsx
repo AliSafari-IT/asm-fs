@@ -33,6 +33,7 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import AccountSettings from "./pages/Accountpage/AccountSettings";
 import { getMdFiles } from "./utils/mdFilesUtils";
 import useAuth from "./hooks/useAuth";
+import React from "react";
 
 function App() {
   const user = useAuth()?.user;
@@ -45,29 +46,48 @@ function App() {
     }
   }, [user]);
 
+  const dropdownItems = [
+    { name: 'legal-docs', label: 'Legal Docs', data: mds.legalDocs, baseUrl: '/legal-docs', description: 'Legal Documentation' },
+    { name: 'changelogs', label: 'Changelogs', data: mds.changelogs, baseUrl: '/changelogs', description: 'Changelogs' },
+    { name: 'tech-docs', label: 'Tech Docs', data: mds.techDocs, baseUrl: '/tech-docs', description: 'Technical Documentation' },
+    { name: 'essential-insights', label: 'Essential Insights', data: mds.essentialInsights, baseUrl: '/essential-insights', description: 'Essential Insights Documentation' },
+  ];
+
   return (
     <ThemeProvider>
       <div className="min-h-screen bg-default text-default">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route
-            path="/legal-docs/:slug?"
-            element={
-              <MarkdownPage data={mds.legalDocs} title="Legal Docs" description="Legal Documentation" />
-            }
-          />
-          <Route
-            path="/changelogs/:slug?"
-            element={
-              <MarkdownPage data={mds.changelogs} title="Changelogs" description="Changelogs" />
-            }
-          />
-          <Route
-            path="/tech-docs/:slug?"
-            element={
-              <MarkdownPage data={mds.techDocs} title="Tech Docs" description="Tech Documentation" />
-            }
-          />
+
+          {dropdownItems.map((item) => (
+            <React.Fragment key={item.name}>
+              <Route
+                path={item.baseUrl}
+                element={
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <MarkdownPage
+                      data={item.data}
+                      title={item.label}
+                      description={item.description}
+                    />
+                  </Suspense>
+                }
+              />
+              <Route
+                path={`${item.baseUrl}/:category?/:slug?`}
+                element={
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <MarkdownPage
+                      data={item.data}
+                      title={item.label}
+                      description={item.description}
+                    />
+                  </Suspense>
+                }
+              />
+            </React.Fragment>
+          ))}
+
 
           <Route path="/posts/:slug" element={<PostDetail />} />
           <Route path="/:model/add" element={<AddForm />} />
