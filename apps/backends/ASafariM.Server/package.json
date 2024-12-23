@@ -10,7 +10,8 @@
     "start": "dotnet run --project ./ASafariM.Server.csproj",
     "build": "dotnet clean && dotnet restore && dotnet build ./ASafariM.Server.csproj",
     "test": "dotnet test --project ./ASafariM.Server.csproj",
-    "dev": "yarn watch",
-    "publish": "dotnet publish -c Release -o ./publish"
+    "dev": "yarn watch --no-hot-reload",
+    "publish": "dotnet publish -c Release -o ./publish",
+    "trustCertificate": "dotnet dev-certs https --clean && dotnet dev-certs https && dotnet dev-certs https --trust"
   }
 }

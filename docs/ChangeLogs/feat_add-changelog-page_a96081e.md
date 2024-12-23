@@ -1,6 +1,6 @@
 # Add Changelog Page with Responsive Design
 
-**Date:** December 13, 2024
+Date: December 13, 2024
 
 ## Changes
 

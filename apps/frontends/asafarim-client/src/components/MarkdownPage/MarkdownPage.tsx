@@ -17,6 +17,7 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
   const [currentDoc, setCurrentDoc] = useState<IMenuItem | undefined>();
   const [pageTitle, setPageTitle] = useState('');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
+  const [sortKey, setSortKey] = useState<keyof IMenuItem>('createdAt');
 
   useEffect(() => {
     console.log('Current Data:', data);
@@ -34,7 +35,7 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
   }, [currentCategory, currentDoc]);
 
   useEffect(() => {
-    if(pageTitle){
+    if (pageTitle) {
       document.title = 'ASafariM | ' + pageTitle;
     }
   }, [pageTitle]);
@@ -82,22 +83,30 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
   }, [category, slug, data]);
 
   useEffect(() => {
-    if (currentDoc) {
-      setPageTitle(currentDoc.title || '');
-    } else if (currentCategory) {
-      setPageTitle(currentCategory.title || '');
-    } else {
-      setPageTitle(title || '');
-    }
+    setPageTitle(currentDoc?.title || currentCategory?.title || title);
   }, [currentDoc, currentCategory, title]);
+
 
   const getGitHash = (path: string): string => {
     const match = path?.match(/_([a-f0-9]+)$/);
     return match ? match[1] : '-';
   };
 
-  const handleSortChange = (newOrder: SortOrder) => {
+  const getUpdatedTimeFromContent = (content: string) => {
+    const lines = content.split('\n');
+    const updateLine = lines.find(line => line.toLowerCase().startsWith('updated:'));
+    if (updateLine) {
+      const dateMatch = updateLine.match(/updated:\s*(.+)/i);
+      if (dateMatch) {
+        return new Date(dateMatch[1]);
+      }
+    }
+    return null;
+  };
+
+  const handleSortChange = (newOrder: SortOrder, key: keyof IMenuItem) => {
     setSortOrder(newOrder);
+    setSortKey(key);
   };
 
   const handleBackToList = () => {
@@ -106,25 +115,56 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
     } else if (category && slug) {
       navigate(`/${data.name}/${category}`);
     } else {
-      navigate(`/${data.name}`);
+      navigate(`/${''}`);
     }
+  };
+
+  const sortData = (data: IMenuItem[]) => {
+    return data.sort((a, b) => {
+      let aValue = a[sortKey];
+      let bValue = b[sortKey];
+
+      // Special handling for updated time from content
+      if (sortKey === 'updatedAt' && a.content && b.content) {
+        const aDate = getUpdatedTimeFromContent(a.content);
+        const bDate = getUpdatedTimeFromContent(b.content);
+        if (aDate && bDate) {
+          aValue = aDate.getTime();
+          bValue = bDate.getTime();
+        }
+      }
+      // Special handling for 'name' column to sort by title
+      else if (sortKey === 'name') {
+        aValue = a.content ? getFirstHeading(a.content) : a.title || '';
+        bValue = b.content ? getFirstHeading(b.content) : b.title || '';
+      }
+
+      if (!aValue) return 1;
+      if (!bValue) return -1;
+
+      if (sortOrder === 'asc') {
+        return aValue > bValue ? 1 : -1;
+      } else {
+        return aValue < bValue ? 1 : -1;
+      }
+    });
   };
 
   const renderTable = (items: IMenuItem[], columns: { key: keyof IMenuItem; label: string }[]) => (
     <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800 shadow rounded-lg">
-        <thead className="bg-gray-50 dark:bg-gray-700">
-          <tr>
+      <table className="table-auto w-full divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800 shadow rounded-lg">
+      <thead className="hidden sm:table-header-group bg-gray-50 dark:bg-gray-700">
+      <tr>
             {columns.map((col) => (
               <th
                 key={String(col.key)}
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
               >
-                {col.label}
-                {col.key === 'title' && (
+                {['name', 'createdAt', 'updatedAt'].includes(col.key) && (
                   <SortArray
+                    label={col.label ?? col.key}
                     sortOrder={sortOrder}
-                    onSortChange={handleSortChange}
+                    onSortChange={(newOrder) => handleSortChange(newOrder, col.key)}
                     className="ml-2 inline-block"
                   />
                 )}
@@ -133,28 +173,50 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-          {items.map((item) => (
-            <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+          {sortData(items).map((item) => (
+            <tr key={item.id} className="sm:table-row flex flex-col sm:flex-row sm:items-center">
               {columns.map((col) => (
-                <td
-                  key={String(col.key)}
-                  className="px-6 py-4 text-sm text-gray-900 dark:text-gray-200 whitespace-nowrap"
-                >
-                  {col.key === 'title' ? (
-                    <Link
-                      href={item.to || '#'}
-                      className="text-info hover:underline"
-                    >
-                      {String(item[col.key])}
-                    </Link>
-                  ) : col.key === 'createdAt' || col.key === 'updatedAt' ? (
-                    item[col.key] instanceof Date
-                      ? (item[col.key] as Date).toLocaleString()
-                      : '-'
-                  ) : (
-                    String(item[col.key] || '-')
-                  )}
-                </td>
+                <>
+                  <td
+                    key={`header-${col.key}`}
+                    className="block sm:hidden px-4 py-2 text-sm font-bold text-gray-500 dark:text-gray-400"
+                  >
+                    {['createdAt', 'updatedAt'].includes(col.key) && (
+                      <SortArray
+                        label={col.label}
+                        sortOrder={sortOrder}
+                        onSortChange={(newOrder) => handleSortChange(newOrder, col.key)}
+                        className="ml-2 inline-block"
+                      />
+                    )}
+                  </td>
+                  <td
+                    key={String(col.key)}
+                    className="px-4 py-2 text-sm text-gray-900 dark:text-gray-200 break-words"
+                  >
+                    {['title', 'name'].includes(col.key) ? (
+                      <Link
+                        href={item.to || '#'}
+                        className="text-info hover:underline"
+                      >
+                        {(item.content && col.key === 'name') ? getFirstHeading(item.content || '') : String(item[col.key])}
+                      </Link>
+                    ) : col.key === 'createdAt' || col.key === 'updatedAt' ? (
+                      col.key === 'updatedAt' && item.content ? (
+                        (() => {
+                          const contentDate = getUpdatedTimeFromContent(item.content);
+                          return contentDate ? contentDate.toLocaleString() : '-';
+                        })()
+                      ) : (
+                        item[col.key] instanceof Date
+                          ? (item[col.key] as Date).toLocaleString()
+                          : '-'
+                      )
+                    ) : (
+                      item.content ? getFirstHeading(item.content || '') : String(item[col.key])
+                    )}
+                  </td>
+                </>
               ))}
             </tr>
           ))}
@@ -169,9 +231,6 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
       {renderTable(data.subMenu?.filter(item => item.type === 'category') || [], [
         { key: 'title', label: 'Category' },
         { key: 'name', label: 'Title' },
-        { key: 'createdAt', label: 'Date' },
-        { key: 'updatedAt', label: 'Updated' },
-        { key: 'description', label: 'Description' },
       ])}
       <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 mt-8">Files</h3>
       {renderTable(data.subMenu?.filter(item => item.type === 'file') || [], [
@@ -191,8 +250,8 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
   );
 
   const renderCategoryDocuments = () => (
-    <div className="py-8 px-4">
-      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{currentCategory?.title}</h2>
+    <div className="py-4 px-2 sm:py-8 sm:px-4">
+      <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">{currentCategory?.title}</h2>
       {renderTable(currentCategory?.subMenu || [], [
         { key: 'title', label: 'Document' },
         { key: 'createdAt', label: 'Date' },
@@ -202,9 +261,10 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
     </div>
   );
 
+
   const asideBlock = (
-    <div className="text-left p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
-      <h2 className="text-2xl font-bold mb-6 text-info-dark flex items-center gap-2">
+    <div className="w-full text-left p-6  rounded-lg shadow-sm">
+      <h2 className="w-full text-2xl font-bold mb-6 text-info-dark flex items-center gap-2">
         <RecentChangesSvgIcon />
         {title}
       </h2>
@@ -216,7 +276,7 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
               ...item,
               mostRecentDate,
               title: item.content ? getFirstHeading(item.content) : item.title || 'No title',
-              icon: <RecentChangesSvg />, 
+              icon: <RecentChangesSvg />,
               className: item.name === category ? 'emphasized' : '',
               hash: getGitHash(item.to || '-')
             };
@@ -249,7 +309,7 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
                 </svg>
-                <span className="font-medium">Back to List</span>
+                <span className="font-medium">{(!category && !slug)? " 🏠 " : "Back to List"}</span>
               </button>
             </div>
           </div>

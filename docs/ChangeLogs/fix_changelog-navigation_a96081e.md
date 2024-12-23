@@ -1,6 +1,6 @@
 # Fix Changelog Navigation and Path Resolution
 
-**Date:** December 14, 2024
+Date: December 14, 2024
 
 ## Changes
 

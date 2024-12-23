@@ -1,16 +1,23 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using SecureCore.Data;
 using SecureCore.Models;
 
 namespace ASafariM.Server.ConfServices
 {
-    public class ConfServices
+    public static class ConfigurationServices
     {
-        public static void ConfigureServices(IServiceCollection services)
+        /// <summary>
+        /// Configures services for the application, including Identity and cookie settings.
+        /// </summary>
+        /// <param name="services">The service collection to add configurations to.</param>
+        /// <param name="env">The current hosting environment.</param>
+        public static void ConfigureServices(IServiceCollection services, IWebHostEnvironment env)
         {
+            // Identity Setup
             services
-                .AddIdentity<SecureCore.Models.ApplicationUser, IdentityRole>(options =>
+                .AddIdentity<ApplicationUser, IdentityRole>(options =>
                 {
                     // Password settings
                     options.Password.RequireDigit = true;
@@ -27,20 +34,63 @@ namespace ASafariM.Server.ConfServices
 
                     // User settings
                     options.User.RequireUniqueEmail = true;
-                    options.SignIn.RequireConfirmedEmail = true;
+
+                    // Sign-in settings (Environment-specific)
+                    options.SignIn.RequireConfirmedEmail = env.IsProduction();
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            // Configure cookie settings
+            // Cookie settings
             services.ConfigureApplicationCookie(options =>
             {
                 options.Cookie.HttpOnly = true;
                 options.ExpireTimeSpan = TimeSpan.FromHours(1);
                 options.SlidingExpiration = true;
                 options.Cookie.SameSite = SameSiteMode.Strict;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SecurePolicy = env.IsDevelopment()
+                    ? CookieSecurePolicy.None
+                    : CookieSecurePolicy.Always;
             });
+
+            // Enable HTTPS redirection in production
+            if (env.IsProduction())
+            {
+                services.AddHttpsRedirection(options =>
+                {
+                    options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
+                    options.HttpsPort = 5001;
+                });
+            }
+        }
+
+        // Add CORS
+        public static void AddCors(IServiceCollection services, string policyName)
+        {
+            var allowedOrigins =
+                Environment.GetEnvironmentVariable("ALLOWED_ORIGINS")?.Split(',')
+                ?? new[] { "http://localhost:5173", "http://localhost:3000" };
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                    policyName,
+                    builder =>
+                        builder
+                            .WithOrigins(allowedOrigins)
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .WithExposedHeaders("X-Custom-Header")
+                            .SetIsOriginAllowedToAllowWildcardSubdomains()
+                            .Build()
+                );
+            });
+        }
+
+        // Use CORS
+        internal static void ApplyCors(WebApplication app, string policyName)
+        {
+            app.UseCors(policyName);
         }
     }
 }
