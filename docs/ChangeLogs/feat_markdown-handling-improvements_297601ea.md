@@ -1,6 +1,6 @@
 # Markdown Handling and Navigation Improvements
 
-**Date:** 2024-12-23
+Date 2024-12-23
 **Type:** Feature & Refactor
 **Author:** asafarim_it_1
 

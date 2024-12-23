@@ -24,8 +24,20 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
   }, [data]);
 
   useEffect(() => {
-    setPageTitle(title);
-  }, [title]);
+    if (currentCategory) {
+      console.log('Current Category:', currentCategory);
+      setPageTitle(`${currentCategory.title}`);
+    } else if (currentDoc) {
+      console.log('Current Doc:', currentDoc);
+      setPageTitle(`${currentDoc.title}`);
+    }
+  }, [currentCategory, currentDoc]);
+
+  useEffect(() => {
+    if(pageTitle){
+      document.title = 'ASafariM | ' + pageTitle;
+    }
+  }, [pageTitle]);
 
   useEffect(() => {
     if (!category && !slug) {
@@ -68,6 +80,16 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
       }
     }
   }, [category, slug, data]);
+
+  useEffect(() => {
+    if (currentDoc) {
+      setPageTitle(currentDoc.title || '');
+    } else if (currentCategory) {
+      setPageTitle(currentCategory.title || '');
+    } else {
+      setPageTitle(title || '');
+    }
+  }, [currentDoc, currentCategory, title]);
 
   const getGitHash = (path: string): string => {
     const match = path?.match(/_([a-f0-9]+)$/);
@@ -125,16 +147,12 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
                     >
                       {String(item[col.key])}
                     </Link>
-                  ) : (
-                    Array.isArray(item[col.key])
-                      ? (item[col.key] as unknown[]).map((subItem, index) => (
-                          <span key={index}>{String(subItem)}</span>
-                        ))
-                      : item[col.key] instanceof Date
+                  ) : col.key === 'createdAt' || col.key === 'updatedAt' ? (
+                    item[col.key] instanceof Date
                       ? (item[col.key] as Date).toLocaleString()
-                      : typeof item[col.key] === 'object'
-                      ? JSON.stringify(item[col.key])
-                      : String(item[col.key] || '-')
+                      : '-'
+                  ) : (
+                    String(item[col.key] || '-')
                   )}
                 </td>
               ))}
@@ -150,11 +168,17 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
       <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{title}</h2>
       {renderTable(data.subMenu?.filter(item => item.type === 'category') || [], [
         { key: 'title', label: 'Category' },
+        { key: 'name', label: 'Title' },
+        { key: 'createdAt', label: 'Date' },
+        { key: 'updatedAt', label: 'Updated' },
         { key: 'description', label: 'Description' },
       ])}
       <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 mt-8">Files</h3>
       {renderTable(data.subMenu?.filter(item => item.type === 'file') || [], [
         { key: 'title', label: 'File' },
+        { key: 'name', label: 'Title' },
+        { key: 'createdAt', label: 'Date' },
+        { key: 'updatedAt', label: 'Updated' },
         { key: 'description', label: 'Description' },
       ])}
     </div>
@@ -171,6 +195,8 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
       <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{currentCategory?.title}</h2>
       {renderTable(currentCategory?.subMenu || [], [
         { key: 'title', label: 'Document' },
+        { key: 'createdAt', label: 'Date' },
+        { key: 'updatedAt', label: 'Updated' },
         { key: 'description', label: 'Description' },
       ])}
     </div>
