@@ -22,17 +22,21 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
   useEffect(() => {
     console.log('Current Data:', data);
     console.log('Current SubMenu:', data.subMenu);
-  }, [data]);
+    console.log('Current Category:', currentCategory?.title, 'Current Doc:', currentDoc?.title);
+  }, [data, currentCategory, currentDoc]);
 
   useEffect(() => {
-    if (currentCategory) {
-      console.log('Current Category:', currentCategory);
-      setPageTitle(`${currentCategory.title}`);
+    if (currentCategory && !currentDoc) {
+      setPageTitle(`${title +' | ' +currentCategory.title}`);
     } else if (currentDoc) {
-      console.log('Current Doc:', currentDoc);
-      setPageTitle(`${currentDoc.title}`);
+      setPageTitle(`${(currentCategory?.title?? title) 
+        + ' | ' 
+        + (description??getFirstHeading(currentDoc.content!).slice(0, 30))
+        + '...'}`);
+    } else {
+      setPageTitle(title);
     }
-  }, [currentCategory, currentDoc]);
+  }, [currentCategory, currentDoc, slug, category]);
 
   useEffect(() => {
     if (pageTitle) {
@@ -82,9 +86,6 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
     }
   }, [category, slug, data]);
 
-  useEffect(() => {
-    setPageTitle(currentDoc?.title || currentCategory?.title || title);
-  }, [currentDoc, currentCategory, title]);
 
 
   const getGitHash = (path: string): string => {
@@ -153,8 +154,9 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
   const renderTable = (items: IMenuItem[], columns: { key: keyof IMenuItem; label: string }[]) => (
     <div className="overflow-x-auto">
       <table className="table-auto w-full divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800 shadow rounded-lg">
-      <thead className="hidden sm:table-header-group bg-gray-50 dark:bg-gray-700">
-      <tr>
+        <thead className="hidden sm:table-header-group bg-gray-50 dark:bg-gray-700">
+          <tr>
+            <th className="px-1 py-2 w-fit text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">#</th>
             {columns.map((col) => (
               <th
                 key={String(col.key)}
@@ -173,8 +175,9 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-          {sortData(items).map((item) => (
-            <tr key={item.id} className="sm:table-row flex flex-col sm:flex-row sm:items-center">
+          {sortData(items).map((item, index) => (
+            <tr key={`${item.id || item.name}-${index}`} className="sm:table-row flex flex-col sm:flex-row sm:items-center">
+              <td className="px-4 py-2 text-sm text-gray-900 dark:text-gray-200 break-words">{index + 1}</td>
               {columns.map((col) => (
                 <>
                   <td
@@ -224,6 +227,7 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
       </table>
     </div>
   );
+  
 
   const renderCategoryList = () => (
     <div className="py-8 px-4">
@@ -309,7 +313,7 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
                 </svg>
-                <span className="font-medium">{(!category && !slug)? " 🏠 " : "Back to List"}</span>
+                <span className="font-medium">{(!category && !slug) ? " 🏠 " : "Back to List"}</span>
               </button>
             </div>
           </div>

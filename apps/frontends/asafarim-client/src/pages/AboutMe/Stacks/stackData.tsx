@@ -3,7 +3,7 @@ import { IStackGroup, IStackItem } from "../../../interfaces/IStack";
 export const stackData: IStackGroup = {
   // Backend Technologies
   backend: [
-    { name: 'C# ASP.Net Core', description: 'Harness the power of C# and .NET Core to architect scalable backend solutions.', color: '#7B61FF', textColor: '#FFFFFF' },
+    { name: 'CSharp ASP.Net Core', description: 'Harness the power of C# and .NET Core to architect scalable backend solutions.', color: '#7B61FF', textColor: '#FFFFFF' },
     { name: 'Restful API', description: 'Craft seamless API experiences with ASP.NET Core and SignalR for real-time magic.', color: '#512BD4', textColor: '#FFFFFF' },
     { name: 'Clean Architecture', description: 'Engineer maintainable systems with Clean Architecture principles at the core.', color: '#FF5733', textColor: '#FFFFFF' },
     { name: 'SQL (MySQL) and NoSQL (MongoDB)', description: 'Master data manipulation with SQL and NoSQL for robust data strategies.', color: '#4CAF50', textColor: '#FFFFFF' },

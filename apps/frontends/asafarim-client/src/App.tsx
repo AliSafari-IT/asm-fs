@@ -51,6 +51,8 @@ function App() {
     { name: 'changelogs', label: 'Changelogs', data: mds.changelogs, baseUrl: '/changelogs', description: 'Changelogs' },
     { name: 'tech-docs', label: 'Tech Docs', data: mds.techDocs, baseUrl: '/tech-docs', description: 'Technical Documentation' },
     { name: 'essential-insights', label: 'Essential Insights', data: mds.essentialInsights, baseUrl: '/essential-insights', description: 'Essential Insights Documentation' },
+    //projects
+    { name: 'projects', label: 'Projects', data: mds.projects, baseUrl: '/projects', description: 'Project Documentation' },
   ];
 
   return (

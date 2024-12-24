@@ -51,6 +51,28 @@ const changeLogBranchInfo = {
   content: '',
 };
 
+const projectsBranchInfo = {
+  folderName: 'Projects',
+  id: 'projects',
+  title: 'Projects',
+  label: 'Projects',
+  name: 'projects',
+  to: '/projects',
+  icon: ChangeLogSvgIcon,
+  subMenu: [],
+  content: '',
+};
+
+const projectsTree: IMenuItem = getTree(
+  {
+    ...import.meta.glob('@mdfiles/Projects/**/*.md', {
+      as: 'raw',
+      eager: true,
+    }),
+  },
+  projectsBranchInfo
+)
+
 const changeLogs: IMenuItem = getTree(
   {
     ...import.meta.glob('@mdfiles/ChangeLogs/**/*.md', {
@@ -185,12 +207,14 @@ export const getMdFiles = (): {
   legalDocs: IMenuItem;
   changelogs: IMenuItem;
   techDocs: IMenuItem;
+  projects: IMenuItem;
 } => {
   return {
     legalDocs: legalDocs,
     changelogs: changeLogs,
     techDocs: techdocsTree,
     essentialInsights: essentialInsightsTree,
+    projects: projectsTree
   };
 };
 
