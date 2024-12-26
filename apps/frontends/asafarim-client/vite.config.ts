@@ -27,15 +27,17 @@ export default defineConfig({
     }
   },
   server: {
+    port: 5173,
+    open: true,
     proxy: {
       '/api': 'http://localhost:5000',  // Proxying backend API requests
+
     },
   },
   css: {
     postcss: './postcss.config.cjs',
   },
-  assetsInclude: ['**/*.md'],
-
+  assetsInclude: ['**/*.md'], 
   build: {
     outDir: '../../../dist/asafarim-client', // Relative to the frontend app's directory
     emptyOutDir: true, // Cleans the directory before build

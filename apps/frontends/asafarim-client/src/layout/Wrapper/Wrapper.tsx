@@ -7,7 +7,6 @@ import MainContent from './MainContent';
 import useAuth from '@/hooks/useAuth';
 import { useLocation } from 'react-router-dom';
 import { useTheme } from '@/contexts/ThemeContext';
-import TopbarWrapper from './TopbarWrapper';
 interface LayoutProps {
   pageTitle?: string;
   pageDescription?: string;
@@ -25,13 +24,11 @@ const Wrapper: React.FC<LayoutProps> = ({
   header,
   footer,
   sidebar,
-  topbar,
   children,
   className
 }) => {
   const { theme } = useTheme();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const topbarRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const pt = pageTitle ? `${pageTitle} | ASafariM` : 'ASafariM';

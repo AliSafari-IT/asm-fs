@@ -1,3 +1,4 @@
+// src/App.tsx
 import {
   Routes,
   Route,
@@ -61,8 +62,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
 
-          {dropdownItems.map((item) => (
-            <React.Fragment key={item.name}>
+          {dropdownItems.map((item, index) => (
+            <React.Fragment key={item.name + index}>
               <Route
                 path={item.baseUrl}
                 element={
@@ -76,7 +77,7 @@ function App() {
                 }
               />
               <Route
-                path={`${item.baseUrl}/:category?/:slug?`}
+                path={`${item.baseUrl}/:category?/*?/*?/:slug?`}
                 element={
                   <Suspense fallback={<div>Loading...</div>}>
                     <MarkdownPage
@@ -89,8 +90,6 @@ function App() {
               />
             </React.Fragment>
           ))}
-
-
           <Route path="/posts/:slug" element={<PostDetail />} />
           <Route path="/:model/add" element={<AddForm />} />
           <Route path="/:model/delete/:id" element={<DelCard />} />

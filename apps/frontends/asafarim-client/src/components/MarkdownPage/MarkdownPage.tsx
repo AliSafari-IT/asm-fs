@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import SidebarNavItem from '@/layout/Navbar/SidebarNavItem';
 import SortArray, { SortOrder } from '@/components/SortArray';
 import { getFirstHeading } from '@/utils/mdUtils';
@@ -176,10 +176,10 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
         </thead>
         <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
           {sortData(items).map((item, index) => (
-            <tr key={`${item.id || item.name}-${index}`} className="sm:table-row flex flex-col sm:flex-row sm:items-center">
+            <tr key={`${item.id || ''}-${item.to || ''}-${index}`} className="sm:table-row flex flex-col sm:flex-row sm:items-center">
               <td className="px-4 py-2 text-sm text-gray-900 dark:text-gray-200 break-words">{index + 1}</td>
               {columns.map((col) => (
-                <>
+                <Fragment key={`${item.id || ''}-${item.to || ''}-${col.key}-${index}`}>
                   <td
                     key={`header-${col.key}`}
                     className="block sm:hidden px-4 py-2 text-sm font-bold text-gray-500 dark:text-gray-400"
@@ -202,7 +202,7 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
                         href={item.to || '#'}
                         className="text-info hover:underline"
                       >
-                        {(item.content && col.key === 'name') ? getFirstHeading(item.content || '') : String(item[col.key])}
+                        {(item.content && col.key === 'name') ? getFirstHeading(item.content) : String(item[col.key])}
                       </Link>
                     ) : col.key === 'createdAt' || col.key === 'updatedAt' ? (
                       col.key === 'updatedAt' && item.content ? (
@@ -216,10 +216,10 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
                           : '-'
                       )
                     ) : (
-                      item.content ? getFirstHeading(item.content || '') : String(item[col.key])
+                      item.content ? getFirstHeading(item.content) : String(item[col.key])
                     )}
                   </td>
-                </>
+                </Fragment>
               ))}
             </tr>
           ))}
