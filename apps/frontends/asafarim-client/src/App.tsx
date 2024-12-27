@@ -69,6 +69,7 @@ function App() {
                     data={item.data}
                     title={item.label}
                     description={item.description}
+                    baseUrl={item.baseUrl}
                   />
                 </Suspense>
               } />
@@ -80,6 +81,7 @@ function App() {
                     data={item.data}
                     title={item.label}
                     description={item.description}
+                    baseUrl={item.baseUrl}
                   />
                 </Suspense>
               } />
@@ -91,6 +93,7 @@ function App() {
                     data={item.data}
                     title={item.label}
                     description={item.description}
+                    baseUrl={item.baseUrl}
                   />
                 </Suspense>
               } />
@@ -102,6 +105,7 @@ function App() {
                     data={item.data}
                     title={item.label}
                     description={item.description}
+                    baseUrl={item.baseUrl}
                   />
                 </Suspense>
               } />
@@ -113,6 +117,7 @@ function App() {
                     data={item.data}
                     title={item.label}
                     description={item.description}
+                    baseUrl={item.baseUrl}
                   />
                 </Suspense>
               } />
@@ -122,6 +127,7 @@ function App() {
                     data={item.data}
                     title={item.label}
                     description={item.description}
+                    baseUrl={item.baseUrl}
                   />
                 </Suspense>
               } />
@@ -131,6 +137,7 @@ function App() {
                     data={item.data}
                     title={item.label}
                     description={item.description}
+                    baseUrl={item.baseUrl}
                   />
                 </Suspense>
               } />
@@ -140,6 +147,7 @@ function App() {
                     data={item.data}
                     title={item.label}
                     description={item.description}
+                    baseUrl={item.baseUrl}
                   />
                 </Suspense>
               } />
@@ -149,6 +157,7 @@ function App() {
                     data={item.data}
                     title={item.label}
                     description={item.description}
+                    baseUrl={item.baseUrl}
                   />
                 </Suspense>
               } />
@@ -158,6 +167,7 @@ function App() {
                     data={item.data}
                     title={item.label}
                     description={item.description}
+                    baseUrl={item.baseUrl}
                   />
                 </Suspense>
               } />

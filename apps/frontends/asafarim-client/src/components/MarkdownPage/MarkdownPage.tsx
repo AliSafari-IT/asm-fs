@@ -5,7 +5,7 @@ import Wrapper from '@/layout/Wrapper/Wrapper';
 import Header from '@/layout/Header/Header';
 import { log } from '@/utils/mdUtils';
 import DisplayMd from '../DisplayMd';
-import { Breadcrumb } from '@fluentui/react/lib/Breadcrumb';
+import { Breadcrumb, IBreadcrumbItem } from '@fluentui/react/lib/Breadcrumb';
 
 const BackIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-6 h-6">
@@ -13,7 +13,7 @@ const BackIcon = () => (
   </svg>
 );
 
-const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: string }> = ({ data, title, description }) => {
+const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: string, baseUrl?: string }> = ({ data, title, description, baseUrl }) => {
   const { categories, topics, sections, chapters, slug } = useParams<{
     categories?: string;
     topics?: string;
@@ -24,7 +24,12 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
   const navigate = useNavigate();
   const [currentDirectory, setCurrentDirectory] = useState<IMenuItem | undefined>();
   const [currentMdFile, setCurrentMdFile] = useState<IMenuItem | undefined>();
-  const [pageTitle, setPageTitle] = useState('');
+  const [pageTitle, setPageTitle] = useState(title || '');
+
+  // add page title
+  useEffect(() => {
+    document.title = pageTitle;
+  }, [pageTitle]);
 
   useEffect(() => {
     let current = data; // Start with the root data
@@ -85,17 +90,21 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
   };
 
   const renderBreadcrumbs = () => {
-    const items = [];
+    const items: IBreadcrumbItem[] = [];
 
-    if (categories) items.push({ text: categories, key: 'categories' });
-    if (topics) items.push({ text: topics, key: 'topics' });
-    if (sections) items.push({ text: sections, key: 'sections' });
-    if (chapters) items.push({ text: chapters, key: 'chapters' });
-    if (slug) items.push({ text: slug, key: 'slug' });
+    if (categories) items.push({ text: categories, key: categories, href: `${baseUrl}/${categories}` });
+    if (topics) items.push({ text: topics, key: topics, href: `${baseUrl}/${categories}/${topics}` });
+    if (sections) items.push({ text: sections, key: sections, href: `${baseUrl}/${categories}/${topics}/${sections}` });
+    if (chapters) items.push({ text: chapters, key: chapters, href: `${baseUrl}/${categories}/${topics}/${sections}/${chapters}` });
+    if (slug) items.push({ text: slug, key: slug, href: `${baseUrl}/${categories}/${topics}/${sections}/${chapters}/${slug}` });
 
     return (
       <Breadcrumb
-        items={items}
+        items={items.map(item => ({
+          text: item.text,
+          key: item.key,
+          onClick: () => navigate( `${item.href}`, { replace: true }), // Use absolute href
+        }))}
         maxDisplayedItems={5}
         ariaLabel="Breadcrumb"
         styles={{
