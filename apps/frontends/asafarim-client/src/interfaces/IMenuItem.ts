@@ -21,6 +21,6 @@ export interface IMenuItem extends INavBase {
   filepath?: string;
   content?: string;
   topics?: ITopic[];
-  type?: 'category' | 'file';
+  type?: 'folder' | 'file';
   isExpanded?: boolean
 };

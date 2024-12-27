@@ -1,5 +1,6 @@
 import { IMenuItem } from '@/interfaces/IMenuItem';
 import { ChangeLogSvgIcon } from '../assets/SvgIcons/ChangeLogSvgIcon';
+import { getCreationDate, getUpdateDate } from './mdUtils';
 
 
 // import technical documentations using Vite's glob import syntax and return them as an object
@@ -233,6 +234,7 @@ export const getMdDocByRelPath = (to: string): IMenuItem | undefined => {
     docs.techDocs,
     docs.changelogs,
     docs.legalDocs,
+    docs.projects
   ];
 
   // Iterate over all document trees to find the matching file or category
@@ -265,35 +267,10 @@ export const getMdDocByRelPath = (to: string): IMenuItem | undefined => {
   return undefined;
 };
 
-
-export const getMdDocByFilePath = (filePath?: string): IMenuItem | undefined => {
-  if (!filePath) return undefined;
-  return getMdFiles().techDocs.subMenu?.find((doc) => doc.filepath === filePath);
-};
-
-
-function getCreationDate(content: string): Date | undefined {
-  const match = content?.match(/(?:\*\*Date:?\*\*|Date:|Created:|Created At:|Created On:|Created Date:|Created Time:|Created At|Created On|Created Date|Created Time|Date) (.+?)(?:\n|$)/m);
-  if (!match) return undefined;
-  const dateStr = match[1].trim();
-  const parsedDate = new Date(dateStr);
-  return isNaN(parsedDate.getTime()) ? undefined : parsedDate;
-}
-
-function getUpdateDate(content: string): Date | undefined {
-  const match = content?.match(/(?:\*\*(?:Updated|Modified|Changed|Last Changed):?\*\*|(?:Updated|Modified|Changed|Last Changed):) (.+?)(?:\n|$)/m);
-  if (!match) return undefined;
-  const dateStr = match[1].trim();
-  // Try parsing both formats: "December 07, 2024" and "10/10/2024, 1:00:00 AM"
-  const parsedDate = new Date(dateStr);
-  return isNaN(parsedDate.getTime()) ? undefined : parsedDate;
-}
-
 export default {
   getMdFiles,
   getChangelogByRelPath,
   getCreationDate,
   getUpdateDate,
   getMdDocByRelPath,
-  getMdDocByFilePath,
 };
