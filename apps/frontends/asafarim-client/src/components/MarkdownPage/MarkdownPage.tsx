@@ -11,11 +11,11 @@ import { IMenuItem } from '@/interfaces/IMenuItem';
 import { Link } from '@fluentui/react/lib/Link';
 
 const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: string }> = ({ data, title = '', description = '' }) => {
-  const { category, slug } = useParams<{ category: string; slug?: string }>();
+  const { category, "*": nestedPath, slug } = useParams<{ category: string; "*": string; slug?: string }>();
   const navigate = useNavigate();
   const [currentCategory, setCurrentCategory] = useState<IMenuItem | undefined>();
   const [currentDoc, setCurrentDoc] = useState<IMenuItem | undefined>();
-  const [pageTitle, setPageTitle] = useState('');
+  const [pageTitle, setPageTitle] = useState<string>('');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
   const [sortKey, setSortKey] = useState<keyof IMenuItem>('createdAt');
 
@@ -57,34 +57,43 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
         setCurrentCategory(undefined);
       }
     } else if (category) {
-      const foundCategory = data.subMenu?.find(
+      // Split the nested path into parts
+      const pathParts = nestedPath ? nestedPath.split('/').filter(Boolean) : [];
+      
+      // Start with the main category
+      let currentItem = data.subMenu?.find(
         (item) => item.type === 'category' && item.name.toLowerCase() === category.toLowerCase()
       );
 
-      if (foundCategory) {
-        setCurrentCategory(foundCategory);
-        if (slug) {
-          const foundDoc = foundCategory.subMenu?.find(
+      // Traverse through nested categories
+      if (currentItem) {
+        for (const part of pathParts) {
+          const nextItem: IMenuItem | undefined = currentItem.subMenu?.find(
+            (item) => item.name.toLowerCase() === part.toLowerCase()
+          );
+          if (!nextItem) break;
+          currentItem = nextItem;
+        }
+
+        // If we have a slug, look for the file in the final category
+        if (slug && currentItem.type === 'category') {
+          const foundDoc = currentItem.subMenu?.find(
             (doc) => doc.type === 'file' && doc.name.toLowerCase() === slug.toLowerCase()
           );
           setCurrentDoc(foundDoc);
-        } else {
-          setCurrentDoc(undefined);
-        }
-      } else {
-        const rootFile = data.subMenu?.find(
-          (item) => item.type === 'file' && item.name.toLowerCase() === category.toLowerCase()
-        );
-        if (rootFile) {
-          setCurrentDoc(rootFile);
+          setCurrentCategory(currentItem);
+        } else if (currentItem.type === 'file') {
+          // If the last item is a file, set it as the current document
+          setCurrentDoc(currentItem);
           setCurrentCategory(undefined);
         } else {
-          setCurrentCategory(undefined);
+          // If we're just at a category, show its contents
+          setCurrentCategory(currentItem);
           setCurrentDoc(undefined);
         }
       }
     }
-  }, [category, slug, data]);
+  }, [category, nestedPath, slug, data]);
 
 
 

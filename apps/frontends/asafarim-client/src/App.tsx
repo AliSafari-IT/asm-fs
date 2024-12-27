@@ -65,7 +65,7 @@ function App() {
           {dropdownItems.map((item, index) => (
             <React.Fragment key={item.name + index}>
               <Route
-                path={item.baseUrl}
+                path={item.baseUrl }
                 element={
                   <Suspense fallback={<div>Loading...</div>}>
                     <MarkdownPage
@@ -77,7 +77,19 @@ function App() {
                 }
               />
               <Route
-                path={`${item.baseUrl}/:category?/*?/*?/:slug?`}
+                path={`${item.baseUrl}/:category?/:slug?`}
+                element={
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <MarkdownPage
+                      data={item.data}
+                      title={item.label}
+                      description={item.description}
+                    />
+                  </Suspense>
+                }
+              />
+              <Route
+                path={`${item.baseUrl}/:category?/*?/:slug?`}
                 element={
                   <Suspense fallback={<div>Loading...</div>}>
                     <MarkdownPage
