@@ -125,12 +125,12 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
       <div className="space-y-8">
         {folders && folders?.length > 0 && (
           <div>
-            <h2 className="text-2xl font-semibold mb-4">Folders</h2>
+            <h2 className="text-xl font-semibold mb-4">Folders</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {folders.map(folder => (
                 <div
                   key={folder.name}
-                  className="p-4 border rounded-lg hover:shadow-md cursor-pointer"
+                  className="p-4 border rounded-lg hover:shadow-md cursor-pointer text-sm"
                   onClick={() => navigate(folder.to || '#')}
                 >
                   <h3 className="text-lg font-medium">{folder.title}</h3>
@@ -150,7 +150,7 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
               {files.map(file => (
                 <div
                   key={file.name}
-                  className="p-4 border rounded-lg hover:shadow-md cursor-pointer"
+                  className="p-4 border rounded-lg hover:shadow-md cursor-pointer text-success smaller hover:text-info transition-colors duration-200"
                   onClick={() => navigate(file.to || '#')}
                 >
                   <h3 className="text-lg font-medium">{file.title}</h3>
@@ -183,7 +183,7 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
               </div>
               <button onClick={handleBackToList} className="inline-flex items-center gap-2 text-info-dark hover:text-info transition-colors duration-200">
                 <BackIcon />
-                <span className="font-medium">Back</span>
+                <span className="font-medium">{(!categories && !slug) ? " 🏠 " : "Back to List"}</span>
               </button>
             </div>
           </div>

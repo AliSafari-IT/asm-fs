@@ -130,7 +130,7 @@ function getTree(
 
   const idPrefix = `${branchInfo.id}-`;
   const to = `${branchInfo.to}`;
-  const categories: Record<string, IMenuItem> = {};
+  const folders: Record<string, IMenuItem> = {};
 
   for (const [filePath, content] of Object.entries(mdFiles)) {
     // Extract relative path from filePath
@@ -163,8 +163,8 @@ function getTree(
       const category = parts[0];
       const fileName = parts.slice(1).join('/'); // Handle deeper paths
 
-      if (!categories[category]) {
-        categories[category] = {
+      if (!folders[category]) {
+        folders[category] = {
           id: `${idPrefix}${category}`,
           title: category.replace(/-/g, ' '),
           label: category,
@@ -173,12 +173,12 @@ function getTree(
           icon: ChangeLogSvgIcon,
           subMenu: [],
           content: '',
-          type: 'category',
+          type: 'folder',
         };
-        tree.subMenu!.push(categories[category]);
+        tree.subMenu!.push(folders[category]);
       }
 
-      categories[category].subMenu!.push({
+      folders[category].subMenu!.push({
         id: `${idPrefix}${category}-${fileName}`,
         title: fileName.replace(/-/g, ' ').replace(/^.*\//, ''),
         label: fileName,
@@ -253,7 +253,7 @@ export const getMdDocByRelPath = (to: string): IMenuItem | undefined => {
       const fileName = rest.join('/');
 
       const categoryItem = docTree.subMenu?.find(
-        (item) => item.type === 'category' && item.name.toLowerCase() === category.toLowerCase()
+        (item) => item.type === 'folder' && item.name.toLowerCase() === category.toLowerCase()
       );
 
       const fileItem = categoryItem?.subMenu?.find(
