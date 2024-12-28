@@ -142,9 +142,8 @@ function getTree(
     const createdAt = getCreationDate(content) || new Date(0); // Fallback to Unix epoch
     const updatedAt = getUpdateDate(content) || createdAt;
 
-
     if (parts.length === 1) {
-      // Root level file
+      // Root-level file
       const fileName = parts[0];
       tree.subMenu!.push({
         id: `${idPrefix}${fileName}`,
@@ -159,42 +158,54 @@ function getTree(
         updatedAt,
       });
     } else {
-      // Nested category or file
-      const category = parts[0];
-      const fileName = parts.slice(1).join('/'); // Handle deeper paths
+      // Nested file or folder
+      let current = tree;
 
-      if (!folders[category]) {
-        folders[category] = {
-          id: `${idPrefix}${category}`,
-          title: category.replace(/-/g, ' '),
-          label: category,
-          name: category,
-          to: `${to}/${category}`,
-          icon: ChangeLogSvgIcon,
-          subMenu: [],
-          content: '',
-          type: 'folder',
-        };
-        tree.subMenu!.push(folders[category]);
+      for (let i = 0; i < parts.length; i++) {
+        const part = parts[i];
+
+        if (i === parts.length - 1) {
+          // Add file
+          current.subMenu!.push({
+            id: `${idPrefix}${part}`,
+            title: part.replace(/-/g, ' '),
+            label: part,
+            name: part,
+            to: `${current.to}/${part}`,
+            content,
+            type: 'file',
+            filepath: filePath,
+            createdAt,
+            updatedAt,
+          });
+        } else {
+          // Add folder if it doesn't exist
+          if (!folders[part]) {
+            const folderTo = `${current.to}/${part}`;
+            const folder: IMenuItem = {
+              id: `${idPrefix}${part}`,
+              title: part.replace(/-/g, ' '),
+              label: part,
+              name: part,
+              to: folderTo,
+              icon: ChangeLogSvgIcon,
+              subMenu: [],
+              content: '',
+              type: 'folder',
+            };
+            folders[part] = folder;
+            current.subMenu!.push(folder);
+          }
+          current = folders[part];
+        }
       }
-
-      folders[category].subMenu!.push({
-        id: `${idPrefix}${category}-${fileName}`,
-        title: fileName.replace(/-/g, ' ').replace(/^.*\//, ''),
-        label: fileName,
-        name: fileName,
-        to: `${to}/${category}/${fileName}`,
-        content,
-        type: 'file',
-        filepath: filePath,
-        createdAt,
-        updatedAt,
-      });
     }
   }
 
-  // Sort files and categories
+  // Sort folders and files
   tree.subMenu = tree.subMenu!.sort((a, b) => {
+    if (a.type === 'folder' && b.type !== 'folder') return -1;
+    if (a.type !== 'folder' && b.type === 'folder') return 1;
     const dateA = a.updatedAt?.getTime() || 0;
     const dateB = b.updatedAt?.getTime() || 0;
     return dateB - dateA; // Sort descending by updatedAt

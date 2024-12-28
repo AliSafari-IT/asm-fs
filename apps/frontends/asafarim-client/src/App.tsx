@@ -38,7 +38,6 @@ import React from "react";
 function App() {
   const user = useAuth()?.user;
   const mds = getMdFiles();
-  let ddPath = '';
 
 
   useEffect(() => {
