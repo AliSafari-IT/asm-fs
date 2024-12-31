@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './StacksPage.css';
 import { stackData } from './stackData';
 import { IStackItem } from '@/interfaces/IStack';
-import { ActionButton, BaseButton, Modal, SearchBox } from '@fluentui/react';
+import { ActionButton, Modal, SearchBox } from '@fluentui/react';
 import Header from '@/layout/Header/Header';
 import { Tooltip } from '@material-tailwind/react';
 import { DialogActions } from '@fluentui/react-components';
@@ -38,9 +38,29 @@ const StacksPage: React.FC = () => {
   };
   const handleClear = (): void => { setSearchTerm(''); };
 
-  function navigateToProjects(stackName?: string): void {
-    window.location.href = `/projects/${getSlug(stackName)}`;
+  function navigateToProjects(selected?: IStackItem, category?: string): void {
+    const topics = selected?.topics;
+    if(topics && topics.length > 0) {
+      const lnk = topics.map(t => getSlug(t.name)).join('-');
+      console.log(" lnk: ", lnk);
+      window.location.href = `/tech-docs/${category}/${topics}/${lnk}`; 
+    }
+    window.location.href = `/tech-docs/${category}/${getSlug(selected?.name)}`;
   }
+  
+  const getCategory = (stackName: string): string => {
+    const backendStacks = ['CSharp ASP.Net Core', 'Restful API', 'Clean Architecture', 'SQL (MySQL) and NoSQL (MongoDB)', 'End-to-End Testing'];
+    const frontendStacks = ['React TypeScript', 'HTML/CSS', 'Git'];
+    const uiFrameworks = ['Tailwind CSS', 'PHP and Laravel', 'Node.js', 'Angular', 'Fluent UI', 'Bootstrap', 'Material UI', 'Syncfusion'];
+    const dataAnalysisStacks = ['Python', 'R & R studio', 'D3', 'Data Visualization', 'Data-Driven UI', ];
+  
+    if (backendStacks.includes(stackName)) return 'backend';
+    if (frontendStacks.includes(stackName)) return 'frontend';
+    if (uiFrameworks.includes(stackName)) return 'ui-frameworks';
+    if (dataAnalysisStacks.includes(stackName)) return 'data-analysis';
+    
+    return ''; // Default case if no category is found
+  };
 
   return (
     <div className="stacks-container">
@@ -89,16 +109,19 @@ const StacksPage: React.FC = () => {
               <ActionButton className="btn-close" onClick={closeModal}>
                 Close
               </ActionButton>
-              <ActionButton
-                className="btn-info"
-                onClick={(e) => {
-                  e?.preventDefault();
-                  navigateToProjects(selectedStack.name);
-                }}
-                title={selectedStack.name}
-              >
-                Projects: {selectedStack.name.length > 20 ? `${selectedStack.name.slice(0, 15)}...` : selectedStack.name}
-              </ActionButton>
+              {selectedStack && (
+                <ActionButton
+                  className="btn-info"
+                  onClick={(e) => {
+                    e?.preventDefault();
+                    const category = getCategory(selectedStack.name); // Function to get the category based on stack name
+                    navigateToProjects(selectedStack, category);
+                  }}
+                  title={selectedStack.name}
+                >
+                  Projects: {selectedStack.name.length > 20 ? `${selectedStack.name.slice(0, 15)}...` : selectedStack.name}
+                </ActionButton>
+              )}
             </DialogActions>
           </div>
         </Modal>

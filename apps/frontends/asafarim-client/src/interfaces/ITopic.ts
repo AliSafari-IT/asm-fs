@@ -7,6 +7,6 @@ export interface ITopic {
   description?: string;
   technologyCategory?: string;
   difficultyLevel?: string;
-  relatedPosts?: any[]; // Consider creating a proper type for this
+  relatedPosts?: unknown[]; // Consider creating a proper type for this
 };
 

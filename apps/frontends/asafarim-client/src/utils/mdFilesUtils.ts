@@ -142,6 +142,8 @@ function getTree(
     const createdAt = getCreationDate(content) || new Date(0); // Fallback to Unix epoch
     const updatedAt = getUpdateDate(content) || createdAt;
 
+    let current = tree;
+
     if (parts.length === 1) {
       // Root-level file
       const fileName = parts[0];
@@ -202,6 +204,12 @@ function getTree(
     }
   }
 
+  // Ensure all folders are included, even if empty
+  for (const folderName in folders) {
+    if (!folders[folderName].subMenu) {
+      folders[folderName].subMenu = [];
+    }
+  }
   // Sort folders and files
   tree.subMenu = tree.subMenu!.sort((a, b) => {
     if (a.type === 'folder' && b.type !== 'folder') return -1;
@@ -211,6 +219,7 @@ function getTree(
     return dateB - dateA; // Sort descending by updatedAt
   });
 
+  // console.log('Generated Tree:', JSON.stringify(tree, null, 2));
   return tree;
 }
 
