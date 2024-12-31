@@ -1,9 +1,12 @@
+import { IAuthState } from '@/interfaces/IAuthState';
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-const UserDropdown: React.FC<{ auth: any, themeToggler?: React.ReactNode }> = ({ auth: { user }, themeToggler }) => {
+const UserDropdown: React.FC<{ auth: IAuthState, themeToggler?: React.ReactNode }> = ({ auth, themeToggler }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  console.log(auth);
+  const user = auth?.user;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

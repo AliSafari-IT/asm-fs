@@ -1,5 +1,4 @@
 import { IMenuItem } from "@/interfaces/IMenuItem";
-import navItems from "@/layout/Navbar/navItemsList";
 import { getMdFiles } from "@/utils/mdFilesUtils";
 import {
   Teaching24Regular as IconTeaching,
@@ -208,9 +207,9 @@ const useNavItems = () => {
   // Directly return the computed nav items
   return [
     homeDD,
-    {...mdFiles.techDocs, isForNavbar: true },
-    {...mdFiles.legalDocs, isForNavbar: true },
-    {...sortedChangeLogs, isForNavbar: true },
+    { ...mdFiles.techDocs, isForNavbar: true },
+    { ...mdFiles.legalDocs, isForNavbar: true },
+    { ...sortedChangeLogs, isForNavbar: true },
     { ...mdFiles.essentialInsights, isForNavbar: true },
     dashboardDD,
     userAccountDD

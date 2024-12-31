@@ -19,6 +19,7 @@ export interface IMenuItem extends INavBase {
   isForNavbar?: boolean; 
   subMenu?: IMenuItem[];
   filepath?: string;
+  folderName?: string;
   content?: string;
   topics?: ITopic[];
   type?: 'folder' | 'file';

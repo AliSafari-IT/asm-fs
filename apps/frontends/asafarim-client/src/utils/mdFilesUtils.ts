@@ -120,7 +120,7 @@ const essentialInsightsTree: IMenuItem = getTree(
 // Utility function to get tree structure for Markdown files
 function getTree(
   mdFiles: Record<string, string>,
-  branchInfo: any
+  branchInfo: IMenuItem
 ): IMenuItem {
   const tree: IMenuItem = {
     ...branchInfo,
@@ -161,7 +161,6 @@ function getTree(
       });
     } else {
       // Nested file or folder
-      let current = tree;
 
       for (let i = 0; i < parts.length; i++) {
         const part = parts[i];
@@ -266,6 +265,7 @@ export const getMdDocByRelPath = (to: string): IMenuItem | undefined => {
       const rootFile = docTree.subMenu?.find(
         (item) => item.type === 'file' && item.to!.endsWith(`/${parts[0]}`)
       );
+      
       if (rootFile) return rootFile;
     } else {
       // Handle nested files in categories
