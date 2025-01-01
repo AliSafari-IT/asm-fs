@@ -2,7 +2,7 @@ import { IAuthState } from '@/interfaces/IAuthState';
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-const UserDropdown: React.FC<{ auth: IAuthState, themeToggler?: React.ReactNode }> = ({ auth, themeToggler }) => {
+const UserDropdown: React.FC<{ auth: IAuthState, themeToggler?: React.ReactNode, mobileView: boolean }> = ({ auth, themeToggler, mobileView }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   console.log(auth);
@@ -42,19 +42,21 @@ const UserDropdown: React.FC<{ auth: IAuthState, themeToggler?: React.ReactNode 
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-1 z-50 border border-gray-200 dark:border-gray-700">
+        <div className={`${mobileView ? "absolute left-0 z-50" : "absolute right-0 z-50"} mt-2 w-48 bg-[var(--bg-secondary)] text-[var(--text-primary)] rounded-md shadow-lg overflow-hidden z-10 ${isOpen ? 'block' : 'hidden'}`}>
           {themeToggler && <div className="px-4 py-2 flex justify-between items-center">
-            Change Theme  {themeToggler}
+             {themeToggler}
           </div>}
           <Link
             to="/user-profile"
             className="block px-4 py-2 text-sm  hover:bg-[var(--info-light)] dark:hover:bg-gray-700 transition-colors duration-200"
+            title='User Profile'
           >
-            Profile
+            User Profile
           </Link>
           <Link
             to="/user-account-settings"
-            className="block px-4 py-2 text-sm hover:bg-[var(--info-light)] dark:hover:bg-gray-700 transition-colors duration-200"
+            className="block px-4 py-2 text-sm  hover:bg-[var(--info-light)] dark:hover:bg-gray-700 transition-colors duration-200"
+            title='Account Settings'
           >
             Account Settings
           </Link>
@@ -62,6 +64,7 @@ const UserDropdown: React.FC<{ auth: IAuthState, themeToggler?: React.ReactNode 
           <Link
             to="/logout"
             className="block px-4 py-2 text-sm text-[var(--danger-dark)] bg-[var(--danger-light)] hover:text-[var(--danger-dark)] hover:font-extrabold transition-colors duration-200"
+            title='Logout'
           >
             Logout
           </Link>

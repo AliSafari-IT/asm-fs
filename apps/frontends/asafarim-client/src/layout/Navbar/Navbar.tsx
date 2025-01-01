@@ -20,8 +20,10 @@ const Navbar: React.FC<{ children?: React.ReactNode, auth?: IAuthState }> = ({ c
     themeContext,
     size: '1x' as SizeProp,
     title: 'Toggle Theme',
+    className: 'text-[var(--text-primary)] transition-all duration-200 ease-in-out ml-2', 
+    mobileView: isMenuOpen,
     viewWidth,
-  }), [themeContext, viewWidth]);
+  }), [isMenuOpen, themeContext, viewWidth]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -80,6 +82,7 @@ const Navbar: React.FC<{ children?: React.ReactNode, auth?: IAuthState }> = ({ c
           {auth?.user ? (
             <UserDropdown
               auth={auth}
+              mobileView={isMenuOpen}
               themeToggler={viewWidth < 401 && (<ThemeToggler {...togglerProps} />)}
             />
           ) : (

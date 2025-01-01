@@ -16,6 +16,7 @@ export const ToggleThemeMobile = ({
     title={title}
     className={className}
     onClick={toggleTheme}
+    style={{ cursor: 'pointer' }}    
   />;
 };
 
