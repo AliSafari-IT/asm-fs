@@ -63,3 +63,8 @@
 .file-name {
     @apply text-sm font-sans text-[var(--text-file-name)];
 }
+
+.dropdown-menu {
+    max-height: 300px; /* Set a maximum height */
+    overflow-y: auto;  /* Enable vertical scrolling */
+  }

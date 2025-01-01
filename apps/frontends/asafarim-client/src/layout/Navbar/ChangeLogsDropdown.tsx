@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { getMdFiles } from "@/utils/mdFilesUtils";
 import { getFirstHeading } from "@/utils/mdUtils";
+import { FaRegFileAlt } from 'react-icons/fa';
 
-const ChangeLogsDropdown: React.FC = () => {
+const ChangeLogsDropdown: React.FC<{ mobileView: boolean }> = ({ mobileView }) => {
   const [isOpen, setIsOpen] = useState(false); // State to manage dropdown visibility
   const mdFiles = getMdFiles(); // Get Markdown files
   const changelogs = mdFiles?.changelogs?.subMenu || []; // Ensure safe access to changelog items
@@ -24,27 +25,28 @@ const ChangeLogsDropdown: React.FC = () => {
   }, []);
 
   return (
-    <div className="relative inline-block text-left" ref={dropdownRef}>
-      {/* Dropdown Button */}
+    <div className="relative inline-block text-left" ref={dropdownRef} >
+      {/* Dropdown Button with no title but an icon*/}
       <button
         onClick={toggleDropdown}
         aria-expanded={isOpen}
         aria-controls="changelog-menu"
-        className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 dark:bg-blue-700 dark:hover:bg-blue-800 transition-all duration-200"
+        className="text-[var(--text-primary)] transition-all duration-200"
       >
-        Change Logs
+        <FaRegFileAlt className="inline-block m-2" />
+        {`${changelogs.length} logs `}
       </button>
 
       {/* Dropdown Menu */}
       {isOpen && (
         <ul
           id="changelog-menu"
-          className="absolute left-0 mt-2 w-56 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg overflow-y-auto max-h-64 z-10"
+          className={`${mobileView ? "absolute left-0" : "absolute right-0"} mt-2 w-56 rounded-md shadow-lg bg-white dark:bg-gray-800 overflow-y-auto max-h-64 z-10`}
         >
           {changelogs.map((file) => (
             <li
               key={file.id}
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+              className="p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
             >
               <a
                 href={file.to}

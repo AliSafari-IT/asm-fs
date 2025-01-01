@@ -76,7 +76,6 @@ const Navbar: React.FC<{ children?: React.ReactNode, auth?: IAuthState }> = ({ c
               />
             ))}
         </div>
-        <ChangeLogsDropdown />
         <div className="flex flex-col lg:flex-row items-start lg:items-center space-y-2 lg:space-y-0 lg:space-x-4 py-2 lg:py-0">
           {auth?.user ? (
             <UserDropdown
@@ -102,6 +101,7 @@ const Navbar: React.FC<{ children?: React.ReactNode, auth?: IAuthState }> = ({ c
           {viewWidth > 400 && (
             <ThemeToggler {...togglerProps} />
           )}
+          <ChangeLogsDropdown mobileView={isMenuOpen} />
         </div>
       </div>
       {children}
