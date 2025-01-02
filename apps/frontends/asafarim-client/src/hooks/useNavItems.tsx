@@ -1,5 +1,5 @@
 import { IMenuItem } from "@/interfaces/IMenuItem";
-import { getMdFiles } from "@/utils/mdFilesUtils";
+import { getAllMdFiles } from "@/utils/mdFilesUtils";
 import {
   Teaching24Regular as IconTeaching,
   ProjectionScreenText24Regular as IconProject,
@@ -165,7 +165,7 @@ const dashboardDD: IMenuItem = {
 
 
 const useNavItems = () => {
-  const mdFiles = getMdFiles();
+  const mdFiles = getAllMdFiles();
   const isAuthenticated = useAuthStatus();
 
   useEffect(() => {
@@ -209,7 +209,7 @@ const useNavItems = () => {
     homeDD,
     { ...mdFiles.techDocs, isForNavbar: true },
     { ...mdFiles.legalDocs, isForNavbar: true },
-    { ...sortedChangeLogs, isForNavbar: true },
+     { ...sortedChangeLogs, isForNavbar: false },
     { ...mdFiles.essentialInsights, isForNavbar: true },
     dashboardDD,
     userAccountDD

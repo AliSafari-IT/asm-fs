@@ -1,16 +1,25 @@
 import React, { useEffect, useRef, useState } from "react";
-import { getMdFiles } from "@/utils/mdFilesUtils";
+import { getAllMdFiles } from "@/utils/mdFilesUtils";
 import { getFirstHeading } from "@/utils/mdUtils";
 import { FaRegFileAlt } from 'react-icons/fa';
 
 const ChangeLogsDropdown: React.FC<{ mobileView: boolean }> = ({ mobileView }) => {
   const [isOpen, setIsOpen] = useState(false); // State to manage dropdown visibility
-  const mdFiles = getMdFiles(); // Get Markdown files
+  const mdFiles = getAllMdFiles(); // Get Markdown files
   const changelogs = mdFiles?.changelogs?.subMenu || []; // Ensure safe access to changelog items
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Toggle dropdown visibility
   const toggleDropdown = () => setIsOpen((prev) => !prev);
+
+  const sortedChangeLogs = {
+    ...mdFiles.changelogs,
+    subMenu: [...(mdFiles.changelogs.subMenu || [])].sort((a, b) => {
+      const dateA = new Date(a.updatedAt || a.createdAt || 0).getTime();
+      const dateB = new Date(b.updatedAt || b.createdAt || 0).getTime();
+      return dateB - dateA; // Sort descending (newest first)
+    }),
+  };
 
   // Close dropdown if clicked outside
   useEffect(() => {
@@ -43,7 +52,7 @@ const ChangeLogsDropdown: React.FC<{ mobileView: boolean }> = ({ mobileView }) =
           id="changelog-menu"
           className={`${mobileView ? "absolute left-0" : "absolute right-0"} mt-2 w-56 rounded-md shadow-lg bg-white dark:bg-gray-800 overflow-y-auto max-h-64 z-10`}
         >
-          {changelogs.map((file) => (
+          {sortedChangeLogs.subMenu.map((file) => (
             <li
               key={file.id}
               className="p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"

@@ -5,8 +5,9 @@ import Wrapper from '@/layout/Wrapper/Wrapper';
 import Header from '@/layout/Header/Header';
 import DisplayMd from '../DisplayMd';
 import { Breadcrumb, IBreadcrumbItem } from '@fluentui/react/lib/Breadcrumb';
-import { FaFolder, FaFileAlt } from "react-icons/fa";
+import { FaFileAlt, FaFolderOpen } from "react-icons/fa";
 import ScrollingButtons from '../ScrollingButtons';
+import { getFirstHeading } from '@/utils/mdUtils';
 
 const BackIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-6 h-6">
@@ -140,8 +141,8 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
                   className="folder-button"
                   onClick={() => navigate(folder.to || '#')}
                 >
-                  <FaFolder className="folder-icon" />
-                  <h3 className="text-lg font-medium">{folder.title}</h3>
+                  <FaFolderOpen className="folder-icon" />
+                  <h3 className="text-lg text-info font-medium">{folder.title}</h3>
                   {folder.description && (
                     <p className="mt-2">{folder.description}</p>
                   )}
@@ -162,7 +163,7 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
                   onClick={() => navigate(file.to || '#')}
                 >
                   <FaFileAlt className="file-icon" />
-                  <h3 className="text-lg font-medium file-name">{file.title}</h3>
+                  <h3 className="text-lg font-medium file-name">{getFirstHeading(file.content+'') || file.title}</h3>
                   {file.description && (
                     <p className=" mt-2">{file.description}</p>
                   )}

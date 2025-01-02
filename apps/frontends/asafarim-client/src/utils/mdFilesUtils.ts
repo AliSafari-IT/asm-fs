@@ -222,7 +222,7 @@ function getTree(
   return tree;
 }
 
-export const getMdFiles = (): {
+export const getAllMdFiles = (): {
   essentialInsights: IMenuItem;
   legalDocs: IMenuItem;
   changelogs: IMenuItem;
@@ -238,16 +238,32 @@ export const getMdFiles = (): {
   };
 };
 
+export const getMdFilesWithoutLogs = (): {
+  essentialInsights: IMenuItem;
+  legalDocs: IMenuItem;
+  // changelogs: IMenuItem;
+  techDocs: IMenuItem;
+  projects: IMenuItem;
+} => {
+  return {
+    legalDocs: legalDocs,
+    // changelogs: changeLogs,
+    techDocs: techdocsTree,
+    essentialInsights: essentialInsightsTree,
+    projects: projectsTree
+  };
+};
+
 export const getChangelogByRelPath = (to?: string): IMenuItem | undefined => {
   if (!to) return undefined;
   const fullPath = `/changelogs/${to}`;
-  return getMdFiles().changelogs.subMenu?.find((doc) => doc.to === fullPath);
+  return getAllMdFiles().changelogs.subMenu?.find((doc) => doc.to === fullPath);
 };
 
 export const getMdDocByRelPath = (to: string): IMenuItem | undefined => {
   if (!to) return undefined;
 
-  const docs = getMdFiles();
+  const docs = getAllMdFiles();
   const allDocs = [
     docs.essentialInsights,
     docs.techDocs,
@@ -288,9 +304,10 @@ export const getMdDocByRelPath = (to: string): IMenuItem | undefined => {
 };
 
 export default {
-  getMdFiles,
-  getChangelogByRelPath,
-  getCreationDate,
-  getUpdateDate,
-  getMdDocByRelPath,
+  getAllMdFiles: getAllMdFiles,
+  getMdFilesWithoutLogs: getMdFilesWithoutLogs,
+  getChangelogByRelPath: getChangelogByRelPath,
+  getCreationDate: getCreationDate,
+  getUpdateDate: getUpdateDate,
+  getMdDocByRelPath: getMdDocByRelPath,
 };

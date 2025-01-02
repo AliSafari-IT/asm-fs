@@ -31,13 +31,13 @@ import Contact from "./pages/Contact";
 import MarkdownPage from "./components/MarkdownPage/MarkdownPage";
 import { ThemeProvider } from './contexts/ThemeContext';
 import AccountSettings from "./pages/Accountpage/AccountSettings";
-import { getMdFiles } from "./utils/mdFilesUtils";
+import { getAllMdFiles } from "./utils/mdFilesUtils";
 import useAuth from "./hooks/useAuth";
 import React from "react";
 
 function App() {
   const user = useAuth()?.user;
-  const mds = getMdFiles();
+  const mds = getAllMdFiles();
 
 
   useEffect(() => {
