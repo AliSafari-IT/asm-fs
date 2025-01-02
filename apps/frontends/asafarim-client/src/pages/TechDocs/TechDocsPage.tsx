@@ -5,14 +5,14 @@ import { getFirstHeading } from '@/utils/mdUtils';
 import { Link, useParams } from 'react-router-dom';
 import DisplayMd from '@/components/DisplayMd';
 import Wrapper from '@/layout/Wrapper/Wrapper';
-import { getMdDocByRelPath, getMdFiles } from '@/utils/mdFilesUtils';
+import { getMdDocByRelPath, getAllMdFiles } from '@/utils/mdFilesUtils';
 import { RecentChangesSvg, RecentChangesSvgIcon } from '@/assets/SvgIcons/RecentChangesSvg';
 import Header from '@/layout/Header/Header';
 
 const TechDocsPage: React.FC = () => {
     const { slug } = useParams<{ slug: string }>();
     const currentTechDoc = getMdDocByRelPath(`${slug}`);
-    const mdFiles = getMdFiles();
+    const mdFiles = getAllMdFiles();
   
     // Extract git hash from the file path
     const getGitHash = (path: string): string => {

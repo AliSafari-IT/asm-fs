@@ -1,328 +1,242 @@
 import React, { useState, useEffect } from 'react';
-import SidebarNavItem from '@/layout/Navbar/SidebarNavItem';
-import SortArray, { SortOrder } from '@/components/SortArray';
-import { getFirstHeading } from '@/utils/mdUtils';
 import { useParams, useNavigate } from 'react-router-dom';
-import DisplayMd from '@/components/DisplayMd';
-import Wrapper from '@/layout/Wrapper/Wrapper';
-import { RecentChangesSvg, RecentChangesSvgIcon } from '@/assets/SvgIcons/RecentChangesSvg';
-import Header from '@/layout/Header/Header';
 import { IMenuItem } from '@/interfaces/IMenuItem';
-import { Link } from '@fluentui/react/lib/Link';
+import Wrapper from '@/layout/Wrapper/Wrapper';
+import Header from '@/layout/Header/Header';
+import DisplayMd from '../DisplayMd';
+import { Breadcrumb, IBreadcrumbItem } from '@fluentui/react/lib/Breadcrumb';
+import ScrollingButtons from '../ScrollingButtons';
+import { getFirstHeading } from '@/utils/mdUtils';
 
-const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: string }> = ({ data, title = '', description = '' }) => {
-  const { category, slug } = useParams<{ category: string; slug?: string }>();
+const BackIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-6 h-6">
+    <path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path>
+  </svg>
+);
+
+
+
+const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: string, baseUrl?: string }> = ({ data, title, description, baseUrl }) => {
+  const { categories, topics, sections, chapters, slug } = useParams<{
+    categories?: string;
+    topics?: string;
+    sections?: string;
+    chapters?: string;
+    slug?: string;
+  }>();
   const navigate = useNavigate();
-  const [currentCategory, setCurrentCategory] = useState<IMenuItem | undefined>();
-  const [currentDoc, setCurrentDoc] = useState<IMenuItem | undefined>();
-  const [pageTitle, setPageTitle] = useState('');
-  const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
-  const [sortKey, setSortKey] = useState<keyof IMenuItem>('createdAt');
+  const [currentDirectory, setCurrentDirectory] = useState<IMenuItem | undefined>();
+  const [currentMdFile, setCurrentMdFile] = useState<IMenuItem | undefined>();
+  const [pageTitle, setPageTitle] = useState(title || '');
+  const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
 
+  // get current viewport height
   useEffect(() => {
-    console.log('Current Data:', data);
-    console.log('Current SubMenu:', data.subMenu);
-  }, [data]);
+    const handleResize = () => {
+      setViewportHeight(window.innerHeight);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
-  useEffect(() => {
-    if (currentCategory) {
-      console.log('Current Category:', currentCategory);
-      setPageTitle(`${currentCategory.title}`);
-    } else if (currentDoc) {
-      console.log('Current Doc:', currentDoc);
-      setPageTitle(`${currentDoc.title}`);
-    }
-  }, [currentCategory, currentDoc]);
+  // get height of markdown-container element
+  const markdownContainerHeight = document.getElementById('markdown-container')?.clientHeight || 0;
 
+  // add page title
   useEffect(() => {
-    if (pageTitle) {
-      document.title = 'ASafariM | ' + pageTitle;
-    }
+    document.title = pageTitle;
   }, [pageTitle]);
 
   useEffect(() => {
-    if (!category && !slug) {
-      setCurrentCategory(undefined);
-      setCurrentDoc(undefined);
-    } else if (slug && !category) {
-      const rootFile = data.subMenu?.find(
-        (item) => item.type === 'file' && item.name.toLowerCase() === slug.toLowerCase()
-      );
-      if (rootFile) {
-        setCurrentDoc(rootFile);
-        setCurrentCategory(undefined);
-      }
-    } else if (category) {
-      const foundCategory = data.subMenu?.find(
-        (item) => item.type === 'category' && item.name.toLowerCase() === category.toLowerCase()
+    let current = data; // Start with the root directory
+    const pathSegments = [categories, topics, sections, chapters, slug].filter(Boolean);
+
+    for (let i = 0; i < pathSegments.length; i++) {
+      const segment = pathSegments[i];
+      const foundItem = current.subMenu?.find(
+        item => item.name.toLowerCase() === segment?.toLowerCase()
       );
 
-      if (foundCategory) {
-        setCurrentCategory(foundCategory);
-        if (slug) {
-          const foundDoc = foundCategory.subMenu?.find(
-            (doc) => doc.type === 'file' && doc.name.toLowerCase() === slug.toLowerCase()
-          );
-          setCurrentDoc(foundDoc);
-        } else {
-          setCurrentDoc(undefined);
-        }
-      } else {
-        const rootFile = data.subMenu?.find(
-          (item) => item.type === 'file' && item.name.toLowerCase() === category.toLowerCase()
-        );
-        if (rootFile) {
-          setCurrentDoc(rootFile);
-          setCurrentCategory(undefined);
-        } else {
-          setCurrentCategory(undefined);
-          setCurrentDoc(undefined);
-        }
+      if (!foundItem) {
+        setCurrentDirectory(current); // Set to current level if nothing is found
+        setCurrentMdFile(undefined);
+        return;
       }
+
+      if (foundItem.type === 'file') {
+        setCurrentMdFile(foundItem); // Set current Markdown file
+        setCurrentDirectory(undefined);
+        return;
+      }
+
+      // If it's a folder, dive deeper
+      current = foundItem;
+      setCurrentDirectory(current);
+      setCurrentMdFile(undefined);
     }
-  }, [category, slug, data]);
+
+    // If no path segments, show the root directory
+    if (pathSegments.length === 0) {
+      setCurrentDirectory(data);
+      setCurrentMdFile(undefined);
+    }
+  }, [data, categories, topics, sections, chapters, slug]);
+
 
   useEffect(() => {
-    setPageTitle(currentDoc?.title || currentCategory?.title || title);
-  }, [currentDoc, currentCategory, title]);
-
-
-  const getGitHash = (path: string): string => {
-    const match = path?.match(/_([a-f0-9]+)$/);
-    return match ? match[1] : '-';
-  };
-
-  const getUpdatedTimeFromContent = (content: string) => {
-    const lines = content.split('\n');
-    const updateLine = lines.find(line => line.toLowerCase().startsWith('updated:'));
-    if (updateLine) {
-      const dateMatch = updateLine.match(/updated:\s*(.+)/i);
-      if (dateMatch) {
-        return new Date(dateMatch[1]);
-      }
+    if (currentMdFile) {
+      setPageTitle(currentMdFile.title || '');
+    } else if (currentDirectory) {
+      setPageTitle(currentDirectory.title || '');
     }
-    return null;
-  };
-
-  const handleSortChange = (newOrder: SortOrder, key: keyof IMenuItem) => {
-    setSortOrder(newOrder);
-    setSortKey(key);
-  };
+  }, [currentDirectory, currentMdFile]);
 
   const handleBackToList = () => {
-    if (category && !slug) {
-      navigate(`/${data.name}`);
-    } else if (category && slug) {
-      navigate(`/${data.name}/${category}`);
+    const pathParts = window.location.pathname.split('/').filter(Boolean);
+    if (pathParts.length > 1) {
+      pathParts.pop();
+      navigate('/' + pathParts.join('/'));
     } else {
-      navigate(`/${''}`);
+      navigate('/');
     }
   };
 
-  const sortData = (data: IMenuItem[]) => {
-    return data.sort((a, b) => {
-      let aValue = a[sortKey];
-      let bValue = b[sortKey];
+  const renderBreadcrumbs = () => {
+    const items: IBreadcrumbItem[] = [];
 
-      // Special handling for updated time from content
-      if (sortKey === 'updatedAt' && a.content && b.content) {
-        const aDate = getUpdatedTimeFromContent(a.content);
-        const bDate = getUpdatedTimeFromContent(b.content);
-        if (aDate && bDate) {
-          aValue = aDate.getTime();
-          bValue = bDate.getTime();
-        }
-      }
-      // Special handling for 'name' column to sort by title
-      else if (sortKey === 'name') {
-        aValue = a.content ? getFirstHeading(a.content) : a.title || '';
-        bValue = b.content ? getFirstHeading(b.content) : b.title || '';
-      }
+    if (categories) items.push({ text: categories, key: categories, href: `${baseUrl}/${categories}` });
+    if (topics) items.push({ text: topics, key: topics, href: `${baseUrl}/${categories}/${topics}` });
+    if (sections) items.push({ text: sections, key: sections, href: `${baseUrl}/${categories}/${topics}/${sections}` });
+    if (chapters) items.push({ text: getFirstHeading(currentMdFile?.content || '') ?? chapters, key: chapters, href: `${baseUrl}/${categories}/${topics}/${sections}/${chapters}` });
 
-      if (!aValue) return 1;
-      if (!bValue) return -1;
-
-      if (sortOrder === 'asc') {
-        return aValue > bValue ? 1 : -1;
-      } else {
-        return aValue < bValue ? 1 : -1;
-      }
-    });
+    return (
+      <Breadcrumb
+        items={items}
+        maxDisplayedItems={5}
+        ariaLabel="Breadcrumb"
+        styles={{
+          root: { marginBottom: '16px' },
+        }}
+      />
+    );
   };
 
-  const renderTable = (items: IMenuItem[], columns: { key: keyof IMenuItem; label: string }[]) => (
-    <div className="overflow-x-auto">
-      <table className="table-auto w-full divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800 shadow rounded-lg">
-      <thead className="hidden sm:table-header-group bg-gray-50 dark:bg-gray-700">
-      <tr>
-            {columns.map((col) => (
-              <th
-                key={String(col.key)}
-                className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
-              >
-                {['name', 'createdAt', 'updatedAt'].includes(col.key) && (
-                  <SortArray
-                    label={col.label ?? col.key}
-                    sortOrder={sortOrder}
-                    onSortChange={(newOrder) => handleSortChange(newOrder, col.key)}
-                    className="ml-2 inline-block"
-                  />
-                )}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-          {sortData(items).map((item) => (
-            <tr key={item.id} className="sm:table-row flex flex-col sm:flex-row sm:items-center">
-              {columns.map((col) => (
-                <>
-                  <td
-                    key={`header-${col.key}`}
-                    className="block sm:hidden px-4 py-2 text-sm font-bold text-gray-500 dark:text-gray-400"
-                  >
-                    {['createdAt', 'updatedAt'].includes(col.key) && (
-                      <SortArray
-                        label={col.label}
-                        sortOrder={sortOrder}
-                        onSortChange={(newOrder) => handleSortChange(newOrder, col.key)}
-                        className="ml-2 inline-block"
-                      />
-                    )}
+  const renderDirectoryContent = () => {
+    const folders = currentDirectory?.subMenu?.filter(item => item.type === 'folder');
+    const files = currentDirectory?.subMenu?.filter(item => item.type === 'file');
+
+    return (
+      <div>
+        {(folders || files) && (
+          <table className="w-full prose text-left border-collapse">
+            <thead>
+              <tr className="bg-secondary text-primary">
+                <th className="p-4">Type</th>
+                <th className="p-4">Name</th>
+                <th className="p-4">Description</th>
+                <th className="p-4">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {folders && folders.map(folder => (
+                <tr key={folder.id} className="hover:bg-primary transition">
+                  <td className="p-4 text-info" title='Folder'>📂</td>
+                  <td className="p-4">
+                    <a
+                      href={folder.to || '#'}
+                      className="hover:underline text-teams-purple"
+                      onClick={e => {
+                        e.preventDefault();
+                        navigate(folder.to || '#');
+                      }}
+                    >
+                      {folder.title}
+                    </a>
                   </td>
-                  <td
-                    key={String(col.key)}
-                    className="px-4 py-2 text-sm text-gray-900 dark:text-gray-200 break-words"
-                  >
-                    {['title', 'name'].includes(col.key) ? (
-                      <Link
-                        href={item.to || '#'}
-                        className="text-info hover:underline"
-                      >
-                        {(item.content && col.key === 'name') ? getFirstHeading(item.content || '') : String(item[col.key])}
-                      </Link>
-                    ) : col.key === 'createdAt' || col.key === 'updatedAt' ? (
-                      col.key === 'updatedAt' && item.content ? (
-                        (() => {
-                          const contentDate = getUpdatedTimeFromContent(item.content);
-                          return contentDate ? contentDate.toLocaleString() : '-';
-                        })()
-                      ) : (
-                        item[col.key] instanceof Date
-                          ? (item[col.key] as Date).toLocaleString()
-                          : '-'
-                      )
-                    ) : (
-                      item.content ? getFirstHeading(item.content || '') : String(item[col.key])
-                    )}
+                  <td className="p-4">{folder.description || 'No description available'}</td>
+                  <td className="p-4">
+                    <button
+                      className="btn-secondary"
+                      onClick={() => navigate(folder.to || '#')}
+                      title="View Folder"
+                    >
+                      🔍
+                    </button>
                   </td>
-                </>
+                </tr>
               ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+              {files && files.map(file => (
+                <tr key={file.id} className="hover:bg-primary transition">
+                  <td className="p-4 text-info" title='File'>📄</td>
+                  <td className="p-4">
+                    <a
+                      href={file.to || '#'}
+                      className="hover:underline text-teams-blue"
+                      onClick={e => {
+                        e.preventDefault();
+                        navigate(file.to || '#');
+                      }}
+                    >
+                      {getFirstHeading(file.content || '') || file.title}
+                    </a>
+                  </td>
+                  <td className="p-4">{file.description || 'No description available'}</td>
+                  <td className="p-4">
+                    <button
+                      className="btn-secondary"
+                      onClick={() => navigate(file.to || '#')}
+                      title="View File"
+                    >
+                      👁️
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    );
+  };
 
-  const renderCategoryList = () => (
-    <div className="py-8 px-4">
-      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{title}</h2>
-      {renderTable(data.subMenu?.filter(item => item.type === 'category') || [], [
-        { key: 'title', label: 'Category' },
-        { key: 'name', label: 'Title' },
-      ])}
-      <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 mt-8">Files</h3>
-      {renderTable(data.subMenu?.filter(item => item.type === 'file') || [], [
-        { key: 'title', label: 'File' },
-        { key: 'name', label: 'Title' },
-        { key: 'createdAt', label: 'Date' },
-        { key: 'updatedAt', label: 'Updated' },
-        { key: 'description', label: 'Description' },
-      ])}
-    </div>
-  );
-
-  const renderDocumentContent = () => (
-    <div className="prose dark:prose-invert max-w-none">
-      <DisplayMd id={currentDoc!.id} markdownContent={currentDoc!.content || ''} />
-    </div>
-  );
-
-  const renderCategoryDocuments = () => (
-    <div className="py-4 px-2 sm:py-8 sm:px-4">
-      <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">{currentCategory?.title}</h2>
-      {renderTable(currentCategory?.subMenu || [], [
-        { key: 'title', label: 'Document' },
-        { key: 'createdAt', label: 'Date' },
-        { key: 'updatedAt', label: 'Updated' },
-        { key: 'description', label: 'Description' },
-      ])}
-    </div>
-  );
-
-
-  const asideBlock = (
-    <div className="w-full text-left p-6  rounded-lg shadow-sm">
-      <h2 className="w-full text-2xl font-bold mb-6 text-info-dark flex items-center gap-2">
-        <RecentChangesSvgIcon />
-        {title}
-      </h2>
-      <SidebarNavItem
-        sidebarNavData={(data.subMenu ?? [])
-          .map(item => {
-            const mostRecentDate = item.updatedAt ?? item.createdAt;
-            return {
-              ...item,
-              mostRecentDate,
-              title: item.content ? getFirstHeading(item.content) : item.title || 'No title',
-              icon: <RecentChangesSvg />,
-              className: item.name === category ? 'emphasized' : '',
-              hash: getGitHash(item.to || '-')
-            };
-          })
-          .sort((a, b) => {
-            const dateA = a.mostRecentDate?.getTime() || 0;
-            const dateB = b.mostRecentDate?.getTime() || 0;
-            return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
-          })}
-        className="space-y-1"
-      />
+  const renderMarkdownContent = () => (
+    <div className="prose dark:prose-invert max-w-none" id="markdown-container">
+      <DisplayMd id={currentMdFile?.id} markdownContent={currentMdFile?.content || ''} key={`${description}_`} />
     </div>
   );
 
   return (
     <Wrapper
       header={
-        <Header>
+        <Header >
           <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="py-6 flex items-center justify-between">
-              <h1 className="text-xl sm:text-2xl tech-docs-title max-w-[70%] break-words">
-                <span className="gradient-text py-6 block">
-                  {pageTitle}
-                </span>
-              </h1>
-              <button
-                onClick={handleBackToList}
-                className="inline-flex items-center gap-2 text-info-dark hover:text-info transition-colors duration-200"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
-                </svg>
-                <span className="font-medium">{(!category && !slug)? " 🏠 " : "Back to List"}</span>
+              <div className="py-6">
+                {renderBreadcrumbs()} {/* Render Fluent UI breadcrumbs */}
+              </div>
+              <button onClick={handleBackToList} className="inline-flex items-center gap-2 text-info-dark hover:text-info transition-colors duration-200">
+                <BackIcon />
+                <span className="font-medium">{(!categories && !slug) ? " 🏠 " : "Back to List"}</span>
               </button>
             </div>
           </div>
         </Header>
       }
-      sidebar={asideBlock}
     >
-      {currentDoc
-        ? renderDocumentContent()
-        : currentCategory
-          ? renderCategoryDocuments()
-          : renderCategoryList()
-      }
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div className="py-6">
+          {currentMdFile ? renderMarkdownContent() : renderDirectoryContent()}
+        </div>
+      </div>
+      {/* Show ScrollingButtons when on the markdown page and the content height is greater than the viewport height */}
+      {currentMdFile && markdownContainerHeight > viewportHeight && (
+        <div className="fixed bottom-4 right-4 z-50">
+          <ScrollingButtons />
+        </div>
+      )}
     </Wrapper>
   );
 };

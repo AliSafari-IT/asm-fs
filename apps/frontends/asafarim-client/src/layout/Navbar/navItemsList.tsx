@@ -7,7 +7,7 @@ import {
 } from '@fluentui/react-icons';
 import { IMenuItem } from '../../interfaces/IMenuItem';
 import { INavItem } from '../../interfaces/INavItem';
-import { getMdFiles } from '@/utils/mdFilesUtils';
+import { getAllMdFiles } from '@/utils/mdFilesUtils';
 
 const mdChapters: INavItem[] = [
   {
@@ -236,7 +236,7 @@ const essentialInsights: IMenuItem = {
 };
 
 
-const mdFiles = getMdFiles();
+const mdFiles = getAllMdFiles();
 
 const navItems: IMenuItem[] = [
   blog,

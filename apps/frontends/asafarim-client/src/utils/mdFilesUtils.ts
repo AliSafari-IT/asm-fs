@@ -1,5 +1,6 @@
 import { IMenuItem } from '@/interfaces/IMenuItem';
 import { ChangeLogSvgIcon } from '../assets/SvgIcons/ChangeLogSvgIcon';
+import { getCreationDate, getUpdateDate } from './mdUtils';
 
 
 // import technical documentations using Vite's glob import syntax and return them as an object
@@ -51,6 +52,28 @@ const changeLogBranchInfo = {
   content: '',
 };
 
+const projectsBranchInfo = {
+  folderName: 'Projects',
+  id: 'projects',
+  title: 'Projects',
+  label: 'Projects',
+  name: 'projects',
+  to: '/projects',
+  icon: ChangeLogSvgIcon,
+  subMenu: [],
+  content: '',
+};
+
+const projectsTree: IMenuItem = getTree(
+  {
+    ...import.meta.glob('@mdfiles/Projects/**/*.md', {
+      as: 'raw',
+      eager: true,
+    }),
+  },
+  projectsBranchInfo
+)
+
 const changeLogs: IMenuItem = getTree(
   {
     ...import.meta.glob('@mdfiles/ChangeLogs/**/*.md', {
@@ -97,7 +120,7 @@ const essentialInsightsTree: IMenuItem = getTree(
 // Utility function to get tree structure for Markdown files
 function getTree(
   mdFiles: Record<string, string>,
-  branchInfo: any
+  branchInfo: IMenuItem
 ): IMenuItem {
   const tree: IMenuItem = {
     ...branchInfo,
@@ -107,7 +130,7 @@ function getTree(
 
   const idPrefix = `${branchInfo.id}-`;
   const to = `${branchInfo.to}`;
-  const categories: Record<string, IMenuItem> = {};
+  const folders: Record<string, IMenuItem> = {};
 
   for (const [filePath, content] of Object.entries(mdFiles)) {
     // Extract relative path from filePath
@@ -119,9 +142,10 @@ function getTree(
     const createdAt = getCreationDate(content) || new Date(0); // Fallback to Unix epoch
     const updatedAt = getUpdateDate(content) || createdAt;
 
+    let current = tree;
 
     if (parts.length === 1) {
-      // Root level file
+      // Root-level file
       const fileName = parts[0];
       tree.subMenu!.push({
         id: `${idPrefix}${fileName}`,
@@ -136,79 +160,116 @@ function getTree(
         updatedAt,
       });
     } else {
-      // Nested category or file
-      const category = parts[0];
-      const fileName = parts.slice(1).join('/'); // Handle deeper paths
+      // Nested file or folder
 
-      if (!categories[category]) {
-        categories[category] = {
-          id: `${idPrefix}${category}`,
-          title: category.replace(/-/g, ' '),
-          label: category,
-          name: category,
-          to: `${to}/${category}`,
-          icon: ChangeLogSvgIcon,
-          subMenu: [],
-          content: '',
-          type: 'category',
-        };
-        tree.subMenu!.push(categories[category]);
+      for (let i = 0; i < parts.length; i++) {
+        const part = parts[i];
+
+        if (i === parts.length - 1) {
+          // Add file
+          current.subMenu!.push({
+            id: `${idPrefix}${part}`,
+            title: part.replace(/-/g, ' '),
+            label: part,
+            name: part,
+            to: `${current.to}/${part}`,
+            content,
+            type: 'file',
+            filepath: filePath,
+            createdAt,
+            updatedAt,
+          });
+        } else {
+          // Add folder if it doesn't exist
+          if (!folders[part]) {
+            const folderTo = `${current.to}/${part}`;
+            const folder: IMenuItem = {
+              id: `${idPrefix}${part}`,
+              title: part.replace(/-/g, ' '),
+              label: part,
+              name: part,
+              to: folderTo,
+              icon: ChangeLogSvgIcon,
+              subMenu: [],
+              content: '',
+              type: 'folder',
+            };
+            folders[part] = folder;
+            current.subMenu!.push(folder);
+          }
+          current = folders[part];
+        }
       }
-
-      categories[category].subMenu!.push({
-        id: `${idPrefix}${category}-${fileName}`,
-        title: fileName.replace(/-/g, ' ').replace(/^.*\//, ''),
-        label: fileName,
-        name: fileName,
-        to: `${to}/${category}/${fileName}`,
-        content,
-        type: 'file',
-        filepath: filePath,
-        createdAt,
-        updatedAt,
-      });
     }
   }
 
-  // Sort files and categories
+  // Ensure all folders are included, even if empty
+  for (const folderName in folders) {
+    if (!folders[folderName].subMenu) {
+      folders[folderName].subMenu = [];
+    }
+  }
+  // Sort folders and files
   tree.subMenu = tree.subMenu!.sort((a, b) => {
+    if (a.type === 'folder' && b.type !== 'folder') return -1;
+    if (a.type !== 'folder' && b.type === 'folder') return 1;
     const dateA = a.updatedAt?.getTime() || 0;
     const dateB = b.updatedAt?.getTime() || 0;
     return dateB - dateA; // Sort descending by updatedAt
   });
 
+  // console.log('Generated Tree:', JSON.stringify(tree, null, 2));
   return tree;
 }
 
-export const getMdFiles = (): {
+export const getAllMdFiles = (): {
   essentialInsights: IMenuItem;
   legalDocs: IMenuItem;
   changelogs: IMenuItem;
   techDocs: IMenuItem;
+  projects: IMenuItem;
 } => {
   return {
     legalDocs: legalDocs,
     changelogs: changeLogs,
     techDocs: techdocsTree,
     essentialInsights: essentialInsightsTree,
+    projects: projectsTree
+  };
+};
+
+export const getMdFilesWithoutLogs = (): {
+  essentialInsights: IMenuItem;
+  legalDocs: IMenuItem;
+  // changelogs: IMenuItem;
+  techDocs: IMenuItem;
+  projects: IMenuItem;
+} => {
+  return {
+    legalDocs: legalDocs,
+    // changelogs: changeLogs,
+    techDocs: techdocsTree,
+    essentialInsights: essentialInsightsTree,
+    projects: projectsTree
   };
 };
 
 export const getChangelogByRelPath = (to?: string): IMenuItem | undefined => {
   if (!to) return undefined;
   const fullPath = `/changelogs/${to}`;
-  return getMdFiles().changelogs.subMenu?.find((doc) => doc.to === fullPath);
+  return getAllMdFiles().changelogs.subMenu?.find((doc) => doc.to === fullPath);
 };
 
 export const getMdDocByRelPath = (to: string): IMenuItem | undefined => {
   if (!to) return undefined;
 
-  const docs = getMdFiles();
+  const docs = getAllMdFiles();
   const allDocs = [
     docs.essentialInsights,
     docs.techDocs,
     docs.changelogs,
     docs.legalDocs,
+    docs.projects
   ];
 
   // Iterate over all document trees to find the matching file or category
@@ -220,6 +281,7 @@ export const getMdDocByRelPath = (to: string): IMenuItem | undefined => {
       const rootFile = docTree.subMenu?.find(
         (item) => item.type === 'file' && item.to!.endsWith(`/${parts[0]}`)
       );
+      
       if (rootFile) return rootFile;
     } else {
       // Handle nested files in categories
@@ -227,7 +289,7 @@ export const getMdDocByRelPath = (to: string): IMenuItem | undefined => {
       const fileName = rest.join('/');
 
       const categoryItem = docTree.subMenu?.find(
-        (item) => item.type === 'category' && item.name.toLowerCase() === category.toLowerCase()
+        (item) => item.type === 'folder' && item.name.toLowerCase() === category.toLowerCase()
       );
 
       const fileItem = categoryItem?.subMenu?.find(
@@ -241,35 +303,11 @@ export const getMdDocByRelPath = (to: string): IMenuItem | undefined => {
   return undefined;
 };
 
-
-export const getMdDocByFilePath = (filePath?: string): IMenuItem | undefined => {
-  if (!filePath) return undefined;
-  return getMdFiles().techDocs.subMenu?.find((doc) => doc.filepath === filePath);
-};
-
-
-function getCreationDate(content: string): Date | undefined {
-  const match = content?.match(/(?:\*\*Date:?\*\*|Date:|Created:|Created At:|Created On:|Created Date:|Created Time:|Created At|Created On|Created Date|Created Time|Date) (.+?)(?:\n|$)/m);
-  if (!match) return undefined;
-  const dateStr = match[1].trim();
-  const parsedDate = new Date(dateStr);
-  return isNaN(parsedDate.getTime()) ? undefined : parsedDate;
-}
-
-function getUpdateDate(content: string): Date | undefined {
-  const match = content?.match(/(?:\*\*(?:Updated|Modified|Changed|Last Changed):?\*\*|(?:Updated|Modified|Changed|Last Changed):) (.+?)(?:\n|$)/m);
-  if (!match) return undefined;
-  const dateStr = match[1].trim();
-  // Try parsing both formats: "December 07, 2024" and "10/10/2024, 1:00:00 AM"
-  const parsedDate = new Date(dateStr);
-  return isNaN(parsedDate.getTime()) ? undefined : parsedDate;
-}
-
 export default {
-  getMdFiles,
-  getChangelogByRelPath,
-  getCreationDate,
-  getUpdateDate,
-  getMdDocByRelPath,
-  getMdDocByFilePath,
+  getAllMdFiles: getAllMdFiles,
+  getMdFilesWithoutLogs: getMdFilesWithoutLogs,
+  getChangelogByRelPath: getChangelogByRelPath,
+  getCreationDate: getCreationDate,
+  getUpdateDate: getUpdateDate,
+  getMdDocByRelPath: getMdDocByRelPath,
 };

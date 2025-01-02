@@ -31,13 +31,13 @@ import Contact from "./pages/Contact";
 import MarkdownPage from "./components/MarkdownPage/MarkdownPage";
 import { ThemeProvider } from './contexts/ThemeContext';
 import AccountSettings from "./pages/Accountpage/AccountSettings";
-import { getMdFiles } from "./utils/mdFilesUtils";
+import { getAllMdFiles } from "./utils/mdFilesUtils";
 import useAuth from "./hooks/useAuth";
 import React from "react";
 
 function App() {
   const user = useAuth()?.user;
-  const mds = getMdFiles();
+  const mds = getAllMdFiles();
 
 
   useEffect(() => {
@@ -51,44 +51,127 @@ function App() {
     { name: 'changelogs', label: 'Changelogs', data: mds.changelogs, baseUrl: '/changelogs', description: 'Changelogs' },
     { name: 'tech-docs', label: 'Tech Docs', data: mds.techDocs, baseUrl: '/tech-docs', description: 'Technical Documentation' },
     { name: 'essential-insights', label: 'Essential Insights', data: mds.essentialInsights, baseUrl: '/essential-insights', description: 'Essential Insights Documentation' },
+    { name: 'projects', label: 'Projects', data: mds.projects, baseUrl: '/projects', description: 'Project Documentation' },
   ];
-
+  // const pathSegments = ['categories', 'topics', 'sections', 'chapters', 'slug'];
   return (
     <ThemeProvider>
       <div className="min-h-screen bg-default text-default">
         <Routes>
           <Route path="/" element={<Home />} />
-
           {dropdownItems.map((item) => (
             <React.Fragment key={item.name}>
-              <Route
-                path={item.baseUrl}
-                element={
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <MarkdownPage
-                      data={item.data}
-                      title={item.label}
-                      description={item.description}
-                    />
-                  </Suspense>
-                }
-              />
-              <Route
-                path={`${item.baseUrl}/:category?/:slug?`}
-                element={
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <MarkdownPage
-                      data={item.data}
-                      title={item.label}
-                      description={item.description}
-                    />
-                  </Suspense>
-                }
-              />
+              {/* Route for categories */}
+              <Route path={`${item.baseUrl}/:categories`} element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <MarkdownPage
+                    data={item.data}
+                    title={item.label}
+                    description={item.description}
+                    baseUrl={item.baseUrl}
+                  />
+                </Suspense>
+              } />
+
+              {/* Route for topics within categories */}
+              <Route path={`${item.baseUrl}/:categories/:topics`} element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <MarkdownPage
+                    data={item.data}
+                    title={item.label}
+                    description={item.description}
+                    baseUrl={item.baseUrl}
+                  />
+                </Suspense>
+              } />
+
+              {/* Route for sections within topics */}
+              <Route path={`${item.baseUrl}/:categories/:topics/:sections`} element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <MarkdownPage
+                    data={item.data}
+                    title={item.label}
+                    description={item.description}
+                    baseUrl={item.baseUrl}
+                  />
+                </Suspense>
+              } />
+
+              {/* Route for chapters within sections */}
+              <Route path={`${item.baseUrl}/:categories/:topics/:sections/:chapters`} element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <MarkdownPage
+                    data={item.data}
+                    title={item.label}
+                    description={item.description}
+                    baseUrl={item.baseUrl}
+                  />
+                </Suspense>
+              } />
+
+              {/* Route for slugs that can be at any level */}
+              <Route path={`${item.baseUrl}/:categories/:topics/:sections/:chapters/:slug`} element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <MarkdownPage
+                    data={item.data}
+                    title={item.label}
+                    description={item.description}
+                    baseUrl={item.baseUrl}
+                  />
+                </Suspense>
+              } />
+              <Route path={`${item.baseUrl}/:categories/:topics/:sections/:slug`} element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <MarkdownPage
+                    data={item.data}
+                    title={item.label}
+                    description={item.description}
+                    baseUrl={item.baseUrl}
+                  />
+                </Suspense>
+              } />
+              <Route path={`${item.baseUrl}/:categories/:topics/:slug`} element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <MarkdownPage
+                    data={item.data}
+                    title={item.label}
+                    description={item.description}
+                    baseUrl={item.baseUrl}
+                  />
+                </Suspense>
+              } />
+              <Route path={`${item.baseUrl}/:categories/:slug`} element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <MarkdownPage
+                    data={item.data}
+                    title={item.label}
+                    description={item.description}
+                    baseUrl={item.baseUrl}
+                  />
+                </Suspense>
+              } />
+              <Route path={`${item.baseUrl}/:slug`} element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <MarkdownPage
+                    data={item.data}
+                    title={item.label}
+                    description={item.description}
+                    baseUrl={item.baseUrl}
+                  />
+                </Suspense>
+              } />
+                <Route path={`${item.baseUrl}`} element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <MarkdownPage
+                    data={item.data}
+                    title={item.label}
+                    description={item.description}
+                    baseUrl={item.baseUrl}
+                  />
+                </Suspense>
+              } />
             </React.Fragment>
           ))}
-
-
           <Route path="/posts/:slug" element={<PostDetail />} />
           <Route path="/:model/add" element={<AddForm />} />
           <Route path="/:model/delete/:id" element={<DelCard />} />

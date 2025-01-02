@@ -1,17 +1,42 @@
 // E:\asm-fs\apps\frontends\asafarim-client\src\pages\Home\HomePanels.tsx
 import { useState } from 'react';
 import './home.scss';
+import DisplayMd from '@/components/DisplayMd';
+import Modal from '@/components/Containers/Modal/Modal';
+import Barchart from '@/components/D3/Barchart';
+import LineChart from '@/components/D3/LineChart';
+// get md file content from d3jsReactUiContent as raw string
 
-const linkData = [
-  { id: 1, title: 'Link 1', content: '<h2>Content for Link 1</h2><p>This is the content of the first link.</p>' },
-  { id: 2, title: 'Link 2', content: '<h2>Content for Link 2</h2><p>This is the content of the second link.</p>' },
-  { id: 3, title: 'Link 3', content: '<h2>Content for Link 3</h2><p>This is the content of the third link.</p>' },
-];
+const d3jsReactUiContent = import.meta.glob('@mdfiles/TechDocs/**/*.md', {
+  as: 'raw',
+  eager: true
+});
+
+
+const d3jsContentKey = Object.keys(d3jsReactUiContent).find(key =>
+  key.endsWith('TechDocs/projects/d3js-react-ui.md')
+);
 
 const HomePanels = () => {
   const [selectedLinkId, setSelectedLinkId] = useState<number>(1);
   const [openDetailsId, setOpenDetailsId] = useState<number | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
+  const d3jsContent = d3jsContentKey ?
+    <div className="prose dark:prose-invert max-w-none" id="markdown-container">
+      <DisplayMd id={'d3js-react-ui'} markdownContent={d3jsReactUiContent[d3jsContentKey] + '' || ''} key={`${d3jsContentKey}_`} />
+    </div>
+    :
+    'Content not found';
+
+  // Access the content
+  const linkData = [
+    { id: 1, title: 'D3.js', content: d3jsContent, components: ['Barchart', 'LineChart', 'Scatterplot', 'StackedAreaChart', 'StackedBarChart', 'StackedColumnChart', 'StackedLineChart', 'TimeSeriesChart', 'TreeMapChart', 'WordCloudChart'] },
+    { id: 2, title: 'Link 2', content: '<h2>Content for Link 2</h2><p>This is the content of the second link.</p>' },
+    { id: 3, title: 'Link 3', content: '<h2>Content for Link 3</h2><p>This is the content of the third link.</p>' },
+  ];
+
   const selectedLink = linkData.find(link => link.id === selectedLinkId);
 
   const handleLinkClick = (id: number) => {
@@ -23,10 +48,22 @@ const HomePanels = () => {
     setOpenDetailsId(openDetailsId === id ? null : id);
   };
 
+  const handleComponentClick = (component: string) => {
+    setSelectedComponent(component);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedComponent(null);
+    setIsModalOpen(false);
+  };
+
+  const d3Components = [<Barchart />, <LineChart />];
+
   return (
     <div className="w-full flex flex-col md:flex-row min-h-[calc(100vh-var(--navbar-height)-var(--footer-height))]">
       {/* Mobile Menu Toggle */}
-      <button 
+      <button
         className="md:hidden px-4 py-2 mb-4 text-primary dark:text-primary-dark hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
       >
@@ -54,7 +91,7 @@ const HomePanels = () => {
               open={link.id === openDetailsId}
               onClick={(e) => e.preventDefault()}
             >
-              <summary 
+              <summary
                 onClick={() => handleDetailsToggle(link.id)}
                 className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               >
@@ -62,7 +99,7 @@ const HomePanels = () => {
                   {link.title}
                 </span>
               </summary>
-              
+
               {link.id === openDetailsId && (
                 <div className="p-4 border-t border-gray-200 dark:border-gray-700">
                   <button
@@ -80,6 +117,23 @@ const HomePanels = () => {
                   >
                     View Content
                   </button>
+                  {link.components && (
+                    <div className="mt-4">
+                      <h3 className="text-lg font-semibold">Components:</h3>
+                      <ul>
+                        {link.components.map((component, index) => (
+                          <li key={index}>
+                            <button
+                              onClick={() => handleComponentClick(component)}
+                              className="text-teams-blue hover:underline cursor-pointer"
+                            >
+                              {component}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
               )}
             </details>
@@ -92,9 +146,28 @@ const HomePanels = () => {
         bg-white dark:bg-gray-800
         text-gray-800 dark:text-gray-200">
         <article className="prose dark:prose-invert max-w-none">
-          {selectedLink && <div dangerouslySetInnerHTML={{ __html: selectedLink.content }} />}
+          {selectedLink && typeof selectedLink.content === 'string' ? (
+            <div dangerouslySetInnerHTML={{ __html: selectedLink.content }} />
+          ) : (
+            <>
+              {selectedLink?.content}
+            </>
+          )}
         </article>
       </div>
+
+      {/* Modal for displaying components */}
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        {selectedComponent && (
+          <>
+            {d3Components.map((component, index) => (
+              <div key={index}>
+                {selectedComponent === component.type.name ? component : null}
+              </div>
+            ))}
+          </>
+        )}
+      </Modal>
     </div>
   );
 };

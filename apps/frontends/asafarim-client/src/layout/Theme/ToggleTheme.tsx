@@ -8,9 +8,10 @@ const ThemeToggler: React.FC<Omit<ToggleThemeProps, 'themeContext'>> = ({
   size = '1x',
   title = 'Toggle Theme',
   viewWidth = 0,
+  mobileView = false,
 }) => {
   return (
-    viewWidth < 401 ?
+    mobileView ?
       (<ToggleThemeMobile size={size} title={title} className={className} viewWidth={viewWidth} />) :
       (<ToggleThemeDesktop className={className} size={size} title={title} viewWidth={viewWidth} />)
   );

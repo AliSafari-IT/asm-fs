@@ -12,4 +12,5 @@ export interface ToggleThemeProps {
   size?: SizeProp;
   title?: string;
   viewWidth?: number;
+  mobileView?: boolean;
 }

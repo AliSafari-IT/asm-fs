@@ -8,6 +8,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 import useNavItems from '@/hooks/useNavItems';
 import { SizeProp } from '@fortawesome/fontawesome-svg-core';
 import ResponsiveDropdownMenu from './components/ResponsiveDropdownMenu';
+import ChangeLogsDropdown from './ChangeLogsDropdown';
 
 const Navbar: React.FC<{ children?: React.ReactNode, auth?: IAuthState }> = ({ children, auth }) => {
   const [viewWidth, setViewWidth] = useState(window.innerWidth);
@@ -19,8 +20,10 @@ const Navbar: React.FC<{ children?: React.ReactNode, auth?: IAuthState }> = ({ c
     themeContext,
     size: '1x' as SizeProp,
     title: 'Toggle Theme',
+    className: 'text-[var(--text-primary)] transition-all duration-200 ease-in-out ml-2', 
+    mobileView: isMenuOpen,
     viewWidth,
-  }), [themeContext, viewWidth]);
+  }), [isMenuOpen, themeContext, viewWidth]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -73,13 +76,13 @@ const Navbar: React.FC<{ children?: React.ReactNode, auth?: IAuthState }> = ({ c
                 topbarNavData={[item]}
                 className="block"
               />
-          ))}
+            ))}
         </div>
-
         <div className="flex flex-col lg:flex-row items-start lg:items-center space-y-2 lg:space-y-0 lg:space-x-4 py-2 lg:py-0">
-          {auth && auth.user ? (
+          {auth?.user ? (
             <UserDropdown
               auth={auth}
+              mobileView={isMenuOpen}
               themeToggler={viewWidth < 401 && (<ThemeToggler {...togglerProps} />)}
             />
           ) : (
@@ -101,6 +104,7 @@ const Navbar: React.FC<{ children?: React.ReactNode, auth?: IAuthState }> = ({ c
           {viewWidth > 400 && (
             <ThemeToggler {...togglerProps} />
           )}
+          <ChangeLogsDropdown mobileView={isMenuOpen} />
         </div>
       </div>
       {children}
