@@ -5,7 +5,6 @@ import Wrapper from '@/layout/Wrapper/Wrapper';
 import Header from '@/layout/Header/Header';
 import DisplayMd from '../DisplayMd';
 import { Breadcrumb, IBreadcrumbItem } from '@fluentui/react/lib/Breadcrumb';
-import { FaFileAlt, FaFolderOpen } from "react-icons/fa";
 import ScrollingButtons from '../ScrollingButtons';
 import { getFirstHeading } from '@/utils/mdUtils';
 
@@ -104,7 +103,7 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
     }
   };
 
-  
+
   const renderBreadcrumbs = () => {
     const items: IBreadcrumbItem[] = [];
 
@@ -130,47 +129,72 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
     const files = currentDirectory?.subMenu?.filter(item => item.type === 'file');
 
     return (
-      <div className="space-y-8">
-        {folders && folders.length > 0 && (
-          <div>
-            <h2 className="text-xl font-semibold mb-4">Folders</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {folders.map(folder => (
-                <div
-                  key={folder.name}
-                  className="folder-button"
-                  onClick={() => navigate(folder.to || '#')}
-                >
-                  <FaFolderOpen className="folder-icon" />
-                  <h3 className="text-lg text-info font-medium">{folder.title}</h3>
-                  {folder.description && (
-                    <p className="mt-2">{folder.description}</p>
-                  )}
-                </div>
+      <div>
+        {(folders || files) && (
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-secondary text-primary">
+                <th className="p-4">Type</th>
+                <th className="p-4">Name</th>
+                <th className="p-4">Description</th>
+                <th className="p-4">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {folders && folders.map(folder => (
+                <tr key={folder.id} className="hover:bg-primary transition">
+                  <td className="p-4 text-info" title='Folder'>📂</td>
+                  <td className="p-4">
+                    <a
+                      href={folder.to || '#'}
+                      className="hover:underline text-teams-purple"
+                      onClick={e => {
+                        e.preventDefault();
+                        navigate(folder.to || '#');
+                      }}
+                    >
+                      {folder.title}
+                    </a>
+                  </td>
+                  <td className="p-4">{folder.description || 'No description available'}</td>
+                  <td className="p-4">
+                    <button
+                      className="btn-secondary"
+                      onClick={() => console.log(`Clicked folder: ${folder.title}`)}
+                    >
+                      Details
+                    </button>
+                  </td>
+                </tr>
               ))}
-            </div>
-          </div>
-        )}
-
-        {files && files.length > 0 && (
-          <div>
-            <h2 className="text-xl font-semibold mb-4">Files</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {files.map(file => (
-                <div
-                  key={file.name}
-                  className="file-button"
-                  onClick={() => navigate(file.to || '#')}
-                >
-                  <FaFileAlt className="file-icon" />
-                  <h3 className="text-lg font-medium file-name">{getFirstHeading(file.content+'') || file.title}</h3>
-                  {file.description && (
-                    <p className=" mt-2">{file.description}</p>
-                  )}
-                </div>
+              {files && files.map(file => (
+                <tr key={file.id} className="hover:bg-primary transition">
+                  <td className="p-4 text-info" title='File'>📄</td>
+                  <td className="p-4">
+                    <a
+                      href={file.to || '#'}
+                      className="hover:underline text-teams-blue"
+                      onClick={e => {
+                        e.preventDefault();
+                        navigate(file.to || '#');
+                      }}
+                    >
+                      {getFirstHeading(file.content || '') || file.title}
+                    </a>
+                  </td>
+                  <td className="p-4">{file.description || 'No description available'}</td>
+                  <td className="p-4">
+                    <button
+                      className="btn-secondary"
+                      onClick={() => console.log(`Clicked file: ${file.title}`)}
+                    >
+                      View
+                    </button>
+                  </td>
+                </tr>
               ))}
-            </div>
-          </div>
+            </tbody>
+          </table>
         )}
       </div>
     );

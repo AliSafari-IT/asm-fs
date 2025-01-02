@@ -16,16 +16,21 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .scroll-btn-container {
-        bottom: 2rem; /* Adjust position for smaller screens */
-        right: 2rem; /* Adjust position for smaller screens */
-        padding: 2rem; /* Adjust padding for smaller screens */
+        bottom: 2rem;
+        /* Adjust position for smaller screens */
+        right: 2rem;
+        /* Adjust position for smaller screens */
+        padding: 2rem;
+        /* Adjust padding for smaller screens */
     }
 }
 
 .scroll-btn-container:hover {
     transform: scale(1.1);
-    background-color: rgba(0, 0, 0, 0.1); /* Slightly darken background on hover */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow for depth */
+    background-color: rgba(0, 0, 0, 0.1);
+    /* Slightly darken background on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Add shadow for depth */
 }
 
 .scroll-btn {
@@ -39,7 +44,7 @@
 
 @media (max-width: 640px) {
     .scroll-btn {
-      @apply p-2 right-2 bottom-16;
+        @apply p-2 right-2 bottom-16;
     }
 }
 
@@ -65,6 +70,20 @@
 }
 
 .dropdown-menu {
-    max-height: 300px; /* Set a maximum height */
-    overflow-y: auto;  /* Enable vertical scrolling */
-  }
+    max-height: 300px;
+    /* Set a maximum height */
+    overflow-y: auto;
+    /* Enable vertical scrolling */
+}
+
+table th {
+    @apply p-4 bg-secondary text-primary;
+}
+
+table td {
+    @apply p-4;
+}
+
+table tr:hover {
+    @apply bg-primary;
+}
