@@ -103,14 +103,13 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
     }
   };
 
-
   const renderBreadcrumbs = () => {
     const items: IBreadcrumbItem[] = [];
 
     if (categories) items.push({ text: categories, key: categories, href: `${baseUrl}/${categories}` });
     if (topics) items.push({ text: topics, key: topics, href: `${baseUrl}/${categories}/${topics}` });
     if (sections) items.push({ text: sections, key: sections, href: `${baseUrl}/${categories}/${topics}/${sections}` });
-    if (chapters) items.push({ text: chapters, key: chapters, href: `${baseUrl}/${categories}/${topics}/${sections}/${chapters}` });
+    if (chapters) items.push({ text: getFirstHeading(currentMdFile?.content || '') ?? chapters, key: chapters, href: `${baseUrl}/${categories}/${topics}/${sections}/${chapters}` });
 
     return (
       <Breadcrumb
@@ -131,7 +130,7 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
     return (
       <div>
         {(folders || files) && (
-          <table className="w-full text-left border-collapse">
+          <table className="w-full prose text-left border-collapse">
             <thead>
               <tr className="bg-secondary text-primary">
                 <th className="p-4">Type</th>
@@ -160,9 +159,10 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
                   <td className="p-4">
                     <button
                       className="btn-secondary"
-                      onClick={() => console.log(`Clicked folder: ${folder.title}`)}
+                      onClick={() => navigate(folder.to || '#')}
+                      title="View Folder"
                     >
-                      Details
+                      🔍
                     </button>
                   </td>
                 </tr>
@@ -186,9 +186,10 @@ const MarkdownPage: React.FC<{ data: IMenuItem, title?: string, description?: st
                   <td className="p-4">
                     <button
                       className="btn-secondary"
-                      onClick={() => console.log(`Clicked file: ${file.title}`)}
+                      onClick={() => navigate(file.to || '#')}
+                      title="View File"
                     >
-                      View
+                      👁️
                     </button>
                   </td>
                 </tr>

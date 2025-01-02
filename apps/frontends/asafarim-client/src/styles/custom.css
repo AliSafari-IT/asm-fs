@@ -76,14 +76,6 @@
     /* Enable vertical scrolling */
 }
 
-table th {
-    @apply p-4 bg-secondary text-primary;
-}
-
-table td {
-    @apply p-4;
-}
-
-table tr:hover {
-    @apply bg-primary;
+.dropdown-item {
+    cursor: pointer;
 }

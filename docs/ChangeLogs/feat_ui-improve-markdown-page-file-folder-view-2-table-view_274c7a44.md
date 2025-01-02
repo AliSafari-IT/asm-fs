@@ -1,4 +1,4 @@
-# Changelog: Improve Markdown Page File/Folder View to Table Layout
+# Improve Markdown Page File/Folder View to Table Layout
 
 Date: 02-01-2025
 Git Hash: 274c7a44
@@ -46,7 +46,8 @@ const renderDirectoryContent = () => {
                 </td>
                 <td className="p-4">{folder.description || 'No description available'}</td>
                 <td className="p-4">
-                  <button className="btn-secondary">Details</button>
+                  <button className="btn-secondary"
+                  onClick={e => { e.preventDefault(); navigate(folder.to || '#'); }}>Details</button>
                 </td>
               </tr>
             ))}
@@ -64,7 +65,8 @@ const renderDirectoryContent = () => {
                 </td>
                 <td className="p-4">{file.description || 'No description available'}</td>
                 <td className="p-4">
-                  <button className="btn-secondary">View</button>
+                  <button className="btn-secondary"
+                  onClick={e => { e.preventDefault(); navigate(file.to || '#'); }}>View</button>
                 </td>
               </tr>
             ))}
