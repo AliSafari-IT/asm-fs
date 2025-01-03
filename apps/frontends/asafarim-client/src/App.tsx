@@ -12,7 +12,6 @@ import Home from "./pages/Home/HomePage";
 import AkkodisTargetedResume from "./pages/AboutMe/TailoredCV/Akkodis";
 import DelCard from "./components/Containers/Card/DelCard";
 import EditCard from "./components/Containers/Card/EditCard";
-import AddForm from "./components/crud/AddForm";
 import ProjectHome from "./pages/Project/Index";
 import PostDetail from "./pages/Post/PostDetail";
 import LogoutPage from "./pages/Accountpage/LogoutPage";
@@ -33,6 +32,11 @@ import AccountSettings from "./pages/Accountpage/AccountSettings";
 import { getAllMdFiles } from "./utils/mdFilesUtils";
 import useAuth from "./hooks/useAuth";
 import React from "react";
+import AddProject from "./pages/Project/AddProject";
+import ViewProject from "./pages/Project/ViewProject";
+
+// const userUrl = API_URL + '/users';
+
 
 function App() {
   const user = useAuth()?.user;
@@ -44,6 +48,7 @@ function App() {
     }
   }, [user]);
 
+  
   const dropdownItems = [
     { name: 'legal-docs', label: 'Legal Docs', data: mds.legalDocs, baseUrl: '/legal-docs', description: 'Legal Documentation' },
     { name: 'changelogs', label: 'Changelogs', data: mds.changelogs, baseUrl: '/changelogs', description: 'Changelogs' },
@@ -59,7 +64,18 @@ function App() {
           <Route path="/" element={<Home />} />
 
           <Route path="/projects" element={<ProjectHome key={Math.random()} />} />
-          <Route path="/projects/:id" element={<ProjectHome key={Math.random()} />} />
+          <Route path="/projects/addnew" element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <AddProject />
+            </Suspense>}
+          />
+          <Route path="/projects/:id" element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <ViewProject project={{}} />
+            </Suspense>}
+          />
+          <Route path="/edit-project/:id" element={<EditCard />} />
+          <Route path="/del-project/:id" element={<DelCard />} />
 
           {dropdownItems.map((item) => (
             <React.Fragment key={item.name}>
@@ -162,7 +178,7 @@ function App() {
                   />
                 </Suspense>
               } />
-                <Route path={`${item.baseUrl}`} element={
+              <Route path={`${item.baseUrl}`} element={
                 <Suspense fallback={<div>Loading...</div>}>
                   <MarkdownPage
                     data={item.data}
@@ -175,9 +191,6 @@ function App() {
             </React.Fragment>
           ))}
           <Route path="/posts/:slug" element={<PostDetail />} />
-          <Route path="/:model/add" element={<AddForm />} />
-          <Route path="/:model/delete/:id" element={<DelCard />} />
-          <Route path="/:model/edit/:id" element={<EditCard />} />
           <Route
             path="/dashboard"
             element={

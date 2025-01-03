@@ -1,124 +1,115 @@
+import { IField } from '@/interfaces/IField';
+import Wrapper from '@/layout/Wrapper/Wrapper';
 import React, { useState } from 'react';
-import axios from 'axios';
 
-const AddForm: React.FC = () => {
-    const [formData, setFormData] = useState({
-        name: '',
-        title: '',
-        description: '',
-        startDate: '',
-        endDate: '',
-        budget: 0,
-        clientId: '',
-        ownerId: '',
+
+interface FormData {
+    [key: string]: string | number | boolean | File | FileList | undefined;
+    delete: boolean;
+}
+
+interface AddFormProps {
+    entityName: string;
+    fields: IField[];
+    submitHandler: (formData: FormData) => Promise<void>;
+}
+
+const AddForm: React.FC<AddFormProps> = ({ entityName, fields, submitHandler }) => {
+    const [formData, setFormData] = useState<FormData>({
+        ...Object.fromEntries(fields.map(field => [field.name, ''])),
+        delete: false,
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setFormData(prevState => ({
-            ...prevState,
-            [name]: value
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        const { name, type, value, checked, files } = e.target as HTMLInputElement;
+        setFormData(prev => ({
+            ...prev,
+            [name]: type === 'checkbox'
+                ? checked
+                : type === 'file'
+                    ? files?.[0]
+                    : value,
         }));
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
         try {
-            const response = await axios.post('https://localhost:44337/api/projects', formData);
-            console.log('Project added:', response.data);
-            // Optionally reset the form
-            setFormData({
-                name: '',
-                title: '',
-                description: '',
-                startDate: '',
-                endDate: '',
-                budget: 0,
-                clientId: '',
-                ownerId: '',
-            });
+            await submitHandler(formData);
+            console.log(`${entityName} added successfully`);
+            setFormData({ delete: false }); // Reset the form
         } catch (error) {
-            console.error('Error adding project:', error);
+            console.error(`Error adding ${entityName}:`, error);
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label>Name:</label>
-                <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                />
-            </div>
-            <div>
-                <label>Title:</label>
-                <input
-                    type="text"
-                    name="title"
-                    value={formData.title}
-                    onChange={handleChange}
-                />
-            </div>
-            <div>
-                <label>Description:</label>
-                <textarea
-                    name="description"
-                    value={formData.description}
-                    onChange={handleChange}
-                />
-            </div>
-            <div>
-                <label>Start Date:</label>
-                <input
-                    type="date"
-                    name="startDate"
-                    value={formData.startDate}
-                    onChange={handleChange}
-                />
-            </div>
-            <div>
-                <label>End Date:</label>
-                <input
-                    type="date"
-                    name="endDate"
-                    value={formData.endDate}
-                    onChange={handleChange}
-                />
-            </div>
-            <div>
-                <label>Budget:</label>
-                <input
-                    type="number"
-                    name="budget"
-                    value={formData.budget}
-                    onChange={handleChange}
-                />
-            </div>
-            <div>
-                <label>Client ID:</label>
-                <input
-                    type="text"
-                    name="clientId"
-                    value={formData.clientId}
-                    onChange={handleChange}
-                />
-            </div>
-            <div>
-                <label>Owner ID:</label>
-                <input
-                    type="text"
-                    name="ownerId"
-                    value={formData.ownerId}
-                    onChange={handleChange}
-                />
-            </div>
-            <button type="submit">Add Project</button>
-        </form>
+        <Wrapper header={<h2 className="text-3xl font-bold text-center mb-4">Add {entityName}</h2>}>
+            <form onSubmit={handleSubmit} className="add-entity-form">
+                {fields.map(field => (
+                    <div key={field.name}>
+                        {field.label && <label>{field.label}:</label>}
+                        {field.type === 'textarea' ? (
+                            <textarea
+                                name={field.name}
+                                value={formData[field.name] as string || ''}
+                                onChange={handleChange}
+                                placeholder={field.placeholder}
+                                required={field.required}
+                            />
+                        ) : field.type === 'select' ? (
+                            <select
+                                name={field.name}
+                                value={formData[field.name] as string || ''}
+                                onChange={handleChange}
+                                required={field.required}
+                                multiple={field.multiple}
+                            >
+                                <option value="">Select an option</option>
+                                {field.options?.map(option => (
+                                    <option key={option.value} value={option.value}>
+                                        {option.label}
+                                    </option>
+                                ))}
+                            </select>
+                        ) : field.type === 'radio' ? (
+                            field.options?.map(option => (
+                                <label key={option.value}>
+                                    <input
+                                        type="radio"
+                                        name={field.name}
+                                        value={option.value}
+                                        checked={formData[field.name] === option.value}
+                                        onChange={handleChange}
+                                        required={field.required}
+                                    />
+                                    {option.label}
+                                </label>
+                            ))
+                        ) : (
+                            <input
+                                type={field.type}
+                                name={field.name}
+                                value={
+                                    field.type === 'checkbox' || field.type === 'file'
+                                        ? undefined
+                                        : formData[field.name] as string || ''
+                                }
+                                checked={field.type === 'checkbox' ? formData[field.name] as boolean || false : undefined}
+                                onChange={handleChange}
+                                required={field.required}
+                                placeholder={field.placeholder}
+                                accept={field.accept} // For file inputs
+                                multiple={field.multiple} // For file inputs
+                            />
+                        )}
+                    </div>
+                ))}
+                <div>
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+        </Wrapper>
     );
 };
 
