@@ -5,12 +5,13 @@ import { Edit20Regular, Delete20Regular, Eye20Regular, AppsAddIn24Regular as Add
 import { useNavigate } from "react-router-dom";
 import dashboardServices from "../../api/entityServices";
 import { IProject, IProjectModel } from "../../interfaces/IProject";
+
 const ProjectHome: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [projects, setProjects] = useState<IProject[]>([]);
-
     const navigate = useNavigate();
+
     const headerBlock = (
         <header className="w-full text-center mx-auto m-0 flex justify-between items-center">
             <Toolbar aria-label="Project Toolbar" className="mt-4">
@@ -71,6 +72,12 @@ const ProjectHome: React.FC = () => {
         }
     };
 
+    const calculateDaysLeft = (startDate: string) => {
+        const today = new Date();
+        const start = new Date(startDate);
+        return Math.ceil((today.getTime() - start.getTime()) / (1000 * 3600 * 24));
+    };
+
     return (
         <Wrapper header={headerBlock}>
             {loading ? (
@@ -95,7 +102,7 @@ const ProjectHome: React.FC = () => {
                                     <td className="p-2">{project.title}</td>
                                     <td className="p-2">{project.description}</td>
                                     <td className="p-2 text-center">{new Date(project.startDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</td>
-                                    <td className={`p-2 text-center font-bold ${(project && project.daysLeft !== undefined && project.daysLeft < 0) ? "bg-danger" : project.daysLeft !== undefined && project.daysLeft < 30 ? "bg-warning" : "bg-info"}`} >{project.daysLeft !== undefined ? project.daysLeft : '-'}</td>
+                                    <td className={`p-2 text-center font-bold ${(project && calculateDaysLeft(project.startDate) !== undefined && calculateDaysLeft(project.startDate) < 0) ? "bg-danger" : (project && calculateDaysLeft(project.startDate) !== undefined && calculateDaysLeft(project.startDate) < 30) ? "bg-warning" : "bg-info"}`} >{calculateDaysLeft(project.startDate) !== undefined ? calculateDaysLeft(project.startDate) : '-'}</td>
                                     <td className="p-2 text-center space-x-2">
                                         <Tooltip content="View" relationship={"description"}>
                                             <Button

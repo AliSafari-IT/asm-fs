@@ -14,6 +14,7 @@ namespace SecureCore.Data
         public DbSet<TaskItem> TaskItems { get; set; }
         public DbSet<UserReactivationRequest> UserReactivationRequests { get; set; }
         public DbSet<UserDataChangeLog> UserDataChangeLogs { get; set; }
+        public DbSet<Project> Projects { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -7,7 +7,7 @@ import Barchart from '@/components/D3/Barchart';
 import LineChart from '@/components/D3/LineChart';
 import Scatterplot from '@/components/D3/Scatterplot';
 import Toolbar from '@/components/Toolbars/Toolbar';
-import { Modal, Panel, ResponsiveMode } from '@fluentui/react';
+import { Modal, ResponsiveMode } from '@fluentui/react';
 import { FaDownload, FaTimes } from 'react-icons/fa';
 import { TreemapChart, TreeMapData } from '@/components/D3/TreeMapChart';
 import treeMapData2 from '@/components/D3/data/treeMapData2';

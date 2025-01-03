@@ -25,7 +25,6 @@ import Footer from "./layout/Footer/Footer";
 import UserProfile from "./pages/User/UserProfile";
 import { Suspense, useEffect } from "react";
 import Layout from "./layout/Layout";
-import RTNav from "./pages/Project/projects/react/tailwind/navbar/RTNav";
 //import UserAccountSettings from "./pages/User/UserAccountSettings";
 import Contact from "./pages/Contact";
 import MarkdownPage from "./components/MarkdownPage/MarkdownPage";
@@ -38,7 +37,6 @@ import React from "react";
 function App() {
   const user = useAuth()?.user;
   const mds = getAllMdFiles();
-
 
   useEffect(() => {
     if (!user) {
@@ -59,6 +57,10 @@ function App() {
       <div className="min-h-screen bg-default text-default">
         <Routes>
           <Route path="/" element={<Home />} />
+
+          <Route path="/projects" element={<ProjectHome key={Math.random()} />} />
+          <Route path="/projects/:id" element={<ProjectHome key={Math.random()} />} />
+
           {dropdownItems.map((item) => (
             <React.Fragment key={item.name}>
               {/* Route for categories */}
@@ -184,9 +186,7 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route path="/projects" element={<ProjectHome key={Math.random()} />} />
-          <Route path="/projects/:id" element={<ProjectHome key={Math.random()} />} />
-          <Route path="/projects/react/tailwind/navbar-with-dynamic-nav-items" element={<RTNav />} />
+
           <Route path="/[...notfound]" element={<NotFound />} />
           <Route path="/about-asafarim" element={<About />} />
           <Route path="/logout" element={<LogoutPage />} />
