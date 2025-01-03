@@ -1,4 +1,3 @@
-// src/components/D3/LineChart.tsx
 import * as React from "react";
 import * as d3 from "d3";
 
@@ -109,7 +108,7 @@ function lineChart(svgRef: React.RefObject<SVGSVGElement>) {
     .axisBottom(xScale)
     .tickSize(height - margin)
     .tickSizeOuter(0)
-    .tickFormat(d3.timeFormat("%b"))
+    .tickFormat(d3.timeFormat("%Y-%m-%d"))
     .tickPadding(15);
 
   const yAxis = d3
@@ -169,7 +168,7 @@ function lineChart(svgRef: React.RefObject<SVGSVGElement>) {
         .attr("y", 70);
     })
     .on("mouseout", function (d: Line) {
-      svg.select(".title-text").remove();
+        svg.select(".title-text").remove();
     })
     .append("path")
     .attr("class", "line")
@@ -244,7 +243,7 @@ export const LineChart: React.FunctionComponent = () => {
     lineChart(svg);
   }, [svg]);
 
-  return <svg ref={svg} />;
+  return <svg ref={svg} className="h-full bg-white dark:bg-gray-600 dark:text-gray-100 m-1 rounded "/>;
 };
 
 export default LineChart;

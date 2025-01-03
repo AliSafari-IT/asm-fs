@@ -1,10 +1,19 @@
 // E:\asm-fs\apps\frontends\asafarim-client\src\pages\Home\HomePanels.tsx
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import './home.scss';
 import DisplayMd from '@/components/DisplayMd';
-import Modal from '@/components/Containers/Modal/Modal';
+//import Modal from '@/components/Containers/Modal/Modal';
 import Barchart from '@/components/D3/Barchart';
 import LineChart from '@/components/D3/LineChart';
+import Scatterplot from '@/components/D3/Scatterplot';
+import Toolbar from '@/components/Toolbars/Toolbar';
+import { Modal, Panel, ResponsiveMode } from '@fluentui/react';
+import { FaDownload, FaTimes } from 'react-icons/fa';
+import { TreemapChart, TreeMapData } from '@/components/D3/TreeMapChart';
+import treeMapData2 from '@/components/D3/data/treeMapData2';
+import treeMapData from '@/components/D3/data/treeMapData';
+import { Hierarchy } from '@/components/D3/Hierarchy';
+import { IAlign } from '@/interfaces/IAlign';
 // get md file content from d3jsReactUiContent as raw string
 
 const d3jsReactUiContent = import.meta.glob('@mdfiles/TechDocs/**/*.md', {
@@ -23,6 +32,7 @@ const HomePanels = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
+  const componentRef = useRef<HTMLDivElement>(null);
   const d3jsContent = d3jsContentKey ?
     <div className="prose dark:prose-invert max-w-none" id="markdown-container">
       <DisplayMd id={'d3js-react-ui'} markdownContent={d3jsReactUiContent[d3jsContentKey] + '' || ''} key={`${d3jsContentKey}_`} />
@@ -32,7 +42,7 @@ const HomePanels = () => {
 
   // Access the content
   const linkData = [
-    { id: 1, title: 'D3.js', content: d3jsContent, components: ['Barchart', 'LineChart', 'Scatterplot', 'StackedAreaChart', 'StackedBarChart', 'StackedColumnChart', 'StackedLineChart', 'TimeSeriesChart', 'TreeMapChart', 'WordCloudChart'] },
+    { id: 1, title: 'D3.js', content: d3jsContent, components: ['Barchart', 'LineChart', 'TreemapChart', 'Hierarchy', 'Scatterplot', 'StackedAreaChart', 'StackedBarChart', 'StackedColumnChart', 'StackedLineChart', 'TimeSeriesChart', 'TreeMapChart', 'WordCloudChart'] },
     { id: 2, title: 'Link 2', content: '<h2>Content for Link 2</h2><p>This is the content of the second link.</p>' },
     { id: 3, title: 'Link 3', content: '<h2>Content for Link 3</h2><p>This is the content of the third link.</p>' },
   ];
@@ -58,7 +68,59 @@ const HomePanels = () => {
     setIsModalOpen(false);
   };
 
-  const d3Components = [<Barchart />, <LineChart />];
+  const exportModalContent = (name: string) => {
+    if (componentRef.current) {
+      const svg = componentRef.current.querySelector('svg');
+      if (svg) {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const svgData = new XMLSerializer().serializeToString(svg);
+        const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(svgBlob);
+
+        const img = new Image();
+        img.onload = () => {
+          // Set canvas dimensions
+          canvas.width = svg.clientWidth;
+          canvas.height = svg.clientHeight;
+
+          // Fill canvas with a white background
+          ctx!.fillStyle = '#ffffff'; // Explicitly set white background
+          ctx!.fillRect(0, 0, canvas.width, canvas.height);
+
+          // Draw the SVG onto the canvas
+          ctx!.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+          // Export the canvas as a JPEG
+          const dataUrl = canvas.toDataURL('image/jpeg', 1.0);
+          const link = document.createElement('a');
+          link.href = dataUrl;
+          link.download = `${name}.jpg`;
+          link.click();
+
+          // Clean up
+          URL.revokeObjectURL(url);
+        };
+        img.onerror = () => {
+          console.error('Failed to load the SVG as an image.');
+        };
+        img.src = url;
+      } else {
+        console.error('SVG element not found in the modal content.');
+      }
+    } else {
+      console.error('Component ref is null or undefined.');
+    }
+  };
+
+  const d3Components = [
+    <Barchart />,
+    <LineChart />,
+    <Scatterplot data={[{ x: 1, y: 7 }, { x: 3, y: 4 }, { x: 5, y: 26 }, { x: 7, y: 8 }, { x: 9, y: 100 }]} width={700} height={500} />,
+    <TreemapChart data={treeMapData as unknown as TreeMapData[]} width={700} height={500} />,
+    <Hierarchy width={700} height={500} data={treeMapData2} />,
+
+  ];
 
   return (
     <div className="w-full flex flex-col md:flex-row min-h-[calc(100vh-var(--navbar-height)-var(--footer-height))]">
@@ -157,16 +219,55 @@ const HomePanels = () => {
       </div>
 
       {/* Modal for displaying components */}
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
+      <Modal
+        isOpen={isModalOpen}
+        onDismiss={closeModal}
+        responsiveMode={ResponsiveMode.small}
+        isBlocking={false}
+        isModeless={false}
+        containerClassName="max-w-4xl mx-auto my-4 space-x-0 space-y-0 align-middle bg-primary dark:bg-primary-dark rounded-md shadow-lg text-primary dark:text-primary-dark"
+      >
+        <Toolbar aria-label="Component Toolbar" align={IAlign.right}>
+          <div className="flex justify-between w-full">
+            <h2 className="text-lg font-semibold text-info align-middle text-left truncate">Chart: {selectedComponent}</h2>
+            <div className="flex space-x-2">
+              {selectedComponent && (
+                <button
+                  className="flex items-center justify-center w-10 h-10 bg-teams-purple text-white rounded-full hover:bg-teams-purple-light active:bg-teams-purple-dark transition-all"
+                  onClick={() => exportModalContent(selectedComponent || 'not-found')}
+                  aria-label="Export Component"
+                  title="Export Chart"
+                >
+                  <FaDownload className="w-5 h-5" />
+                </button>
+              )}
+              {selectedComponent && (
+                <button
+                  className="flex items-center justify-center w-10 h-10 bg-danger text-white rounded-full hover:bg-danger-light active:bg-danger-dark transition-all"
+                  onClick={closeModal}
+                  aria-label="Close Modal"
+                  title="Close Modal"
+                >
+                  <FaTimes className="w-5 h-5" />
+                </button>
+              )}
+            </div>
+          </div>
+        </Toolbar>
+
         {selectedComponent && (
-          <>
+          <div className="py-4 px-1 bg-transparent dark:bg-inverted-light ">
             {d3Components.map((component, index) => (
-              <div key={index}>
+              <div
+                key={index}
+                ref={selectedComponent === component.type.name ? componentRef : null} // Attach ref only to the selected component
+              >
                 {selectedComponent === component.type.name ? component : null}
               </div>
             ))}
-          </>
+          </div>
         )}
+
       </Modal>
     </div>
   );
