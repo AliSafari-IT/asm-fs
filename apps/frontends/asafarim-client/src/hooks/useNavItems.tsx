@@ -1,3 +1,4 @@
+// E:\asm-fs\apps\frontends\asafarim-client\src\hooks\useNavItems.tsx
 import { IMenuItem } from "@/interfaces/IMenuItem";
 import { getAllMdFiles } from "@/utils/mdFilesUtils";
 import {

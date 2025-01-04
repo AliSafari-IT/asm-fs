@@ -1,3 +1,4 @@
+// E:\asm-fs\apps\frontends\asafarim-client\src\pages\AboutMe\Stacks\StacksPage.tsx 
 import React, { useState } from 'react';
 import './StacksPage.css';
 import { stackData } from './stackData';
@@ -42,10 +43,13 @@ const StacksPage: React.FC = () => {
     const topics = selected?.topics;
     if(topics && topics.length > 0) {
       const lnk = topics.map(t => getSlug(t.name)).join('-');
-      console.log(" lnk: ", lnk);
       window.location.href = `/tech-docs/${category}/${topics}/${lnk}`; 
+      console.log(" lnk: ", lnk);
+    } else {
+      const navto = `/tech-docs/${category}/${getSlug(selected?.name)}`;
+      window.location.href = navto;
+      console.log(" selected: navto: ", navto);
     }
-    window.location.href = `/tech-docs/${category}/${getSlug(selected?.name)}`;
   }
   
   const getCategory = (stackName: string): string => {
@@ -115,6 +119,7 @@ const StacksPage: React.FC = () => {
                   onClick={(e) => {
                     e?.preventDefault();
                     const category = getCategory(selectedStack.name); // Function to get the category based on stack name
+                    console.log("category: ", category , " for stack: ", selectedStack.name);
                     navigateToProjects(selectedStack, category);
                   }}
                   title={selectedStack.name}
