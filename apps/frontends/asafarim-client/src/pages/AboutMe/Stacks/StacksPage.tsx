@@ -74,33 +74,45 @@ const StacksPage: React.FC = () => {
 
   function getParentFolders(path: string): string {
     if (!path) {
-      console.warn("getParentFolder: Received an empty path.");
+      console.warn('getParentFolder: Received an empty path.');
       return '';
     }
 
-    const sanitizedPath = path.replace(/\/\.\.\//g, '').replace(/\/$/, '');
-    const normalizedPath = sanitizedPath.replace(/^\/?docs\/TechDocs/, '');
-    const parts = normalizedPath.split('/');
+    // Remove any relative path notations like ../../ and normalize slashes
+    const sanitizedPath = path.replace(/\.\.\//g, '').replace(/\\/g, '/').replace(/\/$/, '');
+
+    // Split the path into parts
+    const parts = sanitizedPath.split('/');
+
+    // Check if the path contains "docs/TechDocs"
+    const techDocsIndex = parts.indexOf('docs');
+    if (techDocsIndex !== -1 && parts[techDocsIndex + 1] === 'TechDocs') {
+      parts.splice(0, techDocsIndex + 2); // Remove everything up to and including "docs/TechDocs"
+    }
 
     if (parts.length <= 1) {
       console.warn(`getParentFolder: Path "${path}" does not have a parent folder.`);
-      return '';
+      return '/tech-docs'; // Default to /tech-docs if no parent exists
     }
 
+    // Remove the last part (assumed to be the file or current folder)
     parts.pop();
 
-    const parentFolders = `/tech-docs/${parts.join('/')}`.replace(/\/+/g, '/');
+    // Join the remaining parts to reconstruct the parent folder path
+    const parentFolders = `/tech-docs/${parts.join('/')}`.replace(/\/+/g, '/'); // Normalize slashes
 
     console.log(
-      "getParentFolder: path =",
+      'getParentFolder: path =',
       path,
-      ", sanitizedPath =",
+      ', sanitizedPath =',
       sanitizedPath,
-      ", parentFolder =",
+      ', parentFolder =',
       parentFolders
     );
-    return parentFolders;
+
+    return parentFolders; // Return the valid parent folder path relative to /tech-docs
   }
+
 
   const categoryColors = useMemo(() => generateCategoryColors(Object.keys(filteredData)), [filteredData]);
 
