@@ -698,8 +698,19 @@
 
   /* Blue Palette: From blue to light blue */
   --ts-pallette-blue: #0a1f44, #0c2c66, #0e3988, #1046aa, #1353cc, #166fee, #3a8cf4, #64a8f9, #8dc4fd, #b5e1ff;
-  --ts-pallette-bgBlue: #f8fafc, #e2e8f0, #cbd5e1, #94a3b8, #64748b, #475569, #334155, #1e293b, #0f172a, #0a0e1a;
+  --ts-pallette-bgBlue:
+    #0a0e1a,
+    #0f172a,
+    #1e293b,
+    #334155,
+    #475569,
+    #64748b,
+    #94a3b8,
+    #cbd5e1,
+    #e2e8f0,
+    #f8fafc;
 
+  /* Gold Palette: From gold to light gold */
   --ts-pallette-gold: #332200, #664400, #997f00, #ccaa00, #ffcc00, #ffeb80, #fff4b3, #fffbe0, #fffee0, #fffee0;
   --ts-pallette-bgGold: #fffee0, #fffee0, #fffbe0, #fff4b3, #ffeb80, #ffcc00, #ccaa00, #997f00, #664400, #332200;
 

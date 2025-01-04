@@ -8,24 +8,15 @@ import { getAllMdFiles } from '@/utils/mdFilesUtils';
 import transformMdFilesToStackData from './transformMdFilesToStackData';
 import { IMenuItem } from '@/interfaces/IMenuItem';
 import getSlug from '@/utils/getSlug';
-import generateCategoryColors from '@/utils/categoryColors'; // Import the reusable tool
+import generateCategoryColors from '@/utils/categoryColors';
+import determineTextColor from '@/utils/determineTextColor';
 
 const StacksPage: React.FC = () => {
   const [selectedStack, setSelectedStack] = useState<IMenuItem | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [dynamicStackData, setDynamicStackData] = useState<Record<string, IMenuItem[]>>({});
 
-  const determineTextColor = (bgColor: string): string => {
-    const hex = bgColor.replace('#', '');
-    const r = parseInt(hex.substring(0, 2), 16);
-    const g = parseInt(hex.substring(2, 4), 16);
-    const b = parseInt(hex.substring(4, 6), 16);
-    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-    return brightness > 125 ? 'var(--text-primary)' : 'var(--text-inverted)';
-  };
-  
   useEffect(() => {
-    // Fetch and transform Markdown data into stackData format
     const mdFiles = getAllMdFiles();
     console.log('Raw Markdown Files:', mdFiles);
 
@@ -69,20 +60,15 @@ const StacksPage: React.FC = () => {
       return;
     }
 
-    // Generate the slug for the selected stack
     const slug = getSlug(selected.name);
     console.log("Slug:", slug);
-    // Normalize parentFolder to avoid double slashes
     const normalizedParentFolder = parentFolder
       ? parentFolder.replace(/\/+$/, '') // Remove trailing slashes
       : '/tech-docs';
 
-    // Construct the full navigation path
-    const navto = `${normalizedParentFolder}/${slug}`.replace(/\/+/g, '/'); // Remove double slashes
+    const navto = `${normalizedParentFolder}/${slug}`.replace(/\/+/g, '/');
 
     console.log("Navigate to:", navto);
-
-    // Navigate to the constructed path
     window.location.href = navto;
   }
 
@@ -92,24 +78,17 @@ const StacksPage: React.FC = () => {
       return '';
     }
 
-    // Remove any relative path notations like ../../
-    const sanitizedPath = path.replace(/\.\.\//g, '').replace(/\/$/, '');
-
-    // Normalize path: remove unwanted prefixes like '/docs/TechDocs'
+    const sanitizedPath = path.replace(/\/\.\.\//g, '').replace(/\/$/, '');
     const normalizedPath = sanitizedPath.replace(/^\/?docs\/TechDocs/, '');
-
-    // Split the path into parts
     const parts = normalizedPath.split('/');
 
     if (parts.length <= 1) {
       console.warn(`getParentFolder: Path "${path}" does not have a parent folder.`);
-      return ''; // Return an empty string if no parent exists
+      return '';
     }
 
-    // Remove the last part (assumed to be the file or current folder)
     parts.pop();
 
-    // Join the remaining parts to reconstruct the parent folder path
     const parentFolders = `/tech-docs/${parts.join('/')}`.replace(/\/+/g, '/');
 
     console.log(
@@ -120,8 +99,9 @@ const StacksPage: React.FC = () => {
       ", parentFolder =",
       parentFolders
     );
-    return parentFolders; // Return the valid parent folder path relative to /tech-docs
+    return parentFolders;
   }
+
   const categoryColors = useMemo(() => generateCategoryColors(Object.keys(filteredData)), [filteredData]);
 
   return (
@@ -143,7 +123,6 @@ const StacksPage: React.FC = () => {
         {Object.entries(filteredData)?.map(([category, stackItems]) => {
           const categoryStyle = categoryColors[category] || categoryColors.default;
 
-          // Directly updating stack properties
           stackItems.map((stack) => {
             stack.color = categoryStyle.color;
             stack.textColor = determineTextColor(categoryStyle.color);
