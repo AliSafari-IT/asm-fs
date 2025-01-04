@@ -38,6 +38,14 @@ export const allPalettes = {
         color: "--ts-pallette-Default",
         bgColor: "--ts-pallette-bgDefault"
     },
+    googlePrimary: {
+        color: "--ts-pallette-googlePrimary",
+        bgColor: "--ts-pallette-bgGooglePrimary"
+    },
+    googleSecondary: {
+        color: "--ts-pallette-googleSecondary",
+        bgColor: "--ts-pallette-bgGoogleSecondary"
+    },
     googleDefault: {
         color: "--ts-pallette-googleDefault",
         bgColor: "--ts-pallette-bgGoogleDefault"
@@ -57,20 +65,12 @@ export const allPalettes = {
     googleInfo: {
         color: "--ts-pallette-googleInfo",
         bgColor: "--ts-pallette-bgGoogleInfo"
-    },
-    googlePrimary: {
-        color: "--ts-pallette-googlePrimary",
-        bgColor: "--ts-pallette-bgGooglePrimary"
-    },
-    googleSecondary: {
-        color: "--ts-pallette-googleSecondary",
-        bgColor: "--ts-pallette-bgGoogleSecondary"
-    },
+    }
 };
 
 const generateCategoryColors = (categories: string[]): Record<string, { color: string; textColor: string; categories: string[] }> => {
     const rootStyles = getComputedStyle(document.documentElement);
-    const selectedPalette = allPalettes.default;
+    const selectedPalette = allPalettes.info;
     const backgroundColors = rootStyles.getPropertyValue(selectedPalette.bgColor).split(",");
     const foregroundColors = rootStyles.getPropertyValue(selectedPalette.color).split(",");
 

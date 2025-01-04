@@ -332,7 +332,53 @@
     #ffb3b3,
     #ffe0e0;
 
-  --ts-pallette-googleDefault:
+    --ts-pallette-googlePrimary:
+    #1a237e,
+    #283593,
+    #303f9f,
+    #3949ab,
+    #3f51b5,
+    #5c6bc0,
+    #7986cb,
+    #9fa8da,
+    #c5cae9,
+    #e8eaf6;
+    --ts-pallette-bgGooglePrimary:
+    #e8eaf6,
+    #c5cae9,
+    #9fa8da,
+    #7986cb,
+    #5c6bc0,
+    #3f51b5,
+    #3949ab,
+    #303f9f,
+    #283593,
+    #1a237e;
+
+    --ts-pallette-googleSecondary:
+    #1a237e,
+    #283593,
+    #303f9f,
+    #3949ab,
+    #3f51b5,
+    #5c6bc0,
+    #7986cb,
+    #9fa8da,
+    #c5cae9,
+    #e8eaf6;
+    --ts-pallette-bgGoogleSecondary:
+    #e8eaf6,
+    #c5cae9,
+    #9fa8da,
+    #7986cb,
+    #5c6bc0,
+    #3f51b5,
+    #3949ab,
+    #303f9f,
+    #283593,
+    #1a237e;
+
+    --ts-pallette-googlePrimary:
     #e8eaf6,
     #c5cae9,
     #9fa8da,
@@ -728,6 +774,12 @@
   --ts-pallette-danger: #d32f2f, #e53935, #ef5350, #f4511e, #fb8c00, #ffab00, #ffd600, #ffecb3, #fff8e1;
   --ts-pallette-bgDanger: #fff8e1, #ffecb3, #ffd600, #ffab00, #fb8c00, #f4511e, #ef5350, #e53935, #d32f2f;
 
+  --ts-pallette-googlePrimary: #e8f5e9, #c8e6c9, #a5d6a7, #81c784, #66bb6a, #4caf50, #43a047, #388e3c, #2e7d32, #1b5e20;
+  --ts-pallette-bgGooglePrimary: #1b5e20, #2e7d32, #388e3c, #43a047, #4caf50, #66bb6a, #81c784, #a5d6a7, #c8e6c9, #e8f5e9;
+
+  --ts-pallette-googleSecondary: #e8f5e9, #c8e6c9, #a5d6a7, #81c784, #66bb6a, #4caf50, #43a047, #388e3c, #2e7d32, #1b5e20;
+  --ts-pallette-bgGoogleSecondary: #1b5e20, #2e7d32, #388e3c, #43a047, #4caf50, #66bb6a, #81c784, #a5d6a7, #c8e6c9, #e8f5e9;
+  
   --ts-pallette-googleSuccess: #e8f5e9, #c8e6c9, #a5d6a7, #81c784, #66bb6a, #4caf50, #43a047, #388e3c, #2e7d32, #1b5e20;
   --ts-pallette-bgGoogleSuccess: #1b5e20, #2e7d32, #388e3c, #43a047, #4caf50, #66bb6a, #81c784, #a5d6a7, #c8e6c9, #e8f5e9;
 
