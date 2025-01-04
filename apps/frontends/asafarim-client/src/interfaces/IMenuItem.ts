@@ -3,6 +3,7 @@ import { ITopic } from "./ITopic";
 
 export interface IMenuItem extends INavBase {
   target?: "_blank" | "_self" | "_parent" | "_top";
+  subMenu?: IMenuItem[];
   onClick?: () => void | undefined;
   onClose?: () => void | undefined;
   onOpen?: () => void | undefined;
@@ -17,11 +18,12 @@ export interface IMenuItem extends INavBase {
   isReadonly?: boolean;
   isDisabled?: boolean; 
   isForNavbar?: boolean; 
-  subMenu?: IMenuItem[];
   filepath?: string;
   folderName?: string;
+  parentFolder?: string;
   content?: string;
   topics?: ITopic[];
   type?: 'folder' | 'file';
-  isExpanded?: boolean
+  color?: string;
+  textColor?: string;
 };
