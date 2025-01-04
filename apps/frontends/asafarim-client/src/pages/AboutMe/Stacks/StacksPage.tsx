@@ -1,19 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import './StacksPage.css';
 import { ActionButton, Modal, SearchBox } from '@fluentui/react';
 import Header from '@/layout/Header/Header';
 import { Tooltip } from '@material-tailwind/react';
-import { DialogActions } from '@fluentui/react-components';
+import { DialogActions, Title3 } from '@fluentui/react-components';
 import { getAllMdFiles } from '@/utils/mdFilesUtils';
 import transformMdFilesToStackData from './transformMdFilesToStackData';
 import { IMenuItem } from '@/interfaces/IMenuItem';
 import getSlug from '@/utils/getSlug';
+import generateCategoryColors from '@/utils/categoryColors'; // Import the reusable tool
 
 const StacksPage: React.FC = () => {
   const [selectedStack, setSelectedStack] = useState<IMenuItem | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [dynamicStackData, setDynamicStackData] = useState<Record<string, IMenuItem[]>>({});
 
+  const determineTextColor = (bgColor: string): string => {
+    const hex = bgColor.replace('#', '');
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    return brightness > 125 ? 'var(--text-primary)' : 'var(--text-inverted)';
+  };
+  
   useEffect(() => {
     // Fetch and transform Markdown data into stackData format
     const mdFiles = getAllMdFiles();
@@ -112,6 +122,7 @@ const StacksPage: React.FC = () => {
     );
     return parentFolders; // Return the valid parent folder path relative to /tech-docs
   }
+  const categoryColors = useMemo(() => generateCategoryColors(Object.keys(filteredData)), [filteredData]);
 
   return (
     <div className="stacks-container">
@@ -130,9 +141,25 @@ const StacksPage: React.FC = () => {
       </Header>
       <div className="categories">
         {Object.entries(filteredData)?.map(([category, stackItems]) => {
+          const categoryStyle = categoryColors[category] || categoryColors.default;
+
+          // Directly updating stack properties
+          stackItems.map((stack) => {
+            stack.color = categoryStyle.color;
+            stack.textColor = determineTextColor(categoryStyle.color);
+          });
+
           return (
             <div key={category} className="category-section">
-              <h2 className="category-title">{stackItems[0].parentFolder}</h2>
+              <Title3
+                className="category-title"
+                style={{
+                  color: categoryStyle.textColor,
+                  backgroundColor: categoryStyle.color,
+                }}
+              >
+                {stackItems[0].parentFolder}
+              </Title3>
               <div className="stack-grid">
                 {stackItems.length > 0 ? (
                   stackItems.map((stack, index) => (
@@ -154,7 +181,7 @@ const StacksPage: React.FC = () => {
                 )}
               </div>
             </div>
-          )
+          );
         })}
       </div>
 
@@ -163,7 +190,7 @@ const StacksPage: React.FC = () => {
           <div className="modal-content">
             <Header>{selectedStack.name}</Header>
             <p>{selectedStack.description}</p>
-            <DialogActions>
+            <DialogActions className='techdoc-modal-actions'>
               <ActionButton className="btn-close" onClick={closeModal}>
                 Close
               </ActionButton>

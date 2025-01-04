@@ -1,0 +1,94 @@
+// E:\asm-fs\apps\frontends\asafarim-client\src\utils\categoryColors.ts
+export const allPalettes = {
+    primary: {
+        color: "--ts-pallette-Primary",
+        bgColor: "--ts-pallette-bgPrimary"
+    },
+    secondary: {
+        color: "--ts-pallette-Secondary",
+        bgColor: "--ts-pallette-bgSecondary"
+    },
+    blue: {
+        color: "--ts-pallette-Blue",
+        bgColor: "--ts-pallette-bgBlue"
+    },
+    gold: {
+        color: "--ts-pallette-Gold",
+        bgColor: "--ts-pallette-bgGold"
+    },
+    success: {
+        color: "--ts-pallette-Success",
+        bgColor: "--ts-pallette-bgSuccess"
+    },
+    warning: {
+        color: "--ts-pallette-Warning",
+        bgColor: "--ts-pallette-bgWarning"
+    },
+    danger: {
+        color: "--ts-pallette-Danger",
+        bgColor: "--ts-pallette-bgDanger"
+    },
+    info: {
+        color: "--ts-pallette-Info",
+        bgColor: "--ts-pallette-bgInfo"
+    },
+    default: {
+        color: "--ts-pallette-Default",
+        bgColor: "--ts-pallette-bgDefault"
+    },
+    googleDefault: {
+        color: "--ts-pallette-googleDefault",
+        bgColor: "--ts-pallette-bgGoogleDefault"
+    },
+    googleSuccess: {
+        color: "--ts-pallette-googleSuccess",
+        bgColor: "--ts-pallette-bgGoogleSuccess"
+    },
+    googleWarning: {
+        color: "--ts-pallette-googleWarning",
+        bgColor: "--ts-pallette-bgGoogleWarning"
+    },
+    googleDanger: {
+        color: "--ts-pallette-googleDanger",
+        bgColor: "--ts-pallette-bgGoogleDanger"
+    },
+    googleInfo: {
+        color: "--ts-pallette-googleInfo",
+        bgColor: "--ts-pallette-bgGoogleInfo"
+    },
+    googlePrimary: {
+        color: "--ts-pallette-googlePrimary",
+        bgColor: "--ts-pallette-bgGooglePrimary"
+    },
+    googleSecondary: {
+        color: "--ts-pallette-googleSecondary",
+        bgColor: "--ts-pallette-bgGoogleSecondary"
+    },
+};
+
+const generateCategoryColors = (categories: string[]): Record<string, { color: string; textColor: string; categories: string[] }> => {
+    const rootStyles = getComputedStyle(document.documentElement);
+    const selectedPalette = allPalettes.blue;
+    const backgroundColors = rootStyles.getPropertyValue(selectedPalette.bgColor).split(",");
+    const foregroundColors = rootStyles.getPropertyValue(selectedPalette.color).split(",");
+
+    const categoryColors: Record<string, { color: string; textColor: string; categories: string[] }> = {};
+    categories.forEach((category, index) => {
+        categoryColors[category] = {
+            color: backgroundColors[index % backgroundColors.length].trim(),
+            textColor: foregroundColors[index % foregroundColors.length].trim(),
+            categories: [category]
+        };
+    });
+
+    // Assign a default color in case a category is not found
+    categoryColors.default = {
+        color: backgroundColors[0].trim(),
+        textColor: foregroundColors[0].trim(),
+        categories: ["default"]
+    };
+
+    return categoryColors;
+};
+
+export default generateCategoryColors
