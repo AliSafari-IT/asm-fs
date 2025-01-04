@@ -22,11 +22,13 @@ ConfigurationServices.ConfigureServices(builder.Services, builder.Environment);
 ConfigurationServices.AddCors(builder.Services, "Default");
 
 // Add custom services
-builder.Services.AddScoped<ITaskItemService, TaskItemService>();
+builder.Services.AddScoped<ITaskItemService, TaskItemService>(); 
 builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserDataChangeLogRepository, UserDataChangeLogRepository>();
+builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
 
 // Configure Authentication and Authorization
 builder

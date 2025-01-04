@@ -76,4 +76,9 @@ export interface INavBase {
   isEditableByUserId?: string;
   isUpdatableByUserId?: string;
   isDeletableByUserId?: string;
-  isArchivableByUserId?: string;}
+  isArchivableByUserId?: string;
+  isExpanded?: boolean;
+  isExpandedByDefault?: boolean;
+  isCollapsed?: boolean;
+  isCollapsedByDefault?: boolean;
+}

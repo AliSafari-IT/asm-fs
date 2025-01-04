@@ -1,19 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './StacksPage.css';
-import { stackData } from './stackData';
-import { IStackItem } from '@/interfaces/IStack';
 import { ActionButton, Modal, SearchBox } from '@fluentui/react';
 import Header from '@/layout/Header/Header';
 import { Tooltip } from '@material-tailwind/react';
 import { DialogActions } from '@fluentui/react-components';
+import { getAllMdFiles } from '@/utils/mdFilesUtils';
+import transformMdFilesToStackData from './transformMdFilesToStackData';
+import { IMenuItem } from '@/interfaces/IMenuItem';
 import getSlug from '@/utils/getSlug';
-//import SearchBox from '@/components/SearchBox/SearchBox';
 
 const StacksPage: React.FC = () => {
-  const [selectedStack, setSelectedStack] = useState<IStackItem | null>(null);
+  const [selectedStack, setSelectedStack] = useState<IMenuItem | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [dynamicStackData, setDynamicStackData] = useState<Record<string, IMenuItem[]>>({});
 
-  const handleCardClick = (stack: IStackItem) => {
+  useEffect(() => {
+    // Fetch and transform Markdown data into stackData format
+    const mdFiles = getAllMdFiles();
+    console.log('Raw Markdown Files:', mdFiles);
+
+    const transformedData = transformMdFilesToStackData(mdFiles.techDocs);
+    console.log('Transformed Stack Data:', transformedData);
+    setDynamicStackData(transformedData);
+  }, []);
+
+  const handleCardClick = (stack: IMenuItem) => {
     setSelectedStack(stack);
   };
 
@@ -21,46 +32,86 @@ const StacksPage: React.FC = () => {
     setSelectedStack(null);
   };
 
-  const filteredData = Object.entries(stackData).reduce((acc, [category, stacks]) => {
-    const filteredStacks = stacks.filter((stack) =>
-      stack.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredData = Object.entries(dynamicStackData).reduce((acc, [category, stacks]) => {
+    const filteredStacks = stacks?.filter((stack) =>
+      stack?.name?.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    if (filteredStacks.length) {
+    if (filteredStacks?.length) {
       acc[category] = filteredStacks;
     }
     return acc;
-  }, {} as typeof stackData);
+  }, {} as typeof dynamicStackData);
 
-  const handleSearch = (e?: { target: { value: string; }; }): void => {
+  const handleSearch = (e?: { target: { value: string } }) => {
     if (e) {
       setSearchTerm(e.target.value);
     }
   };
-  const handleClear = (): void => { setSearchTerm(''); };
 
-  function navigateToProjects(selected?: IStackItem, category?: string): void {
-    const topics = selected?.topics;
-    if(topics && topics.length > 0) {
-      const lnk = topics.map(t => getSlug(t.name)).join('-');
-      console.log(" lnk: ", lnk);
-      window.location.href = `/tech-docs/${category}/${topics}/${lnk}`; 
+  const handleClear = () => setSearchTerm('');
+
+  function navigateToProjects({
+    selected,
+    parentFolder,
+  }: { selected?: IMenuItem; parentFolder?: string } = {}): void {
+    if (!selected || !selected.name) {
+      console.warn("navigateToProjects: Missing selected stack or name.");
+      return;
     }
-    window.location.href = `/tech-docs/${category}/${getSlug(selected?.name)}`;
+
+    // Generate the slug for the selected stack
+    const slug = getSlug(selected.name);
+    console.log("Slug:", slug);
+    // Normalize parentFolder to avoid double slashes
+    const normalizedParentFolder = parentFolder
+      ? parentFolder.replace(/\/+$/, '') // Remove trailing slashes
+      : '/tech-docs';
+
+    // Construct the full navigation path
+    const navto = `${normalizedParentFolder}/${slug}`.replace(/\/+/g, '/'); // Remove double slashes
+
+    console.log("Navigate to:", navto);
+
+    // Navigate to the constructed path
+    window.location.href = navto;
   }
-  
-  const getCategory = (stackName: string): string => {
-    const backendStacks = ['CSharp ASP.Net Core', 'Restful API', 'Clean Architecture', 'SQL (MySQL) and NoSQL (MongoDB)', 'End-to-End Testing'];
-    const frontendStacks = ['React TypeScript', 'HTML/CSS', 'Git'];
-    const uiFrameworks = ['Tailwind CSS', 'PHP and Laravel', 'Node.js', 'Angular', 'Fluent UI', 'Bootstrap', 'Material UI', 'Syncfusion'];
-    const dataAnalysisStacks = ['Python', 'R & R studio', 'D3', 'Data Visualization', 'Data-Driven UI', ];
-  
-    if (backendStacks.includes(stackName)) return 'backend';
-    if (frontendStacks.includes(stackName)) return 'frontend';
-    if (uiFrameworks.includes(stackName)) return 'ui-frameworks';
-    if (dataAnalysisStacks.includes(stackName)) return 'data-analysis';
-    
-    return ''; // Default case if no category is found
-  };
+
+  function getParentFolders(path: string): string {
+    if (!path) {
+      console.warn("getParentFolder: Received an empty path.");
+      return '';
+    }
+
+    // Remove any relative path notations like ../../
+    const sanitizedPath = path.replace(/\.\.\//g, '').replace(/\/$/, '');
+
+    // Normalize path: remove unwanted prefixes like '/docs/TechDocs'
+    const normalizedPath = sanitizedPath.replace(/^\/?docs\/TechDocs/, '');
+
+    // Split the path into parts
+    const parts = normalizedPath.split('/');
+
+    if (parts.length <= 1) {
+      console.warn(`getParentFolder: Path "${path}" does not have a parent folder.`);
+      return ''; // Return an empty string if no parent exists
+    }
+
+    // Remove the last part (assumed to be the file or current folder)
+    parts.pop();
+
+    // Join the remaining parts to reconstruct the parent folder path
+    const parentFolders = `/tech-docs/${parts.join('/')}`.replace(/\/+/g, '/');
+
+    console.log(
+      "getParentFolder: path =",
+      path,
+      ", sanitizedPath =",
+      sanitizedPath,
+      ", parentFolder =",
+      parentFolders
+    );
+    return parentFolders; // Return the valid parent folder path relative to /tech-docs
+  }
 
   return (
     <div className="stacks-container">
@@ -78,34 +129,41 @@ const StacksPage: React.FC = () => {
         />
       </Header>
       <div className="categories">
-        {Object.entries(filteredData).map(([category, stackItems]) => (
-          <div key={category} className="category-section">
-            <h2 className="category-title">{category.replace(/([A-Z])/g, ' $1').trim()}</h2>
-            <div className="stack-grid">
-              {stackItems.map((stack, index) => (
-                <Tooltip key={index} content={stack.description}>
-                  <div
-                    className="stack-card"
-                    style={{ backgroundColor: stack.color, color: stack.textColor }}
-                    onClick={() => handleCardClick(stack)}
-                  >
-                    <h3 className="stack-name">{stack.name}</h3>
-                  </div>
-                </Tooltip>
-              ))}
+        {Object.entries(filteredData)?.map(([category, stackItems]) => {
+          return (
+            <div key={category} className="category-section">
+              <h2 className="category-title">{stackItems[0].parentFolder}</h2>
+              <div className="stack-grid">
+                {stackItems.length > 0 ? (
+                  stackItems.map((stack, index) => (
+                    <Tooltip key={index} content={stack.description}>
+                      <div
+                        className="stack-card"
+                        style={{
+                          backgroundColor: stack.color,
+                          color: stack.textColor,
+                        }}
+                        onClick={() => handleCardClick(stack)}
+                      >
+                        <h3 className="stack-name">{stack.name}</h3>
+                      </div>
+                    </Tooltip>
+                  ))
+                ) : (
+                  <p>No stacks available in this category.</p>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
 
       {selectedStack && (
-        <Modal className="modal" isOpen={true} onDismiss={closeModal}>
+        <Modal className="modal" isOpen={true} onDismiss={closeModal} containerClassName='techdoc-modal-container' >
           <div className="modal-content">
             <Header>{selectedStack.name}</Header>
             <p>{selectedStack.description}</p>
-            <DialogActions
-              className="dialog-actions"
-              >
+            <DialogActions>
               <ActionButton className="btn-close" onClick={closeModal}>
                 Close
               </ActionButton>
@@ -114,13 +172,28 @@ const StacksPage: React.FC = () => {
                   className="btn-info"
                   onClick={(e) => {
                     e?.preventDefault();
-                    const category = getCategory(selectedStack.name); // Function to get the category based on stack name
-                    navigateToProjects(selectedStack, category);
+
+                    console.log("Selected Stack:", selectedStack);
+
+                    const folderName = selectedStack.folderName || '';
+                    const filepath = selectedStack.filepath || '';
+
+                    console.log("Folder Name:", folderName);
+                    console.log("Filepath:", filepath);
+
+                    const parentFolderName = getParentFolders(folderName || filepath);
+                    console.log("Parent Folder Name:", parentFolderName);
+
+                    navigateToProjects({
+                      selected: selectedStack,
+                      parentFolder: parentFolderName,
+                    });
                   }}
                   title={selectedStack.name}
                 >
                   Projects: {selectedStack.name.length > 20 ? `${selectedStack.name.slice(0, 15)}...` : selectedStack.name}
                 </ActionButton>
+
               )}
             </DialogActions>
           </div>
