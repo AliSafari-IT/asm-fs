@@ -11,13 +11,24 @@ import generateCategoryColors from '@/utils/categoryColors';
 import determineTextColor from '@/utils/determineTextColor';
 import { getFirstHeading } from '@/utils/mdUtils';
 
-const StacksPage: React.FC = () => {
+interface StacksPageProps {
+  docBranch: string;
+  stackTitle: string;
+}
+
+const StacksPage: React.FC<StacksPageProps> = ({ docBranch, stackTitle }) => {
   const [selectedStack, setSelectedStack] = useState<IMenuItem | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [dynamicStackData, setDynamicStackData] = useState<Record<string, IMenuItem[]>>({});
 
+  const basePath = docBranch === 'techDocs'
+    ? '/tech-docs'
+    : docBranch === 'changelogs'
+      ? '/changelogs'
+      : '/legal-docs';
+
   useEffect(() => {
-    const transformedData = transformMdFilesToStackData('techDocs');
+    const transformedData = transformMdFilesToStackData(docBranch);
     console.log('Transformed Stack Data:', transformedData);
     setDynamicStackData(transformedData);
   }, []);
@@ -28,6 +39,13 @@ const StacksPage: React.FC = () => {
 
   const closeModal = () => {
     setSelectedStack(null);
+  };
+  const handleClear = () => setSearchTerm('');
+
+  const handleSearch = (e?: { target: { value: string } }) => {
+    if (e) {
+      setSearchTerm(e.target.value);
+    }
   };
 
   const filteredData = Object.entries(dynamicStackData).reduce((acc, [category, stacks]) => {
@@ -40,14 +58,7 @@ const StacksPage: React.FC = () => {
     return acc;
   }, {} as typeof dynamicStackData);
 
-  const handleSearch = (e?: { target: { value: string } }) => {
-    if (e) {
-      setSearchTerm(e.target.value);
-    }
-  };
-
-  const handleClear = () => setSearchTerm('');
-
+  
   function navigateToProjects({
     selected,
     parentFolder,
@@ -61,9 +72,9 @@ const StacksPage: React.FC = () => {
     console.log("Slug:", slug);
     const normalizedParentFolder = parentFolder
       ? parentFolder.replace(/\/+$/, '') // Remove trailing slashes
-      : '/tech-docs';
+      : basePath;
 
-    const navto = `${normalizedParentFolder}/${slug}`.replace(/\/+/g, '/');
+    const navto = docBranch === 'changelogs' ? `${basePath}/${slug}` : `${normalizedParentFolder}/${slug}`.replace(/\/+/g, '/');
 
     console.log("Navigate to:", navto);
     window.location.href = navto;
@@ -89,14 +100,14 @@ const StacksPage: React.FC = () => {
 
     if (parts.length <= 1) {
       console.warn(`getParentFolder: Path "${path}" does not have a parent folder.`);
-      return '/tech-docs'; // Default to /tech-docs if no parent exists
+      return basePath; // Default to basePath if no parent exists
     }
 
     // Remove the last part (assumed to be the file or current folder)
     parts.pop();
 
     // Join the remaining parts to reconstruct the parent folder path
-    const parentFolders = `/tech-docs/${parts.join('/')}`.replace(/\/+/g, '/'); // Normalize slashes
+    const parentFolders = `${basePath}/${parts.join('/')}`.replace(/\/+/g, '/'); // Normalize slashes
 
     console.log(
       'getParentFolder: path =',
@@ -107,16 +118,15 @@ const StacksPage: React.FC = () => {
       parentFolders
     );
 
-    return parentFolders; // Return the valid parent folder path relative to /tech-docs
+    return parentFolders; // Return the valid parent folder path relative to basePath
   }
-
 
   const categoryColors = useMemo(() => generateCategoryColors(Object.keys(filteredData)), [filteredData]);
 
   return (
     <div className="stacks-container">
       <Header className="stacks-header">
-        <h1 className="text-xl font-bold text-center mb-4 md:text-2xl">Tech Stacks</h1>
+        <h1 className="text-xl font-bold text-center mb-4 md:text-2xl">{stackTitle}</h1>
         <SearchBox
           value={searchTerm}
           onChange={handleSearch}
