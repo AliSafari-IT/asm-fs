@@ -4,12 +4,12 @@ import { ActionButton, Modal, SearchBox } from '@fluentui/react';
 import Header from '@/layout/Header/Header';
 import { Tooltip } from '@material-tailwind/react';
 import { DialogActions, Title3 } from '@fluentui/react-components';
-import { getAllMdFiles } from '@/utils/mdFilesUtils';
 import transformMdFilesToStackData from './transformMdFilesToStackData';
 import { IMenuItem } from '@/interfaces/IMenuItem';
 import getSlug from '@/utils/getSlug';
 import generateCategoryColors from '@/utils/categoryColors';
 import determineTextColor from '@/utils/determineTextColor';
+import { getFirstHeading } from '@/utils/mdUtils';
 
 const StacksPage: React.FC = () => {
   const [selectedStack, setSelectedStack] = useState<IMenuItem | null>(null);
@@ -17,10 +17,7 @@ const StacksPage: React.FC = () => {
   const [dynamicStackData, setDynamicStackData] = useState<Record<string, IMenuItem[]>>({});
 
   useEffect(() => {
-    const mdFiles = getAllMdFiles();
-    console.log('Raw Markdown Files:', mdFiles);
-
-    const transformedData = transformMdFilesToStackData(mdFiles.techDocs);
+    const transformedData = transformMdFilesToStackData('techDocs');
     console.log('Transformed Stack Data:', transformedData);
     setDynamicStackData(transformedData);
   }, []);
@@ -149,7 +146,7 @@ const StacksPage: React.FC = () => {
                   backgroundColor: categoryStyle.color,
                 }}
               >
-                {stackItems[0].parentFolder}
+                {stackItems[0].parentFolder || category}
               </Title3>
               <div className="stack-grid">
                 {stackItems.length > 0 ? (
@@ -163,7 +160,7 @@ const StacksPage: React.FC = () => {
                         }}
                         onClick={() => handleCardClick(stack)}
                       >
-                        <h3 className="stack-name">{stack.name}</h3>
+                        <span className="stack-name">{stack.content ? getFirstHeading(stack.content) : stack.name}</span>
                       </div>
                     </Tooltip>
                   ))

@@ -1,12 +1,14 @@
 import { IMenuItem } from '@/interfaces/IMenuItem';
-import {  IStackGroup } from '@/interfaces/IStack';
+import { IStackGroup } from '@/interfaces/IStack';
+import { getAllMdFiles } from '@/utils/mdFilesUtils';
 import { getFirstHeading } from '@/utils/mdUtils';
 
-function processSubMenu(subMenu: IMenuItem[]): IMenuItem[] {
+function processNestedSubMenu(subMenu: IMenuItem[]): IMenuItem[] {
     return subMenu.flatMap((item) => {
-        if (!item.title || !item.filepath || !item.content) {
-            console.warn('Invalid subMenu item skipped:', item);
-            return []; // Skip invalid items
+        if (item.type === 'folder') {
+            return item.subMenu ? processNestedSubMenu(item.subMenu) : [];
+        } else if (item.content === '' || item.content === undefined || !item.filepath) {
+            return [];
         }
 
         // Extract the file name (without extension) from the filepath
@@ -17,7 +19,8 @@ function processSubMenu(subMenu: IMenuItem[]): IMenuItem[] {
         // Extract parent folder as the last part
         const parentFolder = folderParts.length > 1 ? folderParts[folderParts.length - 2] : '';
         const stackItem: IMenuItem = {
-            name: item.title,
+            name: item.name ?? item.title ?? fileName,
+            title: item.title || fileName,
             slug: fileName, // Use file name as slug
             folderName: item.folderName || '',
             filepath: item.filepath || '',
@@ -27,14 +30,14 @@ function processSubMenu(subMenu: IMenuItem[]): IMenuItem[] {
             color: item.color || 'var(--bg-info)',
             textColor: item.textColor || 'var(--text-secondary)',
             id: item.id || fileName,
-            subMenu: item.subMenu ? processSubMenu(item.subMenu) : undefined,
+            subMenu: item.subMenu ? processNestedSubMenu(item.subMenu) : undefined,
             isExpandedByDefault: item.isExpandedByDefault || false,
             isExpanded: item.isExpanded || false,
         };
 
         // Recursively process nested subMenu items
         if (item.subMenu && Array.isArray(item.subMenu)) {
-            return [stackItem, ...processSubMenu(item.subMenu)];
+            return [stackItem, ...processNestedSubMenu(item.subMenu)];
         }
 
         return stackItem;
@@ -42,18 +45,30 @@ function processSubMenu(subMenu: IMenuItem[]): IMenuItem[] {
 }
 
 
-function transformMdFilesToStackData(mdFiles: IMenuItem): IStackGroup {
-    const stackData: IStackGroup = {};
-    console.log('transformMdFilesToStackData → mdFiles:', mdFiles);
+function transformMdFilesToStackData(docsBranch: string): IStackGroup {
+    const mdFiles = getAllMdFiles();
+    const docsBranchKey: keyof typeof mdFiles = docsBranch as keyof typeof mdFiles;
+    const docsBranchFiles = mdFiles[docsBranchKey];
 
-    for (const [category, items] of Object.entries(mdFiles.subMenu!)) {
-        const subMenu = (items as IMenuItem).subMenu || [];
-        console.log('transformMdFilesToStackData → subMenu & items:', category, items);
-        stackData[category] = processSubMenu(subMenu);
+    if (!docsBranchFiles || typeof docsBranchFiles !== 'object') {
+        console.error('Docs branch files are missing or not an object:', docsBranchFiles);
+        return {};
     }
-    console.log('transformMdFilesToStackData → stackData:', stackData);
+
+    const stackData: IStackGroup = {};
+
+    for (const [category, items] of Object.entries(docsBranchFiles)) {
+        if (category === 'subMenu' && Array.isArray(items)) {
+            // Process the subMenu items
+            items.map((item) => {
+                // Recursively process nested subMenu items
+                if (item.subMenu && Array.isArray(item.subMenu)) {
+                    stackData[item.id] = processNestedSubMenu(item.subMenu);
+                }
+            });
+        }
+    }
 
     return stackData;
 }
-
 export default transformMdFilesToStackData;
