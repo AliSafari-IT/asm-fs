@@ -14,6 +14,7 @@ import treeMapData2 from '@/components/D3/data/treeMapData2';
 import treeMapData from '@/components/D3/data/treeMapData';
 import { Hierarchy } from '@/components/D3/Hierarchy';
 import { IAlign } from '@/interfaces/IAlign';
+import StacksPage from '../../components/Stacks/StacksPage';
 // get md file content from d3jsReactUiContent as raw string
 
 const d3jsReactUiContent = import.meta.glob('@mdfiles/TechDocs/**/*.md', {
@@ -23,7 +24,7 @@ const d3jsReactUiContent = import.meta.glob('@mdfiles/TechDocs/**/*.md', {
 
 
 const d3jsContentKey = Object.keys(d3jsReactUiContent).find(key =>
-  key.endsWith('TechDocs/projects/d3js-react-ui.md')
+  key.toLowerCase().endsWith('TechDocs/Projects/d3js-react-ui.md'.toLowerCase())
 );
 
 const HomePanels = () => {
@@ -43,7 +44,7 @@ const HomePanels = () => {
   // Access the content
   const linkData = [
     { id: 1, title: 'D3.js', content: d3jsContent, components: ['Barchart', 'LineChart', 'TreemapChart', 'Hierarchy', 'Scatterplot', 'StackedAreaChart', 'StackedBarChart', 'StackedColumnChart', 'StackedLineChart', 'TimeSeriesChart', 'TreeMapChart', 'WordCloudChart'] },
-    { id: 2, title: 'Link 2', content: '<h2>Content for Link 2</h2><p>This is the content of the second link.</p>' },
+    { id: 2, title: 'Change Logs', content: <StacksPage docBranch="changelogs" stackTitle="Change Logs"/> },
     { id: 3, title: 'Link 3', content: '<h2>Content for Link 3</h2><p>This is the content of the third link.</p>' },
   ];
 
