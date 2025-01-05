@@ -52,22 +52,39 @@ function transformMdFilesToStackData(docsBranch: string): IStackGroup {
     const stackData: IStackGroup = {};
 
     console.log(docsBranch, docsBranchFiles);
-    for (const [category, items] of Object.entries(docsBranchFiles)) {
-        if (category === 'subMenu' && Array.isArray(items)) {
-            console.log("transformMdFilesToStackData category: " + category, items);
-            // Process the subMenu items
-            items.map((item) => {
-                // Recursively process nested subMenu items
-                if (item.subMenu && Array.isArray(item.subMenu)) {
-                    stackData[item.id] = processNestedSubMenu(item.subMenu);
-                } 
-
-                if(!item.subMenu) {
-                    stackData[item.id] = [item];
-                }
-            });
+    
+    if (docsBranch === 'changelogs') {
+        // For changelogs, group all items under a single 'Change Logs' category
+        stackData['Change Logs'] = [];
+        for (const [category, items] of Object.entries(docsBranchFiles)) {
+            if (category === 'subMenu' && Array.isArray(items)) {
+                items.forEach(item => {
+                    if (item.subMenu && Array.isArray(item.subMenu)) {
+                        stackData['Change Logs'].push(...processNestedSubMenu(item.subMenu));
+                    }
+                    if (!item.subMenu) {
+                        stackData['Change Logs'].push(item);
+                    }
+                });
+            }
+        }
+    } else {
+        // Original logic for tech docs and other branches
+        for (const [category, items] of Object.entries(docsBranchFiles)) {
+            if (category === 'subMenu' && Array.isArray(items)) {
+                console.log("transformMdFilesToStackData category: " + category, items);
+                items.map((item) => {
+                    if (item.subMenu && Array.isArray(item.subMenu)) {
+                        stackData[item.id] = processNestedSubMenu(item.subMenu);
+                    } 
+                    if(!item.subMenu) {
+                        stackData[item.id] = [item];
+                    }
+                });
+            }
         }
     }
+
     console.log("transformMdFilesToStackData stackData: " , stackData);
     return stackData;
 }

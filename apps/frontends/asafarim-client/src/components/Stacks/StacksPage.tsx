@@ -58,7 +58,7 @@ const StacksPage: React.FC<StacksPageProps> = ({ docBranch, stackTitle }) => {
     return acc;
   }, {} as typeof dynamicStackData);
 
-  
+
   function navigateToProjects({
     selected,
     parentFolder,
@@ -161,7 +161,7 @@ const StacksPage: React.FC<StacksPageProps> = ({ docBranch, stackTitle }) => {
               <div className="stack-grid">
                 {stackItems.length > 0 ? (
                   stackItems.map((stack, index) => (
-                    <Tooltip key={index} content={stack.description}>
+                    <Tooltip key={index} content={stack.description ?? (stack.content ? getFirstHeading(stack.content) : stack.title ?? stack.name)}>
                       <div
                         className="stack-card"
                         style={{
@@ -170,7 +170,7 @@ const StacksPage: React.FC<StacksPageProps> = ({ docBranch, stackTitle }) => {
                         }}
                         onClick={() => handleCardClick(stack)}
                       >
-                        <span className="stack-name">{stack.content ? getFirstHeading(stack.content) : stack.name}</span>
+                        <span className="stack-name">{stack.content ? getFirstHeading(stack.content) : stack.title ?? stack.name}</span>
                       </div>
                     </Tooltip>
                   ))
