@@ -55,6 +55,7 @@ __metadata:
     "@types/react-dom": "npm:^18.3.0"
     "@types/react-icons": "npm:^3.0.0"
     "@types/react-syntax-highlighter": "npm:^15.5.13"
+    "@types/tinycolor2": "npm:^1"
     "@types/uuid": "npm:^10.0.0"
     "@vitejs/plugin-react": "npm:^4.3.2"
     autoprefixer: "npm:^10.4.20"
@@ -91,6 +92,7 @@ __metadata:
     rehype-sanitize: "npm:^6.0.0"
     sass-embedded: "npm:^1.79.5"
     tailwindcss: "npm:^3.4.13"
+    tinycolor2: "npm:^1.6.0"
     tsparticles: "npm:^3.7.1"
     typescript: "npm:^5.5.3"
     typescript-eslint: "npm:^8.7.0"
@@ -5400,6 +5402,13 @@ __metadata:
   version: 2.0.3
   resolution: "@types/stack-utils@npm:2.0.3"
   checksum: 10c0/1f4658385ae936330581bcb8aa3a066df03867d90281cdf89cc356d404bd6579be0f11902304e1f775d92df22c6dd761d4451c804b0a4fba973e06211e9bd77c
+  languageName: node
+  linkType: hard
+
+"@types/tinycolor2@npm:^1":
+  version: 1.4.6
+  resolution: "@types/tinycolor2@npm:1.4.6"
+  checksum: 10c0/922020c3326460e9d8502c8a98f80db69f06fd14e07fe5a48e8ffe66175762298a9bd51263f2a0c9a40632886a74975a3ff79396defcdbeac0dc176e3e5056e8
   languageName: node
   linkType: hard
 
@@ -14263,6 +14272,13 @@ __metadata:
   version: 2.9.0
   resolution: "tinybench@npm:2.9.0"
   checksum: 10c0/c3500b0f60d2eb8db65250afe750b66d51623057ee88720b7f064894a6cb7eb93360ca824a60a31ab16dab30c7b1f06efe0795b352e37914a9d4bad86386a20c
+  languageName: node
+  linkType: hard
+
+"tinycolor2@npm:^1.6.0":
+  version: 1.6.0
+  resolution: "tinycolor2@npm:1.6.0"
+  checksum: 10c0/9aa79a36ba2c2a87cb221453465cabacd04b9e35f9694373e846fdc78b1c768110f81e581ea41440106c0f24d9a023891d0887e8075885e790ac40eb0e74a5c1
   languageName: node
   linkType: hard
 
