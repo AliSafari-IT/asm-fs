@@ -15,13 +15,22 @@ import treeMapData from '@/components/D3/data/treeMapData';
 import { Hierarchy } from '@/components/D3/Hierarchy';
 import { IAlign } from '@/interfaces/IAlign';
 import StacksPage from '../../components/Stacks/StacksPage';
-// get md file content from d3jsReactUiContent as raw string
+import Header from '@/components/D3/components/Header';
+import GradientBorder from '@/components/D3/components/GradientBorder';
+import StackedAreaChart from '@/components/D3/StackedAreaChart';
+import StackedBarChart from '@/components/D3/StackedBarChart';
+import WordCloudChart from '@/components/D3/WordCloudChart';
+import StackedColumnChart from '@/components/D3/StackedColumnChart';
+import StackedLineChart from '@/components/D3/StackedLineChart';
+import TimeSeriesChart from '@/components/D3/TimeSeriesChart';
+import * as d3 from 'd3';
+import AreaChart from '@/components/D3/components/AreaChart';
 
+// get md file content from d3jsReactUiContent as raw string
 const d3jsReactUiContent = import.meta.glob('@mdfiles/TechDocs/**/*.md', {
   as: 'raw',
   eager: true
 });
-
 
 const d3jsContentKey = Object.keys(d3jsReactUiContent).find(key =>
   key.toLowerCase().endsWith('TechDocs/Projects/d3js-react-ui.md'.toLowerCase())
@@ -41,11 +50,32 @@ const HomePanels = () => {
     :
     'Content not found';
 
+  const chartAreaStyle = {
+    marginTop: 20
+  };
+  const topBoxStyle = {
+    position: 'absolute',
+    top: 0,
+    height: 100,
+    width: '100%',
+    backgroundColor: 'black',
+    zIndex: -1
+  } as React.CSSProperties;
+
   // Access the content
   const linkData = [
     { id: 1, title: 'D3.js', content: d3jsContent, components: ['Barchart', 'LineChart', 'TreemapChart', 'Hierarchy', 'Scatterplot', 'StackedAreaChart', 'StackedBarChart', 'StackedColumnChart', 'StackedLineChart', 'TimeSeriesChart', 'WordCloudChart'] },
     { id: 2, title: 'Change Logs', content: <StacksPage docBranch="changelogs" stackTitle="Change Logs" /> },
-    { id: 3, title: 'Link 3', content: '<h2>Content for Link 3</h2><p>This is the content of the third link.</p>' },
+    {
+      id: 3, title: 'Charts', content: <div>
+        <div style={topBoxStyle}></div>
+        <Header />
+        <div style={chartAreaStyle}>
+          <GradientBorder />
+          <AreaChart data={d3.csv('https://data.cityofnewyork.us/resource/qgea-i56i.csv').then(data => data)} />  
+        </div>
+      </div>
+    },
   ];
 
   const selectedLink = linkData.find(link => link.id === selectedLinkId);
@@ -113,14 +143,35 @@ const HomePanels = () => {
       console.error('Component ref is null or undefined.');
     }
   };
-
+  const dimensions =
+  {
+    width: 700,
+    height: 500
+  };
   const d3Components = [
     <Barchart />,
     <LineChart />,
-    <Scatterplot data={[{ x: 1, y: 7 }, { x: 3, y: 4 }, { x: 5, y: 26 }, { x: 7, y: 8 }, { x: 9, y: 100 }]} width={700} height={500} />,
-    <TreemapChart data={treeMapData as unknown as TreeMapData[]} width={700} height={500} />,
-    <Hierarchy width={700} height={500} data={treeMapData2} />,
-
+    <Scatterplot data={[{ x: 1, y: 7 }, { x: 3, y: 4 }, { x: 5, y: 26 }, { x: 7, y: 8 }, { x: 9, y: 100 }]} width={dimensions.width} height={dimensions.height} />,
+    <TreemapChart data={treeMapData as unknown as TreeMapData[]} width={dimensions.width} height={dimensions.height} />,
+    <Hierarchy width={dimensions.width} height={dimensions.height} data={treeMapData2} />,
+    <StackedAreaChart  data={d3.csv(
+      "https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum_header.csv"
+  )} width={dimensions.width} height={dimensions.height} />,
+    <StackedBarChart  data={
+      d3.csv(
+        "https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum_header.csv"
+      )
+    } width={dimensions.width} height={dimensions.height} />,
+    <StackedColumnChart data={d3.csv(
+      "https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum_header.csv"
+  )} width={dimensions.width} height={dimensions.height} />,
+    <StackedLineChart data={d3.csv(
+      "https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum_header.csv"
+  )} width={dimensions.width} height={dimensions.height} />,
+    <TimeSeriesChart  data={d3.csv(
+      "https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum_header.csv"
+  )} width={dimensions.width} height={dimensions.height} />,
+    <WordCloudChart data={[]} width={dimensions.width} height={dimensions.height} />
   ];
 
   return (

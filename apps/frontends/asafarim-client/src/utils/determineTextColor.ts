@@ -37,7 +37,7 @@ const determineTextColor = (currentTheme: string, bgColor: string): string => {
 
   // Calculate the contrast ratio between the background and the default text color
   const contrastRatio = tinycolor.readability(resolvedColor, defaultTextColor);
-  console.log('Contrast Ratio:', contrastRatio);
+  //console.log('Contrast Ratio:', contrastRatio);
   // Minimum contrast ratio for WCAG AA standards
   const minContrast = 4.5;
 
