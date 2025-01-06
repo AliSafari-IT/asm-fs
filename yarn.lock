@@ -45,6 +45,7 @@ __metadata:
     "@material-tailwind/react": "npm:^2.1.10"
     "@tailwindcss/forms": "npm:^0.5.9"
     "@testing-library/react": "npm:^16.0.1"
+    "@types/create-react-class": "npm:^15"
     "@types/d3": "npm:^7.4.3"
     "@types/file-saver": "npm:^2.0.7"
     "@types/graceful-fs": "npm:^4.1.9"
@@ -61,6 +62,7 @@ __metadata:
     autoprefixer: "npm:^10.4.20"
     axios: "npm:^1.7.7"
     concurrently: "npm:^9.1.0"
+    create-react-class: "npm:^15.7.0"
     cross-env: "npm:^7.0.3"
     cssnano: "npm:^7.0.6"
     d3: "npm:^7.9.0"
@@ -4904,6 +4906,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/create-react-class@npm:^15":
+  version: 15.6.9
+  resolution: "@types/create-react-class@npm:15.6.9"
+  dependencies:
+    "@types/react": "npm:*"
+  checksum: 10c0/8fb3280d233f1c05ea929f215eb783ce5a19a4b66f956e9ab3b004dc113a72d621ca5ce6094ab16df02947af63544363d1e3b7d44fb95d7723643a5e516381fa
+  languageName: node
+  linkType: hard
+
 "@types/d3-array@npm:*, @types/d3-array@npm:^3.2.1":
   version: 3.2.1
   resolution: "@types/d3-array@npm:3.2.1"
@@ -6856,6 +6867,16 @@ __metadata:
   bin:
     create-jest: bin/create-jest.js
   checksum: 10c0/e7e54c280692470d3398f62a6238fd396327e01c6a0757002833f06d00afc62dd7bfe04ff2b9cd145264460e6b4d1eb8386f2925b7e567f97939843b7b0e812f
+  languageName: node
+  linkType: hard
+
+"create-react-class@npm:^15.7.0":
+  version: 15.7.0
+  resolution: "create-react-class@npm:15.7.0"
+  dependencies:
+    loose-envify: "npm:^1.3.1"
+    object-assign: "npm:^4.1.1"
+  checksum: 10c0/bce4b46e6d85b424cb50ca8089266c7664fcecfd81abaafb829680fae2e2e60dc6999cac88f5a16a38473ed284859f2328935a42fc5cd1b7cc48888fdd8363c9
   languageName: node
   linkType: hard
 
@@ -10594,7 +10615,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"loose-envify@npm:^1.1.0, loose-envify@npm:^1.4.0":
+"loose-envify@npm:^1.1.0, loose-envify@npm:^1.3.1, loose-envify@npm:^1.4.0":
   version: 1.4.0
   resolution: "loose-envify@npm:1.4.0"
   dependencies:
