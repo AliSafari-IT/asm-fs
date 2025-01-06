@@ -43,8 +43,8 @@ const HomePanels = () => {
 
   // Access the content
   const linkData = [
-    { id: 1, title: 'D3.js', content: d3jsContent, components: ['Barchart', 'LineChart', 'TreemapChart', 'Hierarchy', 'Scatterplot', 'StackedAreaChart', 'StackedBarChart', 'StackedColumnChart', 'StackedLineChart', 'TimeSeriesChart', 'TreeMapChart', 'WordCloudChart'] },
-    { id: 2, title: 'Change Logs', content: <StacksPage docBranch="changelogs" stackTitle="Change Logs"/> },
+    { id: 1, title: 'D3.js', content: d3jsContent, components: ['Barchart', 'LineChart', 'TreemapChart', 'Hierarchy', 'Scatterplot', 'StackedAreaChart', 'StackedBarChart', 'StackedColumnChart', 'StackedLineChart', 'TimeSeriesChart', 'WordCloudChart'] },
+    { id: 2, title: 'Change Logs', content: <StacksPage docBranch="changelogs" stackTitle="Change Logs" /> },
     { id: 3, title: 'Link 3', content: '<h2>Content for Link 3</h2><p>This is the content of the third link.</p>' },
   ];
 
