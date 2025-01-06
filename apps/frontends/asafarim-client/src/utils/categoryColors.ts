@@ -71,7 +71,7 @@ export const allPalettes = {
 
 const generateCategoryColors = (categories: string[]): Record<string, { color: string; textColor: string; categories: string[] }> => {
     const rootStyles = getComputedStyle(document.documentElement);
-    const selectedPalette = allPalettes.info;
+    const selectedPalette = allPalettes.primary;
     const backgroundColors = rootStyles.getPropertyValue(selectedPalette.bgColor).split(",");
     const foregroundColors = rootStyles.getPropertyValue(selectedPalette.color).split(",");
     const currentTheme = getTheme();
