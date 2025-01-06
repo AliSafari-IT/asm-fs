@@ -1,61 +1,66 @@
-// src/components/D3/Barchart.tsx
 import * as d3 from "d3";
 import { useEffect, useRef } from "react";
 
-const Barchart = () => {
-  const ref = useRef();
+interface BarchartProps {
+  data: { name: string; value: number | undefined }[];
+  width: number;
+  height: number;
+}
+
+const Barchart = ({ data, width, height }: BarchartProps) => {
+  const svgRef = useRef<SVGSVGElement | null>(null);
 
   useEffect(() => {
-    // set the dimensions and margins of the graph
-    const margin = { top: 30, right: 30, bottom: 70, left: 60 },
-      width = 460 - margin.left - margin.right,
-      height = 400 - margin.top - margin.bottom;
+    const margin = { top: 30, right: 30, bottom: 70, left: 60 };
 
-    // append the svg object to the body of the page
+    // Clear any existing SVG content
+    d3.select(svgRef.current).selectAll("*").remove();
+
+    /* Add SVG */
     const svg = d3
-      .select(ref.current)
-      .append("svg")
+      .select(svgRef.current)
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    // Parse the Data
-    d3.csv(
-      "https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum_header.csv"
-    ).then(function (data) {
-      // X axis
-      const x = d3
-        .scaleBand()
-        .range([0, width])
-        .domain(data.map((d) => d.Country))
-        .padding(0.2);
-      svg
-        .append("g")
-        .attr("transform", `translate(0, ${height})`)
-        .call(d3.axisBottom(x))
-        .selectAll("text")
-        .attr("transform", "translate(-10,0)rotate(-45)")
-        .style("text-anchor", "end");
+    const filteredData = data.filter(
+      (d): d is { name: string; value: number } => d.value !== undefined
+    );
 
-      // Add Y axis
-      const y = d3.scaleLinear().domain([0, 13000]).range([height, 0]);
-      svg.append("g").call(d3.axisLeft(y));
+    const x = d3
+      .scaleBand()
+      .range([0, width])
+      .domain(filteredData.map((d) => d.name))
+      .padding(0.2);
 
-      // Bars
-      svg
-        .selectAll("mybar")
-        .data(data)
-        .join("rect")
-        .attr("x", (d) => x(d.Country as string))
-        .attr("y", (d) => y(Number(d?.Value) || 0))
-        .attr("width", x.bandwidth())
-        .attr("height", (d) => height - y(Number(d?.Value) || 0))
-        .attr("fill", "#5f0f40");
-    });
-  }, []);
+    svg
+      .append("g")
+      .attr("transform", `translate(0, ${height})`)
+      .call(d3.axisBottom(x))
+      .selectAll("text")
+      .attr("transform", "translate(-10,0)rotate(-45)")
+      .style("text-anchor", "end");
 
-  return <svg width={460} height={400} id="barchart" ref={ref} />;
+    const y = d3
+      .scaleLinear()
+      .domain([0, d3.max(filteredData, (d) => d.value) || 0])
+      .range([height, 0]);
+
+    svg.append("g").call(d3.axisLeft(y));
+
+    svg
+      .selectAll("rect")
+      .data(filteredData)
+      .join("rect")
+      .attr("x", (d) => x(d.name) || 0)
+      .attr("y", (d) => y(d.value))
+      .attr("width", x.bandwidth())
+      .attr("height", (d) => height - y(d.value))
+      .attr("fill", "#5f0f40");
+  }, [data, height, width]);
+
+  return <svg ref={svgRef} />;
 };
 
 export default Barchart;

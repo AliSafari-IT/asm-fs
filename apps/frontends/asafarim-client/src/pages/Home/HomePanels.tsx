@@ -15,17 +15,78 @@ import treeMapData from '@/components/D3/data/treeMapData';
 import { Hierarchy } from '@/components/D3/Hierarchy';
 import { IAlign } from '@/interfaces/IAlign';
 import StacksPage from '../../components/Stacks/StacksPage';
-import Header from '@/components/D3/components/Header';
-import GradientBorder from '@/components/D3/components/GradientBorder';
 import StackedAreaChart from '@/components/D3/StackedAreaChart';
 import StackedBarChart from '@/components/D3/StackedBarChart';
 import WordCloudChart from '@/components/D3/WordCloudChart';
 import StackedColumnChart from '@/components/D3/StackedColumnChart';
 import StackedLineChart from '@/components/D3/StackedLineChart';
 import TimeSeriesChart from '@/components/D3/TimeSeriesChart';
+import Header from '@/layout/Header/Header';
 import * as d3 from 'd3';
-import AreaChart from '@/components/D3/components/AreaChart';
 
+interface Data {
+  date: Date | null;
+  price: number;
+}
+
+interface Line {
+  name: string;
+  values: Data[];
+}
+
+const parseDate = d3.timeParse("%Y-%m");
+
+
+const dataLineChart: Line[] = [
+  {
+    name: "NAFTA",
+    values: [
+      { date: "2020-01", price: 0 },
+      { date: "2020-02", price: 500 },
+      { date: "2020-03", price: 1500 },
+      { date: "2020-04", price: 3000 },
+      { date: "2020-05", price: 3500 },
+      { date: "2020-06", price: 4500 },
+      { date: "2020-07", price: 4000 },
+      { date: "2020-08", price: 4250 },
+      { date: "2020-09", price: 5000 },
+      { date: "2020-10", price: 3500 },
+      { date: "2020-11", price: 4000 },
+      { date: "2020-12", price: 4500 }
+    ].map((line) => {
+      const date = parseDate(line.date);
+
+      return {
+        date: date,
+        price: line.price
+      };
+    })
+  },
+  {
+    name: "Europe",
+    values: [
+      { date: "2020-01", price: 0 },
+      { date: "2020-02", price: 400 },
+      { date: "2020-03", price: 1200 },
+      { date: "2020-04", price: 1700 },
+      { date: "2020-05", price: 2100 },
+      { date: "2020-06", price: 3500 },
+      { date: "2020-07", price: 3000 },
+      { date: "2020-08", price: 3250 },
+      { date: "2020-09", price: 4500 },
+      { date: "2020-10", price: 2200 },
+      { date: "2020-11", price: 1300 },
+      { date: "2020-12", price: 600 }
+    ].map((line) => {
+      const date = parseDate(line.date);
+
+      return {
+        date: date,
+        price: line.price
+      };
+    })
+  }
+];
 // get md file content from d3jsReactUiContent as raw string
 const d3jsReactUiContent = import.meta.glob('@mdfiles/TechDocs/**/*.md', {
   as: 'raw',
@@ -50,32 +111,11 @@ const HomePanels = () => {
     :
     'Content not found';
 
-  const chartAreaStyle = {
-    marginTop: 20
-  };
-  const topBoxStyle = {
-    position: 'absolute',
-    top: 0,
-    height: 100,
-    width: '100%',
-    backgroundColor: 'black',
-    zIndex: -1
-  } as React.CSSProperties;
-
   // Access the content
   const linkData = [
     { id: 1, title: 'D3.js', content: d3jsContent, components: ['Barchart', 'LineChart', 'TreemapChart', 'Hierarchy', 'Scatterplot', 'StackedAreaChart', 'StackedBarChart', 'StackedColumnChart', 'StackedLineChart', 'TimeSeriesChart', 'WordCloudChart'] },
     { id: 2, title: 'Change Logs', content: <StacksPage docBranch="changelogs" stackTitle="Change Logs" /> },
-    {
-      id: 3, title: 'Charts', content: <div>
-        <div style={topBoxStyle}></div>
-        <Header />
-        <div style={chartAreaStyle}>
-          <GradientBorder />
-          <AreaChart data={d3.csv('https://data.cityofnewyork.us/resource/qgea-i56i.csv').then(data => data)} />  
-        </div>
-      </div>
-    },
+    { id: 3, title: 'Charts', content: <Header color='red' size='text-3xl'> Panel 3: Under Construction! </Header> },
   ];
 
   const selectedLink = linkData.find(link => link.id === selectedLinkId);
@@ -149,29 +189,68 @@ const HomePanels = () => {
     height: 500
   };
   const d3Components = [
-    <Barchart />,
-    <LineChart />,
+    <Barchart data ={
+      [
+        { name: 'A', value: 30 },
+        { name: 'B', value: 80 },
+        { name: 'C', value: 45 },
+        { name: 'D', value: 60 },
+        { name: 'E', value: 20 },
+        { name: 'F', value: 90 },
+        { name: 'G', value: 55 },
+        
+      ] as { name: string; value: number | undefined } []
+    } width={dimensions.width} height={dimensions.height} />,
+    <LineChart width={dimensions.width} height={dimensions.height} data ={dataLineChart} />,
     <Scatterplot data={[{ x: 1, y: 7 }, { x: 3, y: 4 }, { x: 5, y: 26 }, { x: 7, y: 8 }, { x: 9, y: 100 }]} width={dimensions.width} height={dimensions.height} />,
     <TreemapChart data={treeMapData as unknown as TreeMapData[]} width={dimensions.width} height={dimensions.height} />,
     <Hierarchy width={dimensions.width} height={dimensions.height} data={treeMapData2} />,
-    <StackedAreaChart  data={d3.csv(
-      "https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum_header.csv"
-  )} width={dimensions.width} height={dimensions.height} />,
-    <StackedBarChart  data={
-      d3.csv(
-        "https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum_header.csv"
-      )
+    <StackedAreaChart data={[
+      { "date": "2020-01-01", "apples": 10, "oranges": 20 },
+      { "date": "2020-01-02", "apples": 15, "oranges": 25 },
+    ]} width={dimensions.width} height={dimensions.height} />,
+    <StackedBarChart data={
+      [
+        { "label": "A", "value": 10 },
+        { "label": "B", "value": 20 },
+        { "label": "C", "value": 30 },
+        { "label": "D", "value": 40 }
+      ]
     } width={dimensions.width} height={dimensions.height} />,
-    <StackedColumnChart data={d3.csv(
-      "https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum_header.csv"
-  )} width={dimensions.width} height={dimensions.height} />,
-    <StackedLineChart data={d3.csv(
-      "https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum_header.csv"
-  )} width={dimensions.width} height={dimensions.height} />,
-    <TimeSeriesChart  data={d3.csv(
-      "https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum_header.csv"
-  )} width={dimensions.width} height={dimensions.height} />,
-    <WordCloudChart data={[]} width={dimensions.width} height={dimensions.height} />
+    <StackedColumnChart data={
+      [
+        { "label": "A", "value": 10 },
+        { "label": "B", "value": 20 },
+        { "label": "C", "value": 30 },
+        { "label": "D", "value": 40 }
+      ]
+    } width={dimensions.width} height={dimensions.height} />,
+    <StackedLineChart data={
+      [
+        { "label": "A", "value": 10 },
+        { "label": "B", "value": 20 },
+        { "label": "C", "value": 30 },
+        { "label": "D", "value": 40 }
+      ]
+    } width={dimensions.width} height={dimensions.height} />,
+    <TimeSeriesChart data={
+      [
+        { DateTime: new Date("2020-01-01"), value: 10 },
+        { DateTime: new Date("2020-01-02"), value: 20 },
+        { DateTime: new Date("2020-01-03"), value: 30 },
+        { DateTime: new Date("2020-01-04"), value: 17 }
+      ]
+    } width={dimensions.width+300} height={dimensions.height}  xKey={'DateTime'} yKey={'value'} />,
+    <WordCloudChart data={
+      [
+        { word: "Hello", count: 10 },
+        { word: "React", count: 5 },
+        { word: "D3", count: 15 },
+        { word: "Cloud", count: 20 },
+        { word: "Chart", count: 8 },
+        { word: "TypeScript", count: 12 }
+      ]
+    } width={dimensions.width} height={dimensions.height} />
   ];
 
   return (

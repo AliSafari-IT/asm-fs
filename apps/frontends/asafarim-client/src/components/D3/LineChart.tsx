@@ -11,62 +11,17 @@ interface Line {
   values: Data[];
 }
 
-function lineChart(svgRef: React.RefObject<SVGSVGElement>) {
-  const parseDate = d3.timeParse("%Y-%m");
+interface LineChartProps {
+  data: Line[];
+  width: number;
+  height: number;
+}
 
-  const data: Line[] = [
-    {
-      name: "NAFTA",
-      values: [
-        { date: "2020-01", price: 0 },
-        { date: "2020-02", price: 500 },
-        { date: "2020-03", price: 1500 },
-        { date: "2020-04", price: 3000 },
-        { date: "2020-05", price: 3500 },
-        { date: "2020-06", price: 4500 },
-        { date: "2020-07", price: 4000 },
-        { date: "2020-08", price: 4250 },
-        { date: "2020-09", price: 5000 },
-        { date: "2020-10", price: 3500 },
-        { date: "2020-11", price: 4000 },
-        { date: "2020-12", price: 4500 }
-      ].map((line) => {
-        const date = parseDate(line.date);
+export const LineChart: React.FunctionComponent<LineChartProps> = ({ data, width, height }) => {
+  const svgRef = React.useRef<SVGSVGElement>(null);
 
-        return {
-          date: date,
-          price: line.price
-        };
-      })
-    },
-    {
-      name: "Europe",
-      values: [
-        { date: "2020-01", price: 0 },
-        { date: "2020-02", price: 400 },
-        { date: "2020-03", price: 1200 },
-        { date: "2020-04", price: 1700 },
-        { date: "2020-05", price: 2100 },
-        { date: "2020-06", price: 3500 },
-        { date: "2020-07", price: 3000 },
-        { date: "2020-08", price: 3250 },
-        { date: "2020-09", price: 4500 },
-        { date: "2020-10", price: 2200 },
-        { date: "2020-11", price: 1300 },
-        { date: "2020-12", price: 600 }
-      ].map((line) => {
-        const date = parseDate(line.date);
-
-        return {
-          date: date,
-          price: line.price
-        };
-      })
-    }
-  ];
-  const svg = d3.select(svgRef.current);
-  const width = 700;
-  const height = 400;
+  React.useEffect(() => {
+    const svg = d3.select(svgRef.current);
   const margin = 50;
   const duration = 250;
   // const tooltip = { width: 100, height: 100, x: 10, y: -30 };
@@ -108,7 +63,7 @@ function lineChart(svgRef: React.RefObject<SVGSVGElement>) {
     .axisBottom(xScale)
     .tickSize(height - margin)
     .tickSizeOuter(0)
-    .tickFormat(d3.timeFormat("%Y-%m-%d"))
+    .tickFormat( d => d3.timeFormat("%Y-%m-%d")(d as Date))
     .tickPadding(15);
 
   const yAxis = d3
@@ -167,7 +122,7 @@ function lineChart(svgRef: React.RefObject<SVGSVGElement>) {
         .attr("x", (width - margin) / 2)
         .attr("y", 70);
     })
-    .on("mouseout", function (d: Line) {
+    .on("mouseout", function () {
         svg.select(".title-text").remove();
     })
     .append("path")
@@ -235,15 +190,10 @@ function lineChart(svgRef: React.RefObject<SVGSVGElement>) {
     .on("mouseout", function () {
       d3.select(this).transition().duration(duration).attr("r", circleRadius);
     });
-}
 
-export const LineChart: React.FunctionComponent = () => {
-  const svg = React.useRef<SVGSVGElement>(null);
-  React.useEffect(() => {
-    lineChart(svg);
-  }, [svg]);
+  }, [data, height, svgRef, width]);
 
-  return <svg ref={svg} className="h-full bg-white dark:bg-gray-600 dark:text-gray-100 m-1 rounded "/>;
+  return <svg ref={svgRef} className="h-full bg-white dark:bg-gray-600 dark:text-gray-100 m-1 rounded "/>;
 };
 
 export default LineChart;
