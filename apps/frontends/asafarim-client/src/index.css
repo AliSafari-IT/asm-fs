@@ -519,17 +519,33 @@
   }
 
   h3 {
-    @apply text-2xl font-semibold mt-6 mb-3;
+    @apply text-2xl font-semibold mt-6 mb-3 leading-relaxed;
+    color: var(--markdown-header-text);
+  }
+
+  h4 {
+    @apply text-xl font-semibold mt-6 mb-3 leading-relaxed;
+    color: var(--markdown-header-text);
+  }
+
+  h5 {
+    @apply text-lg font-semibold mt-6 mb-3;
+    color: var(--markdown-header-text);
+  }
+
+  h6 {
+    @apply text-base font-semibold mt-6 mb-3;
     color: var(--markdown-header-text);
   }
 
   p {
-    @apply text-lg leading-relaxed mb-6;
+    @apply leading-relaxed my-6;
     color: var(--markdown-text);
   }
 
-  strong {
-    @apply font-bold;
+  strong,
+  b {
+    @apply font-extrabold;
     color: var(--text-primary);
   }
 
@@ -547,14 +563,6 @@
     @apply pl-4 py-1 my-6 border-l-4;
     background-color: var(--markdown-quote-bg);
     border-color: var(--teams-purple);
-  }
-
-  ul {
-    @apply list-disc list-inside mb-6 space-y-2;
-  }
-
-  ol {
-    @apply list-decimal list-inside mb-6 space-y-2;
   }
 
   code {
@@ -678,10 +686,10 @@
 
 /* Responsive behavior for navbar items */
 @media (max-width: 1024px) {
-  .navbar-tree-container > div {
+  .navbar-tree-container>div {
     width: 100%;
   }
-  
+
   .navbar-tree-container .group ul {
     position: static;
     width: 100%;
