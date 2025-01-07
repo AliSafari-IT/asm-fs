@@ -26,6 +26,7 @@
   --border-primary: #e5e7eb;
   --border-secondary: #d1d5db;
   --border-focus: #6264a7;
+  --border-color: #d1d5db;
 
   /* Component Specific */
   --button-primary: var(--teams-purple);
@@ -528,6 +529,15 @@
   --border-primary: #3a4150;
   --border-secondary: #4a5262;
   --border-focus: #8b93ff;
+  --border-color: #4a5262;
+
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+  --header-bg: var(--bg-transparent);
+  --header-text: var(--text-primary);
+  --header-border: var(--border-primary);
 
   /* Component Specific */
   --button-primary: var(--teams-purple);

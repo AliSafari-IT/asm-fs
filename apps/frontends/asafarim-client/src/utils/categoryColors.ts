@@ -1,4 +1,5 @@
 import determineTextColor from "./determineTextColor";
+import { getTheme } from "./themeUtils";
 
 // E:\asm-fs\apps\frontends\asafarim-client\src\utils\categoryColors.ts
 export const allPalettes = {
@@ -70,16 +71,17 @@ export const allPalettes = {
 
 const generateCategoryColors = (categories: string[]): Record<string, { color: string; textColor: string; categories: string[] }> => {
     const rootStyles = getComputedStyle(document.documentElement);
-    const selectedPalette = allPalettes.info;
+    const selectedPalette = allPalettes.googlePrimary;
     const backgroundColors = rootStyles.getPropertyValue(selectedPalette.bgColor).split(",");
     const foregroundColors = rootStyles.getPropertyValue(selectedPalette.color).split(",");
+    const currentTheme = getTheme();
 
     const categoryColors: Record<string, { color: string; textColor: string; categories: string[] }> = {};
     categories.forEach((category, index) => {
         const bgColor = backgroundColors[index % backgroundColors.length].trim();
         categoryColors[category] = {
             color: bgColor,
-            textColor: determineTextColor(bgColor),
+            textColor: determineTextColor(currentTheme, bgColor),
             categories: [category],
         };
     });

@@ -1,24 +1,59 @@
 import tinycolor from 'tinycolor2';
 
-const determineTextColor = (bgColor: string): string => {
-  // Ensure `bgColor` is a valid color
-  const parsedColor = tinycolor(bgColor);
+// Function to resolve CSS variable value
+const resolveCSSVariable = (color: string): string => {
+  if (color.startsWith('var(')) {
+    const cssVariable = color.slice(4, -1).trim(); // Extract variable name
+    const computedStyle = getComputedStyle(document.documentElement);
+    const resolvedColor = computedStyle.getPropertyValue(cssVariable).trim();
 
-  // Check if the color is valid
+    if (resolvedColor) {
+      return resolvedColor;
+    } else {
+      console.warn(`CSS variable ${cssVariable} is not defined or has an invalid value.`);
+      return '#000000'; // Fallback to black if the variable is not defined
+    }
+  }
+  return color; // If not a CSS variable, return as is
+};
+
+const determineTextColor = (currentTheme: string, bgColor: string): string => {
+  // Resolve CSS variable if applicable
+  const resolvedColor = resolveCSSVariable(bgColor);
+
+  // Ensure `resolvedColor` is a valid color
+  const parsedColor = tinycolor(resolvedColor);
+  // Define the primary text colors for light and dark themes
+  const lightTextColor = 'darkblue'; // Black
+  const darkTextColor = 'lightblue'; // White
+
   if (!parsedColor.isValid()) {
     console.warn(`Invalid background color provided: ${bgColor}`);
-    return 'var(--text-primary)'; // Default fallback
+    return currentTheme === 'dark' ? darkTextColor : lightTextColor; // Fallback to default theme colors
   }
 
-  // Use `tinycolor.mostReadable` to calculate the most readable text color
-  const readableColor = tinycolor.mostReadable(bgColor, ['#ffffff', '#000000'], {
+  // Choose a default text color based on the current theme
+  const defaultTextColor = currentTheme === 'dark' ? darkTextColor : lightTextColor;
+
+  // Calculate the contrast ratio between the background and the default text color
+  const contrastRatio = tinycolor.readability(resolvedColor, defaultTextColor);
+  //console.log('Contrast Ratio:', contrastRatio);
+  // Minimum contrast ratio for WCAG AA standards
+  const minContrast = 4.5;
+
+  // If contrast ratio meets standards, return the default color
+  if (contrastRatio >= minContrast) {
+    return defaultTextColor;
+  }
+
+  // If the contrast is insufficient, calculate the most readable color
+  const fallbackTextColor = tinycolor.mostReadable(resolvedColor, [lightTextColor, darkTextColor], {
     includeFallbackColors: true,
-    level: 'AA', // WCAG AA standard
+    level: 'AAA',
     size: 'large',
   });
 
-  // Return the most readable color
-  return readableColor.toHexString();
+  return fallbackTextColor.toHexString();
 };
 
 export default determineTextColor;

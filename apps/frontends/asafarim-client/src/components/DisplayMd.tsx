@@ -13,7 +13,7 @@ interface DisplayMdProps {
 }
 
 const DisplayMd: React.FC<DisplayMdProps> = ({ markdownContent, id }) => {
-  const [fontSize, setFontSize] = React.useState('16px');
+  const [fontSize, setFontSize] = React.useState('14px');
   const [viewBox, setViewBox] = React.useState('0 0 24 24');
   const [copySuccess, setCopySuccess] = React.useState(false);
   const themeContext = useTheme();
@@ -25,7 +25,7 @@ const DisplayMd: React.FC<DisplayMdProps> = ({ markdownContent, id }) => {
     } else if (themeContext.theme === 'light') {
       document.body.setAttribute('data-theme', 'light');
     }
-  }, [themeContext.theme, themeContext]);
+  }, [themeContext.theme, themeContext, id]);
 
   useEffect(() => {
     const element = id
@@ -44,6 +44,18 @@ const DisplayMd: React.FC<DisplayMdProps> = ({ markdownContent, id }) => {
       setViewBox("-15 0 20 23");
     }
   }, [fontSize]);
+
+  const sanitizeConfig = {
+    tagNames: ['b', 'strong', 'p', 'ul', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'], // Add more tags as needed
+    attributes: {
+      '*': [], // Allow all attributes
+    },
+    protocols: {
+      // Allow protocols as needed
+      'a': ['href', 'title'],
+    },
+  };
+
 
   const handleCopy = () => {
     navigator.clipboard.writeText(markdownContent).then(() => {
@@ -107,7 +119,7 @@ const DisplayMd: React.FC<DisplayMdProps> = ({ markdownContent, id }) => {
       </Toolbar>
 
       <ReactMarkdown
-        rehypePlugins={[rehypeRaw, rehypeSanitize]}
+        rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeConfig]]}
         className="markdown-body mt-4 px-4 py-2 md:px-8 md:py-4 lg:px-12 lg:py-6 xl:px-16 xl:py-8 rounded-md shadow-md"
         children={markdownContent} />
     </div>

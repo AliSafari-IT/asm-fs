@@ -45,7 +45,9 @@ __metadata:
     "@material-tailwind/react": "npm:^2.1.10"
     "@tailwindcss/forms": "npm:^0.5.9"
     "@testing-library/react": "npm:^16.0.1"
+    "@types/create-react-class": "npm:^15"
     "@types/d3": "npm:^7.4.3"
+    "@types/d3-cloud": "npm:^1"
     "@types/file-saver": "npm:^2.0.7"
     "@types/graceful-fs": "npm:^4.1.9"
     "@types/jest": "npm:^29.5.14"
@@ -61,9 +63,11 @@ __metadata:
     autoprefixer: "npm:^10.4.20"
     axios: "npm:^1.7.7"
     concurrently: "npm:^9.1.0"
+    create-react-class: "npm:^15.7.0"
     cross-env: "npm:^7.0.3"
     cssnano: "npm:^7.0.6"
     d3: "npm:^7.9.0"
+    d3-cloud: "npm:^1.2.7"
     docx: "npm:^9.0.2"
     eslint: "npm:^9.11.1"
     eslint-plugin-react-hooks: "npm:^5.1.0-rc.0"
@@ -4904,6 +4908,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/create-react-class@npm:^15":
+  version: 15.6.9
+  resolution: "@types/create-react-class@npm:15.6.9"
+  dependencies:
+    "@types/react": "npm:*"
+  checksum: 10c0/8fb3280d233f1c05ea929f215eb783ce5a19a4b66f956e9ab3b004dc113a72d621ca5ce6094ab16df02947af63544363d1e3b7d44fb95d7723643a5e516381fa
+  languageName: node
+  linkType: hard
+
 "@types/d3-array@npm:*, @types/d3-array@npm:^3.2.1":
   version: 3.2.1
   resolution: "@types/d3-array@npm:3.2.1"
@@ -4933,6 +4946,15 @@ __metadata:
   version: 3.0.6
   resolution: "@types/d3-chord@npm:3.0.6"
   checksum: 10c0/c5a25eb5389db01e63faec0c5c2ec7cc41c494e9b3201630b494c4e862a60f1aa83fabbc33a829e7e1403941e3c30d206c741559b14406ac2a4239cfdf4b4c17
+  languageName: node
+  linkType: hard
+
+"@types/d3-cloud@npm:^1":
+  version: 1.2.9
+  resolution: "@types/d3-cloud@npm:1.2.9"
+  dependencies:
+    "@types/d3": "npm:^3"
+  checksum: 10c0/bb8dd363a7bb330db07ba5fa6cff5c73db6359b5b9fb2570fa1ac45911ec5b46f83d022d12a2c847da51fc2f894d887d60674bc8aa77cbb4dabafd0500f1e72c
   languageName: node
   linkType: hard
 
@@ -5135,6 +5157,13 @@ __metadata:
     "@types/d3-interpolate": "npm:*"
     "@types/d3-selection": "npm:*"
   checksum: 10c0/1dbdbcafddcae12efb5beb6948546963f29599e18bc7f2a91fb69cc617c2299a65354f2d47e282dfb86fec0968406cd4fb7f76ba2d2fb67baa8e8d146eb4a547
+  languageName: node
+  linkType: hard
+
+"@types/d3@npm:^3":
+  version: 3.5.53
+  resolution: "@types/d3@npm:3.5.53"
+  checksum: 10c0/1ffab5a29e9a5eb2fe976b38333a085406b3f1f3d0d1ed07d2947217ad891e61c95b06d74bb7db378b7d6ea51df93bc7c57edfcade45dadd4dff7e0f7c415507
   languageName: node
   linkType: hard
 
@@ -6859,6 +6888,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"create-react-class@npm:^15.7.0":
+  version: 15.7.0
+  resolution: "create-react-class@npm:15.7.0"
+  dependencies:
+    loose-envify: "npm:^1.3.1"
+    object-assign: "npm:^4.1.1"
+  checksum: 10c0/bce4b46e6d85b424cb50ca8089266c7664fcecfd81abaafb829680fae2e2e60dc6999cac88f5a16a38473ed284859f2328935a42fc5cd1b7cc48888fdd8363c9
+  languageName: node
+  linkType: hard
+
 "cross-env@npm:^7.0.3":
   version: 7.0.3
   resolution: "cross-env@npm:7.0.3"
@@ -7071,6 +7110,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"d3-cloud@npm:^1.2.7":
+  version: 1.2.7
+  resolution: "d3-cloud@npm:1.2.7"
+  dependencies:
+    d3-dispatch: "npm:^1.0.3"
+  checksum: 10c0/9a1eb9b1854d5f54b9aba9afe1edfeca14f2849e6176aa6fcee51def62fd825c802e9b2cf37d8b3d51868c894558596fbe5a0bd956d9bf065b55decb95892e10
+  languageName: node
+  linkType: hard
+
 "d3-color@npm:1 - 3, d3-color@npm:3, d3-color@npm:^3.1.0":
   version: 3.1.0
   resolution: "d3-color@npm:3.1.0"
@@ -7100,6 +7148,13 @@ __metadata:
   version: 3.0.1
   resolution: "d3-dispatch@npm:3.0.1"
   checksum: 10c0/6eca77008ce2dc33380e45d4410c67d150941df7ab45b91d116dbe6d0a3092c0f6ac184dd4602c796dc9e790222bad3ff7142025f5fd22694efe088d1d941753
+  languageName: node
+  linkType: hard
+
+"d3-dispatch@npm:^1.0.3":
+  version: 1.0.6
+  resolution: "d3-dispatch@npm:1.0.6"
+  checksum: 10c0/6302554a019e2d75d4e3dc7e8757a00b4b12ac2a2952bccc66e4478ccd170f425e2b6a9443118d5feadcd2439f33582b63c7925e832104ff1978cadea2a30dc2
   languageName: node
   linkType: hard
 
@@ -10594,7 +10649,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"loose-envify@npm:^1.1.0, loose-envify@npm:^1.4.0":
+"loose-envify@npm:^1.1.0, loose-envify@npm:^1.3.1, loose-envify@npm:^1.4.0":
   version: 1.4.0
   resolution: "loose-envify@npm:1.4.0"
   dependencies:

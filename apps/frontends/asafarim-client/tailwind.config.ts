@@ -1,4 +1,5 @@
 import withMT from "../../../node_modules/@material-tailwind/react/utils/withMT";
+import forms from '@tailwindcss/forms';
 
 const config = {
   darkMode: ['class', '[data-theme="dark"]'],
@@ -153,7 +154,9 @@ const config = {
     },
   },
   plugins: [
-    require('@tailwindcss/forms'),
+    forms({
+      strategy: 'class', // When using the class strategy, form elements are styled with form-{name} classes, otherwise using the base strategy, form elements are styled globally, and no form-{name} classes are generated.
+    }),
   ],
 };
 

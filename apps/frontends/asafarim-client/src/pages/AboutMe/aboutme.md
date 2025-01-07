@@ -10,16 +10,19 @@ In my free time, I cherish moments with my family, indulge in gardening, and enj
 
 ## Technical Skills 🔧
 
-- **Backend Development**:
-  - **ASP.NET Core 8.0** ⚙️: Proficient in building RESTful APIs and real-time communication systems using ASP.NET Core and SignalR. Experienced in implementing authentication, authorization, and integrating with various databases in **SQL (MySQL)** and **NoSQL (MongoDB)**.
-  - **Clean Architecture** 🏛️: Expertise in applying **Clean Architecture** principles to ensure a clear separation of concerns, promoting high testability, scalability, and maintainability. By adhering to **SOLID** principles, I ensure that code remains adaptable to change, reusable, and easily extendable while minimizing dependencies across layers.
-  - **Automated Testing Application** 🧪: Designed and created an end-to-end automated testing application using **Node.js TypeScript** with **NoSQL MongoDB** for testing web applications at XiTechniX.
-  - **.NET WPF with C# & R.Net** 🎛️: Gained valuable hands-on experience in creating applications for time series analysis and displaying various charts.
+### Backend Development
 
-- **Frontend Development**:
-  - **React & Redux** ⚛️: Skilled in developing complex Single Page Applications (SPAs) using React and managing application state with Redux. Comfortable with React Hooks, Context API, and performance optimization techniques.
-  - **TypeScript** 📘: Strong proficiency in TypeScript for type-safe JavaScript development, enhancing code quality and maintainability.
+- **ASP.NET Core 8.0** ⚙️: Proficient in building RESTful APIs and real-time communication systems using ASP.NET Core and SignalR. Experienced in implementing authentication, authorization, and integrating with various databases in **SQL (MySQL)** and **NoSQL (MongoDB)**.
+- **Clean Architecture** 🏛️: Expertise in applying **Clean Architecture** principles to ensure a clear separation of concerns, promoting high testability, scalability, and maintainability. By adhering to **SOLID** principles, I ensure that code remains adaptable to change, reusable, and easily extendable while minimizing dependencies across layers
+- **Automated Testing Application** 🧪: Designed and created an end-to-end automated testing application using **Node.js TypeScript** with **NoSQL MongoDB** for testing web applications at XiTechniX.
+- **.NET WPF with C# & R.Net** 🎛️: Gained valuable hands-on experience in creating applications for time series analysis and displaying various charts.
 
+### Frontend Development
+
+- **React & Redux** ⚛️: Skilled in developing complex Single Page Applications (SPAs) using React and managing application state with Redux. Comfortable with React Hooks, Context API, and performance optimization techniques.
+- **HTML5** 🎨: Proficient in HTML5 for semantic markup, ensuring modern web standards and accessibility.
+- **CSS3** 🎨: Proficient in CSS3 for styling, ensuring responsive and visually appealing user interfaces.
+- **TypeScript** 📘: Strong proficiency in TypeScript for type-safe JavaScript development, enhancing code quality and maintainability.
 - **Testing & Quality Assurance**:
   - **Unit & Functional Testing** 🧪: Experienced in writing unit and functional tests using frameworks like **xUnit** and **Moq** in .NET to ensure individual components and features work as expected.
   - **Integration Testing** 🔗: Proficient in integration testing to verify the interactions between different modules in the system, ensuring seamless collaboration.
@@ -112,3 +115,16 @@ For insights into my scientific research and academic endeavors from before I be
 ## Conclusion 🏁
 
 I am excited to bring my skills and passion for web development to innovative projects that make a positive impact. My goal is to leverage my experience in developing seamless, user-focused applications while continuously improving the performance and scalability of the solutions I work on. I look forward to the opportunity to contribute to a dynamic team and collaborate on cutting-edge technologies.
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            clifford: "#da373d",
+          },
+        },
+      },
+    };
+  </script>

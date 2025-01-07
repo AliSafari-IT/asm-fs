@@ -10,7 +10,7 @@ namespace ASafariM.Server.Controllers;
 [Route("api/[controller]")]
 public class SitemapsController : ControllerBase
 {
-    private readonly IMediator _mediator;
+    private readonly IMediator _mediator; 
 
     public SitemapsController(IMediator mediator)
     {

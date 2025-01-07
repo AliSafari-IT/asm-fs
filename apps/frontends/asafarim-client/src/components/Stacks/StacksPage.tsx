@@ -20,6 +20,8 @@ const StacksPage: React.FC<StacksPageProps> = ({ docBranch, stackTitle }) => {
   const [selectedStack, setSelectedStack] = useState<IMenuItem | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [dynamicStackData, setDynamicStackData] = useState<Record<string, IMenuItem[]>>({});
+  const [stacksHeaderBgColor, setStacksHeaderBgColor] = useState<string>();
+  const [stacksHeaderTextColor, setStacksHeaderTextColor] = useState<string >();
 
   const basePath = docBranch === 'techDocs'
     ? '/tech-docs'
@@ -32,6 +34,21 @@ const StacksPage: React.FC<StacksPageProps> = ({ docBranch, stackTitle }) => {
     console.log('Transformed Stack Data:', transformedData);
     setDynamicStackData(transformedData);
   }, []);
+
+  useEffect(() => {
+    if (!stacksHeaderBgColor) {
+      setStacksHeaderBgColor(document.getElementById('stacks-header')?.style.backgroundColor);
+    }
+
+    if (!stacksHeaderTextColor && stacksHeaderBgColor) {
+      const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+      const stacksHeaderTextColor = determineTextColor(currentTheme, stacksHeaderBgColor);
+      setStacksHeaderTextColor(stacksHeaderTextColor);
+    }
+  }, [stacksHeaderBgColor, stacksHeaderTextColor]);
+
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+
 
   const handleCardClick = (stack: IMenuItem) => {
     setSelectedStack(stack);
@@ -58,6 +75,7 @@ const StacksPage: React.FC<StacksPageProps> = ({ docBranch, stackTitle }) => {
     return acc;
   }, {} as typeof dynamicStackData);
 
+  const categoryColors = useMemo(() => generateCategoryColors(Object.keys(filteredData)), [filteredData]);
 
   function navigateToProjects({
     selected,
@@ -108,43 +126,38 @@ const StacksPage: React.FC<StacksPageProps> = ({ docBranch, stackTitle }) => {
 
     // Join the remaining parts to reconstruct the parent folder path
     const parentFolders = `${basePath}/${parts.join('/')}`.replace(/\/+/g, '/'); // Normalize slashes
-
-    console.log(
-      'getParentFolder: path =',
-      path,
-      ', sanitizedPath =',
-      sanitizedPath,
-      ', parentFolder =',
-      parentFolders
-    );
-
     return parentFolders; // Return the valid parent folder path relative to basePath
   }
 
-  const categoryColors = useMemo(() => generateCategoryColors(Object.keys(filteredData)), [filteredData]);
 
   return (
     <div className="stacks-container">
-      <Header className="stacks-header">
-        <h1 className="text-xl font-bold text-center mb-4 md:text-2xl">{stackTitle}</h1>
-        <SearchBox
-          value={searchTerm}
-          onChange={handleSearch}
-          onClear={handleClear}
-          onEscape={handleClear}
-          onAbort={handleClear}
-          onSearch={handleClear}
-          className="search-bar"
-          placeholder="Search..."
-        />
+      <Header
+        id="stacks-header"
+        className="stacks-header"
+        color={stacksHeaderBgColor}
+        size="text-lg"
+      >
+        {stackTitle}
       </Header>
+
+      <SearchBox
+        value={searchTerm}
+        onChange={handleSearch}
+        onClear={handleClear}
+        onEscape={handleClear}
+        onAbort={handleClear}
+        onSearch={handleClear}
+        className="stacks-search-bar"
+        placeholder="Search..."
+      />
       <div className="categories">
         {Object.entries(filteredData)?.map(([category, stackItems]) => {
           const categoryStyle = categoryColors[category] || categoryColors.default;
 
           stackItems.map((stack) => {
             stack.color = categoryStyle.color;
-            stack.textColor = determineTextColor(categoryStyle.color);
+            stack.textColor = determineTextColor(currentTheme, categoryStyle.color);
           });
 
           return (
@@ -184,11 +197,11 @@ const StacksPage: React.FC<StacksPageProps> = ({ docBranch, stackTitle }) => {
       </div>
 
       {selectedStack && (
-        <Modal className="modal" isOpen={true} onDismiss={closeModal} containerClassName='techdoc-modal-container' >
-          <div className="modal-content">
-            <Header>{selectedStack.name}</Header>
+        <Modal className="modal " isOpen={true} onDismiss={closeModal} containerClassName='stack-modal-container'>
+          <div className="stack-modal-content">
+            <Header className="stack-modal-header" color='var(--text-info)'>{selectedStack.name}</Header>
             <p>{selectedStack.description}</p>
-            <DialogActions className='techdoc-modal-actions'>
+            <DialogActions className='stack-modal-actions'>
               <ActionButton className="btn-close" onClick={closeModal}>
                 Close
               </ActionButton>

@@ -36,8 +36,6 @@ const UserProfile: React.FC = () => {
 
     if (loading) return <div>Loading...</div>;
 
-    if (error) return <div>{error}</div>;
-
     return (
         <div className="max-w-4xl mx-auto p-6">
             {userInfo ? (

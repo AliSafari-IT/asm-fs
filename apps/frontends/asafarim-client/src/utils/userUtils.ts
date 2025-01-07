@@ -22,12 +22,12 @@ export const getUserInfo = async (userId: string) => {
 
 
 export const getUserFullInfo = async (email: string) => {
-  const url = `${API_FULLINFO_URL}/by-email/${email}`;
+  const url = `${API_FULLINFO_URL}/${email.replace('@', '%40')}`;
   console.debug('Fetching user full info from:', url);
-  
-    try {
+
+  try {
     const response = await axios.get(url);
-    return response.data; // Returns the combined user data
+    return response.data;
   } catch (error) {
     console.error('Error fetching user info:', error);
     const err = error as AxiosError;
