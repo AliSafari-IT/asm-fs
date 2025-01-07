@@ -1,9 +1,9 @@
 # Fix Export Data Click Handler and UI Enhancements
 
-**Date:** 2025-01-07  
-**Commit:** dafe4c9  
-**Type:** fix  
-**Components:** Multiple files  
+Date: 2025-01-07  
+Commit: dafe4c9  
+Type: fix  
+Components: Multiple files  
 
 ## Description
 
