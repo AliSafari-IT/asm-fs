@@ -209,14 +209,12 @@ const HomePanels = () => {
       { "date": new Date("2020-01-01"), "apples": 10, "oranges": 20 },
       { "date": new Date("2020-01-02"), "apples": 15, "oranges": 25 },
     ]}  />,
-    <StackedBarChart data={
-      [
-        { "label": "A", "value": 10 },
-        { "label": "B", "value": 20 },
-        { "label": "C", "value": 30 },
-        { "label": "D", "value": 40 }
-      ]
-    } width={dimensions.width} height={dimensions.height} />,
+    <StackedBarChart data={[
+      { "label": "A", "value": 10 },
+      { "label": "B", "value": 20 },
+      { "label": "C", "value": 30 },
+      { "label": "D", "value": 40 }
+    ]}  />,
     <StackedColumnChart data={
       [
         { "label": "A", "value": 10 },
