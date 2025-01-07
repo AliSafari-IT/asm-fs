@@ -1,9 +1,14 @@
 export interface IUserModel {
-    id?: string;
-    userId?: string;
-    isAdmin: boolean;
+    id: string;
     email: string;
     fullName: string;
-    remark?: string;
     bio?: string;
-}
+    isAdmin: boolean;
+    userName?: string;
+    userId?: string;
+    createdAt?: string;
+    updatedAt?: string;
+    isDeleted?: boolean;
+    deletedAt?: string;
+  }
+  

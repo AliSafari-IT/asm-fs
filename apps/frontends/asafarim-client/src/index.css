@@ -51,6 +51,7 @@
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 8px 12px rgba(0, 0, 0, 0.15);
   --shadow-xl: 0 16px 24px rgba(0, 0, 0, 0.2);
+
 }
 
 @layer components {
@@ -213,6 +214,26 @@
     @apply border-[var(--border-inverted)];
   }
 
+  /* ring-colors */
+  .ring-success {
+    @apply ring-[var(--ring-success)];
+  }
+
+  .ring-warning {
+    @apply ring-[var(--ring-warning)];
+  }
+
+  .ring-danger {
+    @apply ring-[var(--ring-danger)];
+  }
+
+  .ring-info {
+    @apply ring-[var(--ring-info)];
+  }
+
+  .ring-inverted {
+    @apply ring-[var(--ring-inverted)];
+  }
   /* Layout Components */
 
   .header {

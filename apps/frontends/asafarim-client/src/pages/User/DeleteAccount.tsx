@@ -46,8 +46,8 @@ const DeleteAccount: React.FC<{ currentUserInfo: UserInfo | null }> = ({ current
 
     if (!isConfirming) {
         return (
-            <div className="max-w-2xl mx-auto p-6">
-                <div className="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800/50 rounded-lg p-6 space-y-6">
+            <div className="w-full max-w-3xl mx-auto px-4 py-8">
+                <div className="p-6 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800/50 rounded-lg space-y-6">
                     <div className="space-y-2">
                         <h1 className="text-2xl font-bold text-red-700 dark:text-red-400">Delete Account</h1>
                         <p className="text-red-600 dark:text-red-300">This action cannot be undone.</p>
@@ -91,61 +91,58 @@ const DeleteAccount: React.FC<{ currentUserInfo: UserInfo | null }> = ({ current
     }
 
     return (
-        <div className="max-w-2xl mx-auto p-6">
-            <div className="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800/50 rounded-lg p-6 space-y-6">
-                <div className="space-y-2">
-                    <h1 className="text-2xl font-bold text-red-700 dark:text-red-400">Confirm Account Deletion</h1>
-                    <p className="text-red-600 dark:text-red-300">
-                        Please enter your password to permanently delete your account
-                    </p>
-                </div>
+        <div className="w-full sm:p-8 max-w-3xl mx-auto px-4 py-8 mb-3 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800/50 rounded-lg space-y-6">
+            <div className="space-y-2">
+                <h1 className="text-2xl font-bold text-red-700 dark:text-red-400">Confirm Account Deletion</h1>
+                <p className="text-red-600 dark:text-red-300">
+                    Please enter your password to permanently delete your account
+                </p>
+            </div>
 
-                <div className="space-y-4">
-                    <div className="bg-white/50 dark:bg-black/20 rounded-lg p-4 border border-red-200 dark:border-red-800/30">
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full p-3 border rounded-lg bg-white dark:bg-gray-900 
+            <div className="space-y-4">
+                <div className="bg-white/50 dark:bg-black/20 rounded-lg p-4 border border-red-200 dark:border-red-800/30">
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full p-3 border rounded-lg bg-white dark:bg-gray-900 
                                      text-gray-900 dark:text-gray-100 
                                      border-red-200 dark:border-red-800/30
                                      focus:ring-2 focus:ring-red-500 dark:focus:ring-red-600
                                      focus:border-transparent outline-none
                                      placeholder-red-300 dark:placeholder-red-700"
-                            placeholder="Enter your password to confirm"
-                        />
+                        placeholder="Enter your password to confirm"
+                    />
+                </div>
+
+                {error && (
+                    <div className="bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 p-3 rounded-lg">
+                        {error}
                     </div>
+                )}
 
-                    {error && (
-                        <div className="bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 p-3 rounded-lg">
-                            {error}
-                        </div>
-                    )}
-
-                    <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                        <Button
-                            onClick={handleDeleteAccount}
-                            disabled={!password}
-                            className={`w-full sm:w-auto ${
-                                !password 
-                                    ? 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed' 
-                                    : 'bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600'
+                <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                    <Button
+                        onClick={handleDeleteAccount}
+                        disabled={!password}
+                        className={`w-full sm:w-auto ${!password
+                                ? 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed'
+                                : 'bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600'
                             } text-white transition-colors duration-200`}
-                        >
-                            Permanently Delete Account
-                        </Button>
-                        <Button
-                            onClick={() => setIsConfirming(false)}
-                            className="w-full sm:w-auto border border-gray-300 dark:border-gray-600 
+                    >
+                        Permanently Delete Account
+                    </Button>
+                    <Button
+                        onClick={() => setIsConfirming(false)}
+                        className="w-full sm:w-auto border border-gray-300 dark:border-gray-600 
                                      warning hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 
                                      text-gray-800 dark:text-gray-200 transition-colors duration-200
                                      shadow-sm hover:shadow"
-                        >
-                            <span className="flex items-center justify-center">
-                                Cancel <CancelSvgIcon />
-                            </span>
-                        </Button>
-                    </div>
+                    >
+                        <span className="flex items-center justify-center">
+                            Cancel <CancelSvgIcon />
+                        </span>
+                    </Button>
                 </div>
             </div>
         </div>

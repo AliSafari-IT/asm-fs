@@ -3,6 +3,12 @@ import { FaUndo, FaEnvelope, FaUser, FaLock, FaKey } from 'react-icons/fa';
 import authService from '../../api/authService';
 import Layout from '@/layout/Layout';
 import { useNavigate } from 'react-router-dom';
+import UserAccountSettings from '../User/UserAccountSettings';
+import DeleteAccount from '../User/DeleteAccount';
+import ExportData from '../User/ExportData';
+import useAuth from '../../hooks/useAuth';
+import { getUserFullInfo } from '../../utils/userUtils';
+import UserInfo from '@/interfaces/IUserInfo';
 
 const AccountSettings: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -15,8 +21,9 @@ const AccountSettings: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [activeTab, setActiveTab] = useState('email');
     const [userId, setUserId] = useState('');
+    const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
     const navigate = useNavigate();
-
+    const { user } = useAuth();
 
     useEffect(() => {
         const userData = localStorage.getItem('user');
@@ -41,6 +48,21 @@ const AccountSettings: React.FC = () => {
         }
     }, [successMessage]);
 
+    const fetchUserInfo = async () => {
+        if (user?.email) {
+            try {
+                const data = await getUserFullInfo(user.email);
+                setUserInfo(data);
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    };
+
+    useEffect(() => {
+        fetchUserInfo();
+    }, []);
+
     const handleResetEmailUsername = () => {
         const userData = localStorage.getItem('user');
         if (userData) {
@@ -55,7 +77,7 @@ const AccountSettings: React.FC = () => {
 
     const validateUsername = (newUsername: string) => {
         console.log('Validating username:', newUsername, '\nOriginal username:', originalUsername, '\nCurrent email:', email);
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const usernameRegex = /^[a-zA-Z0-9_]+$/;
         if (!usernameRegex.test(newUsername)) {
             return "Username must be alphanumeric.";
@@ -154,6 +176,7 @@ const AccountSettings: React.FC = () => {
                 setNewPassword('');
             }
         } catch (error) {
+            console.error('Error updating username:', error);
             setLoading(false);
             setError('An unexpected error occurred.');
         } finally {
@@ -218,10 +241,9 @@ const AccountSettings: React.FC = () => {
                 <p className="text-gray-600 dark:text-gray-400 mt-2">Manage your account preferences and security settings</p>
             </div>
         }>
-            <div className="max-w-6xl mx-auto px-4 py-8">
-                <div className="grid grid-cols-1 md:grid-cols-[240px,1fr] gap-8">
-                    {/* Sidebar Navigation */}
-                    <nav className="space-y-2 gap-8 rounded-xl shadow-sm p-6 border-r-8 border-focus">
+            <div className="w-full max-w-3xl mx-auto px-4 py-8">
+                <div className="grid grid-cols-1 md:grid-cols-[240px,1fr] gap-6">
+                    <nav className="space-y-2 gap-6 rounded-lg shadow p-6 border-r border-gray-200 dark:border-gray-700">
                         <button
                             onClick={() => { setActiveTab('email'); handleResetEmailUsername(); }}
                             className={tabButtonClass(activeTab === 'email')}
@@ -248,8 +270,7 @@ const AccountSettings: React.FC = () => {
                         </button>
                     </nav>
 
-                    {/* Main Content */}
-                    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border-l-8 border-focus">
+                    <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
                         {activeTab === 'email' && (
                             <form onSubmit={handleUpdateEmail} className="space-y-6">
                                 <div className="space-y-1">
@@ -268,17 +289,16 @@ const AccountSettings: React.FC = () => {
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                             placeholder="Enter your email"
-                                            className={inputClass}
+                                            className={`${inputClass} transition duration-200 ease-in-out`}
                                             required
                                         />
                                     </div>
                                 </div>
-                                <button type="submit" disabled={loading} className={buttonClass}>
+                                <button type="submit" disabled={loading} className={`${buttonClass} transition duration-200 ease-in-out`}>
                                     {loading ? 'Updating...' : 'Update Email'}
                                 </button>
                             </form>
                         )}
-
                         {activeTab === 'username' && (
                             <form onSubmit={handleUpdateUsername} className="space-y-6">
                                 <div className="space-y-1">
@@ -297,17 +317,16 @@ const AccountSettings: React.FC = () => {
                                             value={updatedUsername}
                                             onChange={(e) => setUpdatedUsername(e.target.value)}
                                             placeholder="Enter your username"
-                                            className={inputClass}
+                                            className={`${inputClass} transition duration-200 ease-in-out`}
                                             required
                                         />
                                     </div>
                                 </div>
-                                <button type="submit" disabled={loading} className={buttonClass}>
+                                <button type="submit" disabled={loading} className={`${buttonClass} transition duration-200 ease-in-out`}>
                                     {loading ? 'Updating...' : 'Update Username'}
                                 </button>
                             </form>
                         )}
-
                         {activeTab === 'password' && (
                             <form onSubmit={handleUpdatePassword} className="space-y-6">
                                 <div className="space-y-1">
@@ -321,7 +340,7 @@ const AccountSettings: React.FC = () => {
                                             value={currentPassword}
                                             onChange={(e) => setCurrentPassword(e.target.value)}
                                             placeholder="Enter current password"
-                                            className={inputClass}
+                                            className={`${inputClass} transition duration-200 ease-in-out`}
                                             required
                                         />
                                     </div>
@@ -337,18 +356,16 @@ const AccountSettings: React.FC = () => {
                                             value={newPassword}
                                             onChange={(e) => setNewPassword(e.target.value)}
                                             placeholder="Enter new password"
-                                            className={inputClass}
+                                            className={`${inputClass} transition duration-200 ease-in-out`}
                                             required
                                         />
                                     </div>
                                 </div>
-                                <button type="submit" disabled={loading} className={buttonClass}>
+                                <button type="submit" disabled={loading} className={`${buttonClass} transition duration-200 ease-in-out`}>
                                     {loading ? 'Updating...' : 'Update Password'}
                                 </button>
                             </form>
                         )}
-
-                        {/* Messages */}
                         <div className="mt-6 space-y-4">
                             {successMessage && (
                                 <div className="p-4 rounded-lg bg-success/10 dark:bg-success-dark/10 border border-success/20 dark:border-success-dark/20">
@@ -360,7 +377,6 @@ const AccountSettings: React.FC = () => {
                                     </p>
                                 </div>
                             )}
-
                             {error && (
                                 <div className="p-4 rounded-lg bg-danger/10 dark:bg-danger-dark/10 border border-danger/20 dark:border-danger-dark/20">
                                     <p className="text-sm font-medium text-danger-dark dark:text-danger-light flex items-center gap-2">
@@ -375,6 +391,9 @@ const AccountSettings: React.FC = () => {
                     </div>
                 </div>
             </div>
+            <UserAccountSettings key={userInfo?.email} currentUserInfo={userInfo} />
+            <ExportData currentUserInfo={userInfo} />
+            <DeleteAccount currentUserInfo={userInfo} />
         </Layout>
     );
 };
