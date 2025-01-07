@@ -67,6 +67,20 @@ const logreg: IMenuItem[] = [
   },
 ];
 
+const emailBody = encodeURIComponent(`To ASafariM Team,
+
+Hello,
+
+[Your subject here]
+
+[Add your message/information here]
+
+---
+[Your Name]
+[Your Contact Information]`);
+const emailSubject = 'Contact ASafariM';
+const emailTo = 'ASafariM <ali@asafarim.com>';
+const emailLink = `mailto:${emailTo}?subject=${encodeURIComponent(emailSubject)}&body=${emailBody}`;
 // Home Dropdown
 const homeDD: IMenuItem = {
   id: 'home',
@@ -118,18 +132,11 @@ const homeDD: IMenuItem = {
           id: 'email',
           name: 'email',
           title: 'Email',
-          to: 'mailto:YtK5H@example.com',
+          to: emailLink,
+          className: '',
           icon: <IconContact />,
           label: 'Email',
-        },
-        {
-          id: 'phone',
-          name: 'phone',
-          title: 'Phone',
-          to: 'tel:123-456-7890',
-          icon: <IconContact />,
-          label: 'Phone',
-        },
+        }
       ],
     },
   ],

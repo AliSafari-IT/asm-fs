@@ -3,10 +3,6 @@ import Wrapper from "../../layout/Wrapper/Wrapper";
 import aboutMeMd from './aboutme.md?raw';
 
 export default function About(): JSX.Element {
-  // get current theme
-
-  const headerBlock = '';
-
   const asideBlock = (
     <div className="sidebartext-left m-4 p-4 shadow-sm ">
       <h2 className="text-xl font-semibold mb-4">
@@ -29,7 +25,7 @@ export default function About(): JSX.Element {
   );
 
   return (
-    <Wrapper header={headerBlock} footer={null} sidebar={asideBlock}>
+    <Wrapper  footer={null} sidebar={asideBlock}>
       <DisplayMd markdownContent={aboutMeMd} id="about-me-markdown" />
     </Wrapper>
   );
