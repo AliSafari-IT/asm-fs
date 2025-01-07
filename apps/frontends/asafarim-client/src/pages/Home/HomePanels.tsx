@@ -206,8 +206,8 @@ const HomePanels = () => {
     <TreemapChart data={treeMapData as unknown as TreeMapData[]} width={dimensions.width} height={dimensions.height} />,
     <Hierarchy width={dimensions.width} height={dimensions.height} data={treeMapData2} />,
     <StackedAreaChart data={[
-      { "date": "2020-01-01", "apples": 10, "oranges": 20 },
-      { "date": "2020-01-02", "apples": 15, "oranges": 25 },
+      { "date": new Date("2020-01-01"), "apples": 10, "oranges": 20 },
+      { "date": new Date("2020-01-02"), "apples": 15, "oranges": 25 },
     ]} width={dimensions.width} height={dimensions.height} />,
     <StackedBarChart data={
       [
