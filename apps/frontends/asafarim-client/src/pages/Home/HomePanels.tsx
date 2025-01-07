@@ -208,7 +208,7 @@ const HomePanels = () => {
     <StackedAreaChart data={[
       { "date": new Date("2020-01-01"), "apples": 10, "oranges": 20 },
       { "date": new Date("2020-01-02"), "apples": 15, "oranges": 25 },
-    ]} width={dimensions.width} height={dimensions.height} />,
+    ]}  />,
     <StackedBarChart data={
       [
         { "label": "A", "value": 10 },

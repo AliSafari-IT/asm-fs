@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
+import ChartContainer from "./ChartContainer";
 
 interface DataRow {
   date: Date; // e.g., "2020-01-01"
@@ -22,7 +23,7 @@ const StackedAreaChart: React.FC<StackedAreaChartProps> = ({ data: rawData }) =>
       }
 
       // Get container dimensions
-      const containerWidth = containerRef.current.offsetWidth;
+      const containerWidth = containerRef.current?.offsetWidth || 0;
       const containerHeight = containerWidth * 0.6; // Maintain aspect ratio (e.g., 3:2)
 
       // Clear any previous SVG content
@@ -130,9 +131,9 @@ const StackedAreaChart: React.FC<StackedAreaChartProps> = ({ data: rawData }) =>
   }, [rawData]);
 
   return (
-    <div ref={containerRef} style={{ width: "100%", height: "100%" }}>
+    <ChartContainer containerRef={containerRef} style={{ width: "100%", height: "100%" }}>
       <svg ref={svgRef} />
-    </div>
+    </ChartContainer>
   );
 };
 
