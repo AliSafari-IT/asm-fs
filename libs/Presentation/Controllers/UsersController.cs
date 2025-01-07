@@ -203,8 +203,8 @@ namespace Presentation.Controllers
                 userInfo.FullName,
                 userInfo.CreatedAt,
                 userInfo.UpdatedAt,
-                userInfo.IsAdmin,
-                userInfo.IsDeleted,
+                aspNetUser.IsAdmin,
+                aspNetUser.IsDeleted,
                 userInfo.DeletedAt,
             };
 

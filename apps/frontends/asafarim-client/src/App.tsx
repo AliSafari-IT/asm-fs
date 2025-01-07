@@ -213,7 +213,7 @@ function App() {
             path="/user-account-settings"
             element={
               <PrivateRoute>
-                <AccountSettings />
+                <AccountSettings/>
               </PrivateRoute>
             }
           />
