@@ -1,18 +1,16 @@
-using Domain.Entities;
-using Domain.Enum;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace Application.Interfaces
 {
     public interface IUserRoleService
     {
-        Task<IEnumerable<UserRole>> GetUserRolesAsync();
-        Task<UserRole> GetUserRoleByIdAsync(Guid id);
-        Task<UserRole> CreateUserRoleAsync(UserRole userRole);
-        Task UpdateUserRoleAsync(UserRole userRole);
-        Task DeleteUserRoleAsync(Guid id);
-        Task AssignRoleToUserAsync(Guid userId, UserRoleEnum role);
+        Task<IEnumerable<IdentityUserRole<Guid>>> GetUserRolesAsync();
+        Task<IdentityUserRole<Guid>?> GetUserRoleByIdAsync(Guid userId, Guid roleId);
+        Task<IdentityUserRole<Guid>> CreateUserRoleAsync(IdentityUserRole<Guid> userRole);
+        Task DeleteUserRoleAsync(Guid userId, Guid roleId);
+        Task AssignRoleToUserAsync(Guid userId, Guid roleId);
     }
 }

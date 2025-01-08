@@ -6,10 +6,7 @@ using Application.Interfaces;
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Repositories;
-using Infrastructure.Mapping;
 using Infrastructure.Repositories;
-using Microsoft.EntityFrameworkCore;
-using SecureCore.Data;
 
 namespace Infrastructure.Services
 {
@@ -17,141 +14,119 @@ namespace Infrastructure.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IUserDataChangeLogRepository _userDataChangeLogRepository;
-        private readonly ApplicationDbContext _context;
 
         public UserService(
             IUserRepository userRepository,
-            IUserDataChangeLogRepository userDataChangeLogRepository,
-            ApplicationDbContext context
-        )
+            IUserDataChangeLogRepository userDataChangeLogRepository)
         {
             _userRepository = userRepository;
             _userDataChangeLogRepository = userDataChangeLogRepository;
-            _context = context;
         }
 
-        // Get list of users, excluding deleted ones
-        public async Task<IEnumerable<User>> GetUsersAsync()
+        // Get all users (including soft-deleted)
+        public async Task<IEnumerable<ApplicationUser>> GetAllUsersAsync()
         {
-            return (
-                await _context
-                    .Users.Where(u => !u.IsDeleted) // Exclude deleted users
-                    .ToListAsync()
-            ).Select(u => u.ToDomainUser());
+            return await _userRepository.GetAllUsersAsync();
         }
 
-        // Get a user by Id, excluding deleted ones
-        public async Task<User> GetUserByIdAsync(Guid id)
+        // Get active users (excluding soft-deleted)
+        public async Task<IEnumerable<ApplicationUser>> GetActiveUsersAsync()
         {
-            return await _context
-                .Users.Where(u => u.Id.Equals(id) && !u.IsDeleted)
-                .FirstOrDefaultAsync()
-                .ContinueWith(t => t.Result?.ToDomainUser());
+            var users = await _userRepository.GetAllUsersAsync();
+            return users.Where(u => !u.IsDeleted);
+        }
+
+        // Get user by ID
+        public async Task<ApplicationUser?> GetUserByIdAsync(Guid id)
+        {
+            var user = await _userRepository.GetUserByIdAsync(id);
+            return user != null && !user.IsDeleted ? user : null;
+        }
+
+        // Get user by email
+        public async Task<ApplicationUser> GetUserByEmailAsync(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                throw new ArgumentException("Email is required", nameof(email));
+
+            var user = await _userRepository.GetUserByEmailAsync(email);
+            if (user == null || user.IsDeleted)
+                throw new NotFoundException($"User with email {email} not found");
+
+            return user;
         }
 
         // Create a new user
-        public async Task<User> CreateUserAsync(User user)
+        public async Task<ApplicationUser> CreateUserAsync(ApplicationUser user)
         {
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+
             user.Id = Guid.NewGuid();
             user.CreatedAt = DateTime.UtcNow;
             user.UpdatedAt = DateTime.UtcNow;
 
-            var applicationUser = user.ToApplicationUser();
-            _context.Users.Add(applicationUser);
-            await _context.SaveChangesAsync();
-            return applicationUser.ToDomainUser();
+            return await _userRepository.CreateUserAsync(user);
         }
 
-        // Update an existing user with GDPR compliance
-        public async Task<User> UpdateUserAsync(User user)
+        // Update an existing user
+        public async Task<ApplicationUser> UpdateUserAsync(ApplicationUser user)
         {
             var existingUser = await _userRepository.GetUserByIdAsync(user.Id);
-            if (existingUser == null)
-            {
+
+            if (existingUser == null || existingUser.IsDeleted)
                 throw new NotFoundException("User not found");
-            }
 
-            // Log the changes
-            var changes = new Dictionary<string, object>();
-            if (existingUser.Email != user.Email)
-            {
-                if (!IsValidEmail(user.Email))
-                {
-                    throw new ValidationException("Invalid email format");
-                }
-                changes.Add("Email", new { Old = existingUser.Email, New = user.Email });
-            }
-            if (existingUser.UserName != user.FullName)
-            {
-                changes.Add(
-                    "DisplayName",
-                    new { Old = existingUser.UserName, New = user.FullName }
-                );
-            }
+            existingUser.Email = user.Email ?? existingUser.Email;
+            existingUser.UserName = user.UserName ?? existingUser.UserName;
+            existingUser.FirstName = user.FirstName ?? existingUser.FirstName;
+            existingUser.LastName = user.LastName ?? existingUser.LastName;
+            existingUser.UpdatedBy = user.UpdatedBy;
+            existingUser.UpdatedAt = DateTime.UtcNow;
 
-            var updatedUser = await _userRepository.UpdateUserAsync(user);
-
-            // Create change log entry
-            if (changes.Count != 0)
-            {
-                var changeLog = new Domain.Entities.UserDataChangeLog
-                {
-                    Id = Guid.NewGuid(),
-                    UserId = user.Id.ToString(),
-                    Action = "UpdateUserData",
-                    Changes = System.Text.Json.JsonSerializer.Serialize(changes),
-                    Timestamp = DateTime.UtcNow,
-                };
-                await _userDataChangeLogRepository.AddAsync(changeLog);
-            }
-
-            return updatedUser;
+            return await _userRepository.UpdateUserAsync(existingUser);
         }
 
-        private bool IsValidEmail(string email)
-        {
-            try
-            {
-                var addr = new System.Net.Mail.MailAddress(email);
-                return addr.Address == email;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        // Mark a user as deleted
+        // Soft delete a user
         public async Task DeleteUserAsync(Guid id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _userRepository.GetUserByIdAsync(id);
 
-            if (user != null && !user.IsDeleted)
-            {
-                user.MarkAsDeleted(id); // Or use the current user's Id here
-                await _context.SaveChangesAsync();
-            }
+            if (user == null || user.IsDeleted)
+                throw new NotFoundException("User not found");
+
+            user.MarkAsDeleted(Guid.NewGuid()); // Mark as deleted with the current user's ID or a default one
+            await _userRepository.UpdateUserAsync(user);
         }
 
-        // Get all non-deleted users
-        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        // Assign a task to a user
+        public async Task<ApplicationUser> AssignTaskToUserAsync(Guid userId, TaskItem task)
         {
-            return (IEnumerable<User>)
-                await _context
-                    .Users.Where(u => !u.IsDeleted) // Exclude deleted users
-                    .ToListAsync();
+            var user = await _userRepository.GetUserByIdAsync(userId);
+            if (user == null || user.IsDeleted)
+                throw new NotFoundException("User not found");
+
+            task.AssignedToUserId = userId;
+            task.CreatedAt = DateTime.UtcNow;
+
+            // Assuming ApplicationUser has a navigation property for tasks
+            if (user.TaskItems == null)
+                user.TaskItems = new List<TaskItem>();
+
+            user.TaskItems.Add(task);
+
+            return await _userRepository.UpdateUserAsync(user);
         }
 
-        // Not implemented: Assign task to user (placeholder for future implementation)
-        Task<User> IUserService.AssignTaskToUserAsync(Guid userId, TaskItem task)
+        // Get tasks assigned to a user
+        public async Task<IEnumerable<TaskItem>> GetUserTasksAsync(Guid userId)
         {
-            throw new NotImplementedException();
-        }
+            var user = await _userRepository.GetUserByIdAsync(userId);
+            if (user == null || user.IsDeleted)
+                throw new NotFoundException("User not found");
 
-        // Not implemented: Get tasks assigned to a user (placeholder for future implementation)
-        Task<IEnumerable<TaskItem>> IUserService.GetUserTasksAsync(Guid userId)
-        {
-            throw new NotImplementedException();
+            // Assuming ApplicationUser has a navigation property for tasks
+            return user.TaskItems ?? Enumerable.Empty<TaskItem>();
         }
     }
 }

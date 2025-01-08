@@ -1,4 +1,4 @@
-namespace SecureCore.Models
+namespace Domain.Entities
 {
     public class ReactivationRequest
     {

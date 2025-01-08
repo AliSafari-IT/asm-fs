@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 using Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers
 {

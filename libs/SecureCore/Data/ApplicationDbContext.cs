@@ -1,12 +1,13 @@
+using System.Diagnostics;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using SecureCore.Models;
 
 namespace SecureCore.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }
@@ -15,6 +16,7 @@ namespace SecureCore.Data
         public DbSet<UserReactivationRequest> UserReactivationRequests { get; set; }
         public DbSet<UserDataChangeLog> UserDataChangeLogs { get; set; }
         public DbSet<Project> Projects { get; set; }
+        public DbSet<ApplicationUser> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -34,38 +36,35 @@ namespace SecureCore.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // Configure IdentityUserRole<string> (userroles table)
+            modelBuilder.Entity<IdentityUserRole<string>>(entity =>
+            {
+                entity.ToTable("userroles"); // Use the existing table name
+                entity.Property(e => e.UserId).HasColumnType("char(36)").IsRequired();
+                entity.Property(e => e.RoleId).HasColumnType("int").IsRequired(); // Assume RoleId maps to an integer
+            });
+
             // Configure UserReactivationRequest
             modelBuilder.Entity<UserReactivationRequest>(entity =>
             {
-                entity.ToTable("user_reactivation_requests");
+                entity.HasKey(e => e.Id);
 
-                entity.Property(e => e.Id).HasColumnType("char(36)").IsRequired();
+                entity.Property(e => e.UserId).IsRequired();
 
-                entity.Property(e => e.UserId).HasColumnType("varchar(255)").IsRequired();
-
-                entity.Property(e => e.Email).HasColumnType("longtext").IsRequired();
-
-                entity.Property(e => e.RequestDate).HasColumnType("datetime(6)").IsRequired();
-
-                entity.Property(e => e.Status).HasColumnType("int").IsRequired();
-
-                entity
-                    .Property(e => e.ProcessedDate)
-                    .HasColumnType("datetime(6)")
-                    .IsRequired(false);
-
-                entity.Property(e => e.ProcessedBy).HasColumnType("longtext").IsRequired(false);
-
-                // Configure the relationship with ApplicationUser
                 entity
                     .HasOne(e => e.User)
-                    .WithMany()
+                    .WithMany(u => u.UserReactivationRequests)
                     .HasForeignKey(e => e.UserId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .OnDelete(DeleteBehavior.Cascade); // Optional delete behavior
+            });
+
+            modelBuilder.Entity<ApplicationUser>(entity =>
+            {
+                entity.Property(e => e.CreatedBy).IsRequired(false); // Mark as optional
             });
 
             // Mapping the 'users' table
-            modelBuilder.Entity<User>(entity =>
+            modelBuilder.Entity<ApplicationUser>(entity =>
             {
                 entity.ToTable("users");
 
@@ -76,7 +75,9 @@ namespace SecureCore.Data
 
                 entity.Property(e => e.IsAdmin).HasColumnType("tinyint(1)").IsRequired();
 
-                entity.Property(e => e.FullName).HasColumnType("longtext").IsRequired();
+                entity.Property(e => e.FirstName).HasColumnType("longtext").IsRequired();
+
+                entity.Property(e => e.LastName).HasColumnType("longtext").IsRequired();
 
                 entity.Property(e => e.Email).HasColumnType("longtext").IsRequired();
 
@@ -103,16 +104,11 @@ namespace SecureCore.Data
                     .HasColumnType("char(36)") // Mapping GUID to char(36)
                     .IsRequired(false);
             });
+        }
 
-            // Mapping the 'userroles' table
-            modelBuilder.Entity<UserRole>(entity =>
-            {
-                entity.ToTable("userroles");
-
-                entity.Property(e => e.UserId).HasColumnType("char(36)").IsRequired();
-
-                entity.Property(e => e.Role).HasColumnType("int").IsRequired();
-            });
+        private string GetDebuggerDisplay()
+        {
+            return ToString();
         }
     }
 }

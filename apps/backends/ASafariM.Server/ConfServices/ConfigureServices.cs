@@ -1,8 +1,8 @@
+using Domain.Entities;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using SecureCore.Data;
-using SecureCore.Models;
 
 namespace ASafariM.Server.ConfServices
 {
@@ -17,7 +17,7 @@ namespace ASafariM.Server.ConfServices
         {
             // Identity Setup
             services
-                .AddIdentity<ApplicationUser, IdentityRole>(options =>
+                .AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
                 {
                     // Password settings
                     options.Password.RequireDigit = true;

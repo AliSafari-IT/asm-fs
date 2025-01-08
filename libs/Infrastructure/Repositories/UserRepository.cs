@@ -1,81 +1,107 @@
-// E:\asm-fs\libs\Infrastructure\Repositories\UserRepository.cs
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Domain.Entities;
 using Domain.Exceptions;
-using Infrastructure.Mapping;
 using Microsoft.EntityFrameworkCore;
 using SecureCore.Data;
-using SecureCore.Models;
 
 namespace Infrastructure.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly ApplicationDbContext _context; // Your DbContext
+        private readonly ApplicationDbContext _context;
 
         public UserRepository(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public async Task<User> GetUserByIdAsync(Guid userId)
+        // Get user by GUID
+        public async Task<ApplicationUser?> GetUserByIdAsync(Guid userId)
         {
-            var applicationUser = await _context
-                .Users.Where(u => u.Id.ToString() == userId.ToString())
-                .FirstOrDefaultAsync();
-            return applicationUser?.ToDomainUser();
+            return await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
         }
 
-        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        // Get user by string ID
+        public async Task<ApplicationUser?> GetUserByIdAsync(string id)
         {
-            var users = await _context.Users.Where(u => !u.IsDeleted).ToListAsync();
-            return users.Select(u => u.ToDomainUser());
+            if (!Guid.TryParse(id, out var userId))
+                throw new ArgumentException("Invalid user ID format", nameof(id));
+
+            return await GetUserByIdAsync(userId);
         }
 
-        public async Task<User> CreateUserAsync(User user)
+        // Get all users
+        public async Task<IEnumerable<ApplicationUser>> GetAllUsersAsync()
         {
-            if (user == null)
-                throw new ArgumentNullException(nameof(user));
-
-            var applicationUser = user.ToApplicationUser();
-            await _context.Users.AddAsync(applicationUser);
-            await _context.SaveChangesAsync();
-            return applicationUser.ToDomainUser();
+            return await _context.Users.Where(u => !u.IsDeleted).ToListAsync();
         }
 
-        public async Task<User> UpdateUserAsync(User user)
+        // Create a new user
+        public async Task<ApplicationUser> CreateUserAsync(ApplicationUser user)
         {
             if (user == null)
                 throw new ArgumentNullException(nameof(user));
 
-            var appUser = user.ToApplicationUser();
-            _context.Users.Update(appUser);
+            user.Id = Guid.NewGuid();
+            user.CreatedAt = DateTime.UtcNow;
+            user.UpdatedAt = DateTime.UtcNow;
+
+            await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
-            return appUser.ToDomainUser();
+
+            return user;
         }
 
+        // Update an existing user
+        public async Task<ApplicationUser> UpdateUserAsync(ApplicationUser user)
+        {
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+
+            var existingUser = await _context.Users.FindAsync(user.Id);
+            if (existingUser == null)
+                throw new NotFoundException($"User with ID {user.Id} not found");
+
+            existingUser.Email = user.Email ?? existingUser.Email;
+            existingUser.UserName = user.UserName ?? existingUser.UserName;
+            existingUser.FirstName = user.FirstName ?? existingUser.FirstName;
+            existingUser.LastName = user.LastName ?? existingUser.LastName;
+            existingUser.UpdatedAt = DateTime.UtcNow;
+
+            _context.Users.Update(existingUser);
+            await _context.SaveChangesAsync();
+
+            return existingUser;
+        }
+
+        // Soft delete a user
         public async Task<bool> DeleteUserAsync(Guid userId)
         {
-            var user = await _context.Users.FindAsync(userId.ToString());
+            var user = await _context.Users.FindAsync(userId);
             if (user == null)
                 return false;
 
             user.IsDeleted = true;
+            user.DeletedAt = DateTime.UtcNow;
+
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
+
             return true;
         }
 
-        async Task<User> IUserRepository.GetUserByEmailAsync(string email)
+        // Get user by email
+        public async Task<ApplicationUser> GetUserByEmailAsync(string email)
         {
-            var appUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-            if (appUser == null)
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
                 throw new NotFoundException($"User with email {email} not found");
-            return appUser.ToDomainUser();
+
+            return user;
         }
+
     }
 }
