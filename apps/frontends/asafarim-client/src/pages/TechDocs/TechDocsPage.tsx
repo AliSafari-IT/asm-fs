@@ -3,7 +3,7 @@ import SidebarNavItem from '@/layout/Navbar/SidebarNavItem';
 import SortArray, { SortOrder } from '@/components/SortArray';
 import { getFirstHeading } from '@/utils/mdUtils';
 import { Link, useParams } from 'react-router-dom';
-import DisplayMd from '@/components/DisplayMd';
+import DisplayMd from '@/components/MarkdownPage/DisplayMd';
 import Wrapper from '@/layout/Wrapper/Wrapper';
 import { getMdDocByRelPath, getAllMdFiles } from '@/utils/mdFilesUtils';
 import { RecentChangesSvg, RecentChangesSvgIcon } from '@/assets/SvgIcons/RecentChangesSvg';

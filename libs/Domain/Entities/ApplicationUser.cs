@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Entities
@@ -14,9 +13,11 @@ namespace Domain.Entities
         [Required]
         public string LastName { get; set; } = string.Empty;
 
-        public string? Bio { get; set; }
+        public string Bio { get; set; } = string.Empty;
 
         public string? ProfilePicture { get; set; }
+
+        public string? Remark { get; set; }
 
         public bool IsDeleted { get; set; } = false;
 
@@ -34,28 +35,26 @@ namespace Domain.Entities
 
         public Guid? DeletedBy { get; set; }
 
-        // List of TaskItems
         public ICollection<TaskItem> TaskItems { get; set; } = new List<TaskItem>();
 
-        // List of UserReactivationRequests
         public ICollection<UserReactivationRequest> UserReactivationRequests { get; set; } = new List<UserReactivationRequest>();
 
-
-        // Full Name Property
         public string FullName => $"{FirstName} {LastName}";
 
-        // Optional Details
         public DateTime? DateOfBirth { get; set; }
 
         public bool IsActive { get; set; } = true;
 
-        public string? AuthenticationType => "Identity";
+        public string AuthenticationType => "Identity";
 
-        public bool IsAuthenticated => true;
+        private bool isAuthenticated;
 
-        public string? Name => $"{FirstName} {LastName}";
+        public bool IsAuthenticated => isAuthenticated;
 
-        // Helper Methods
+        public void SetAuthenticationStatus(bool status) {
+            isAuthenticated = status;
+        }
+
         public void MarkAsDeleted(Guid id)
         {
             IsDeleted = true;

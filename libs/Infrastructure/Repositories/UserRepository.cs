@@ -19,13 +19,13 @@ namespace Infrastructure.Repositories
         }
 
         // Get user by GUID
-        public async Task<ApplicationUser?> GetUserByIdAsync(Guid userId)
+        public async Task<ApplicationUser> GetUserByIdAsync(Guid userId)
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
         }
 
         // Get user by string ID
-        public async Task<ApplicationUser?> GetUserByIdAsync(string id)
+        public async Task<ApplicationUser> GetUserByIdAsync(string id)
         {
             if (!Guid.TryParse(id, out var userId))
                 throw new ArgumentException("Invalid user ID format", nameof(id));
@@ -36,7 +36,7 @@ namespace Infrastructure.Repositories
         // Get all users
         public async Task<IEnumerable<ApplicationUser>> GetAllUsersAsync()
         {
-            return await _context.Users.Where(u => !u.IsDeleted).ToListAsync();
+            return await _context.Users.Where(u => (bool)!u.IsDeleted).ToListAsync();
         }
 
         // Create a new user

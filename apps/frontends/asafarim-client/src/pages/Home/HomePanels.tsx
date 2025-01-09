@@ -1,7 +1,7 @@
 // E:\asm-fs\apps\frontends\asafarim-client\src\pages\Home\HomePanels.tsx
 import { useRef, useState } from 'react';
 import './home.scss';
-import DisplayMd from '@/components/DisplayMd';
+import DisplayMd from '@/components/MarkdownPage/DisplayMd';
 //import Modal from '@/components/Containers/Modal/Modal';
 import Barchart from '@/components/D3/Barchart';
 import LineChart from '@/components/D3/LineChart';

@@ -12,6 +12,7 @@ updated: 2024-12-23 17:32:00
 ### Code Snippets
 
 #### Updated `getUpdatedTimeFromContent` Function
+
 ```tsx
 const getUpdatedTimeFromContent = (content: string) => {
     const lines = content.split('\n');

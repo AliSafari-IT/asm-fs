@@ -1,5 +1,5 @@
 // E:\asm\apps\dashboard-client\src\pages\AboutMe\TailoredCV\Akkodis.tsx
-import DisplayMd from "../../../components/DisplayMd";
+import DisplayMd from "../../../components/MarkdownPage/DisplayMd";
 import Wrapper from "../../../layout/Wrapper/Wrapper";
 import Akkodis from './Akkodis.md?raw';
 

@@ -1,8 +1,8 @@
 # Improve Markdown Page File/Folder View to Table Layout
 
-Date: 02-01-2025
-Git Hash: 274c7a44
-Type: Feature
+ Date: 02-01-2025
+- Git Hash: 274c7a44
+- Type: Feature
 
 ## Summary
 
@@ -14,7 +14,8 @@ This update enhances the file and folder view within the `MarkdownPage` componen
 
 ### 1. Updated `renderDirectoryContent`
 Enhanced the method to render folders and files in a table format:
-```tsx
+
+```typescript
 const renderDirectoryContent = () => {
   const folders = currentDirectory?.subMenu?.filter(item => item.type === 'folder');
   const files = currentDirectory?.subMenu?.filter(item => item.type === 'file');

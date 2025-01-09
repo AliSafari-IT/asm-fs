@@ -1,4 +1,4 @@
-import DisplayMd from '../../../../../../components/DisplayMd';
+import DisplayMd from '../../../../../../components/MarkdownPage/DisplayMd';
 import Wrapper from '../../../../../../layout/Wrapper/Wrapper';
 import mdFile from './dynamic-nav.md?raw';
 

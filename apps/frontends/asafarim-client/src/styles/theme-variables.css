@@ -4,7 +4,7 @@
   --bg-tertiary: #ebe8e8;
   --bg-success: #92c353;
   --bg-warning: #f8d22a;
-  --bg-danger: #e23838;
+  --bg-danger: #dd4b4b;
   --bg-error: #e23838;
   --bg-info: #4f6bed;
   --bg-inverted: #201f1f;
@@ -513,8 +513,8 @@
   --bg-tertiary: #2d3341;
   --bg-success: #415c1e;
   --bg-warning: #f8d22a;
-  --bg-danger: #e23838;
-  --bg-error: #e23838;
+  --bg-danger: #eb2525;
+  --bg-error: #eb2525;
   --bg-info: #4f6bed;
   --bg-inverted: #ffffff;
   --bg-transparent: rgba(0, 0, 0, 0);

@@ -1,9 +1,12 @@
+// IUser.ts
 import { IUserRole } from "./IUserRole";
 
 export interface IUser {
     id: string;
     isAdmin: boolean;
     email: string;
+    lastName: string;
+    firstName: string;
     fullName: string;
     remark?: string;
     isDeleted?: boolean;
@@ -18,6 +21,6 @@ export interface IUser {
     userRole?: IUserRole;
     userRoleName?: string;
     userRoleDescription?: string;
-    
-
 }
+
+

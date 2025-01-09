@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { IMenuItem } from '@/interfaces/IMenuItem';
 import Wrapper from '@/layout/Wrapper/Wrapper';
 import Header from '@/layout/Header/Header';
-import DisplayMd from '../DisplayMd';
+import DisplayMd from './DisplayMd';
 import { Breadcrumb, IBreadcrumbItem } from '@fluentui/react/lib/Breadcrumb';
 import ScrollingButtons from '../ScrollingButtons';
 import { getFirstHeading } from '@/utils/mdUtils';

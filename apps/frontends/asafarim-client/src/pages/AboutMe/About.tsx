@@ -1,4 +1,4 @@
-import DisplayMd from "../../components/DisplayMd";
+import DisplayMd from "../../components/MarkdownPage/DisplayMd";
 import Wrapper from "../../layout/Wrapper/Wrapper";
 import aboutMeMd from './aboutme.md?raw';
 

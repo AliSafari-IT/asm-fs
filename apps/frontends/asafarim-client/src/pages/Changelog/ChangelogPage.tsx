@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import DisplayMd from '../../components/DisplayMd';
+import DisplayMd from '../../components/MarkdownPage/DisplayMd';
 import Wrapper from '../../layout/Wrapper/Wrapper';
 import { getAllMdFiles,  getChangelogByRelPath } from '../../utils/mdFilesUtils';
 import Header from '@/layout/Header/Header';

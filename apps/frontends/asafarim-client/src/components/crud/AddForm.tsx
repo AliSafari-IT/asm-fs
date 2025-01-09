@@ -1,6 +1,8 @@
+// E:\asm-fs\apps\frontends\asafarim-client\src\components\crud\AddForm.tsx 
 import { IField } from '@/interfaces/IField';
-import Wrapper from '@/layout/Wrapper/Wrapper';
 import React, { useState } from 'react';
+import Toolbar from '../Toolbars/Toolbar';
+import { ActionButton } from '@fluentui/react';
 
 
 interface FormData {
@@ -12,9 +14,10 @@ interface AddFormProps {
     entityName: string;
     fields: IField[];
     submitHandler: (formData: FormData) => Promise<void>;
+    onCancel: () => void;
 }
 
-const AddForm: React.FC<AddFormProps> = ({ entityName, fields, submitHandler }) => {
+const AddForm: React.FC<AddFormProps> = ({ entityName, fields, submitHandler, onCancel }) => {
     const [formData, setFormData] = useState<FormData>({
         ...Object.fromEntries(fields.map(field => [field.name, ''])),
         delete: false,
@@ -44,8 +47,7 @@ const AddForm: React.FC<AddFormProps> = ({ entityName, fields, submitHandler }) 
     };
 
     return (
-        <Wrapper header={<h2 className="text-3xl font-bold text-center mb-4">Add {entityName}</h2>}>
-            <form onSubmit={handleSubmit} className="add-entity-form">
+            <form onSubmit={handleSubmit} className="add-entity-form" autoComplete='on' >
                 {fields.map(field => (
                     <div key={field.name}>
                         {field.label && <label>{field.label}:</label>}
@@ -105,11 +107,11 @@ const AddForm: React.FC<AddFormProps> = ({ entityName, fields, submitHandler }) 
                         )}
                     </div>
                 ))}
-                <div>
-                    <button type="submit">Submit</button>
-                </div>
+                <Toolbar aria-label='Add' className='flex justify-end'>
+                    <ActionButton type="submit" id='submit' className='w-24'>Submit</ActionButton>
+                    <ActionButton type="button" onClick={onCancel} id='cancel' className='w-24 btn-danger'>Cancel</ActionButton>
+                </Toolbar>
             </form>
-        </Wrapper>
     );
 };
 

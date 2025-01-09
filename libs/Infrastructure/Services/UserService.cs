@@ -17,7 +17,8 @@ namespace Infrastructure.Services
 
         public UserService(
             IUserRepository userRepository,
-            IUserDataChangeLogRepository userDataChangeLogRepository)
+            IUserDataChangeLogRepository userDataChangeLogRepository
+        )
         {
             _userRepository = userRepository;
             _userDataChangeLogRepository = userDataChangeLogRepository;
@@ -33,14 +34,14 @@ namespace Infrastructure.Services
         public async Task<IEnumerable<ApplicationUser>> GetActiveUsersAsync()
         {
             var users = await _userRepository.GetAllUsersAsync();
-            return users.Where(u => !u.IsDeleted);
+            return users.Where(u => u != null && u.IsDeleted != true);
         }
 
         // Get user by ID
-        public async Task<ApplicationUser?> GetUserByIdAsync(Guid id)
+        public async Task<ApplicationUser> GetUserByIdAsync(Guid id)
         {
             var user = await _userRepository.GetUserByIdAsync(id);
-            return user != null && !user.IsDeleted ? user : null;
+            return user != null && user?.IsDeleted != true ? user : null;
         }
 
         // Get user by email
@@ -50,7 +51,7 @@ namespace Infrastructure.Services
                 throw new ArgumentException("Email is required", nameof(email));
 
             var user = await _userRepository.GetUserByEmailAsync(email);
-            if (user == null || user.IsDeleted)
+            if (user == null || user?.IsDeleted == true)
                 throw new NotFoundException($"User with email {email} not found");
 
             return user;
@@ -74,7 +75,7 @@ namespace Infrastructure.Services
         {
             var existingUser = await _userRepository.GetUserByIdAsync(user.Id);
 
-            if (existingUser == null || existingUser.IsDeleted)
+            if (existingUser == null || existingUser?.IsDeleted == true)
                 throw new NotFoundException("User not found");
 
             existingUser.Email = user.Email ?? existingUser.Email;
@@ -92,7 +93,7 @@ namespace Infrastructure.Services
         {
             var user = await _userRepository.GetUserByIdAsync(id);
 
-            if (user == null || user.IsDeleted)
+            if (user == null || user?.IsDeleted == true)
                 throw new NotFoundException("User not found");
 
             user.MarkAsDeleted(Guid.NewGuid()); // Mark as deleted with the current user's ID or a default one
@@ -103,7 +104,7 @@ namespace Infrastructure.Services
         public async Task<ApplicationUser> AssignTaskToUserAsync(Guid userId, TaskItem task)
         {
             var user = await _userRepository.GetUserByIdAsync(userId);
-            if (user == null || user.IsDeleted)
+            if (user == null || user?.IsDeleted == true)
                 throw new NotFoundException("User not found");
 
             task.AssignedToUserId = userId;
@@ -122,7 +123,7 @@ namespace Infrastructure.Services
         public async Task<IEnumerable<TaskItem>> GetUserTasksAsync(Guid userId)
         {
             var user = await _userRepository.GetUserByIdAsync(userId);
-            if (user == null || user.IsDeleted)
+            if (user == null || user?.IsDeleted == true)
                 throw new NotFoundException("User not found");
 
             // Assuming ApplicationUser has a navigation property for tasks

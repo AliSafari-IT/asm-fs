@@ -22,6 +22,7 @@ const changelogFiles = import.meta.glob('@/pages/Changelog/changelogMds/*.md', {
 ## Technical Improvements
 
 ### Root Package.json Changes
+
 ```json
 {
   "scripts": {
