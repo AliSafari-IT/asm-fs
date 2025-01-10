@@ -58,6 +58,8 @@ const AddForm: React.FC<AddFormProps> = ({ entityName, fields, submitHandler, on
                                 onChange={handleChange}
                                 placeholder={field.placeholder}
                                 required={field.required}
+                                disabled={field.disabled}
+                                style={{cursor: field.disabled ? 'not-allowed' : 'auto'}}
                             />
                         ) : field.type === 'select' ? (
                             <select
@@ -66,6 +68,8 @@ const AddForm: React.FC<AddFormProps> = ({ entityName, fields, submitHandler, on
                                 onChange={handleChange}
                                 required={field.required}
                                 multiple={field.multiple}
+                                disabled={field.disabled}
+                                style={{cursor: field.disabled ? 'not-allowed' : 'auto'}}
                             >
                                 <option value="">Select an option</option>
                                 {field.options?.map(option => (
@@ -84,6 +88,8 @@ const AddForm: React.FC<AddFormProps> = ({ entityName, fields, submitHandler, on
                                         checked={formData[field.name] === option.value}
                                         onChange={handleChange}
                                         required={field.required}
+                                        disabled={field.disabled}
+                                        style={{cursor: field.disabled ? 'not-allowed' : 'auto'}}
                                     />
                                     {option.label}
                                 </label>
@@ -103,6 +109,8 @@ const AddForm: React.FC<AddFormProps> = ({ entityName, fields, submitHandler, on
                                 placeholder={field.placeholder}
                                 accept={field.accept} // For file inputs
                                 multiple={field.multiple} // For file inputs
+                                disabled={field.disabled}
+                                style={{cursor: field.disabled ? 'not-allowed' : 'auto'}}
                             />
                         )}
                     </div>

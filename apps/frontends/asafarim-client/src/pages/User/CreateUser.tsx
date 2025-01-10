@@ -20,17 +20,15 @@ const CreateUser: React.FC = () => {
     { name: 'lastName', label: 'Last Name', type: 'text', placeholder: 'Enter last name', required: true },
     { name: 'email', label: 'Email', type: 'email', placeholder: 'Enter email address', required: true },
     { name: 'bio', label: 'Bio', type: 'textarea', placeholder: 'Enter a short bio' },
-    {
-      name: 'isAdmin',
-      label: 'Admin Status',
-      type: 'radio',
-      options: [
-        { value: 'true', label: 'Yes' },
-        { value: 'false', label: 'No' },
-      ],
-      required: true,
-    },
+    { name: 'profilePicture', label: 'Profile Picture URL', type: 'url', placeholder: 'Enter profile picture URL' },
+    { name: 'remark', label: 'Remark', type: 'text', placeholder: 'Enter a remark' },
+    { name: 'isDeleted', label: 'Is Deleted', type: 'checkbox', disabled: true },
+    { name: 'isAdmin', label: 'Is Admin', type: 'radio', options: [{ value: 'true', label: 'Yes' }, { value: 'false', label: 'No' }], required: true },
+    { name: 'isActive', label: 'Is Active', type: 'checkbox', disabled: true },
+    { name: 'dateOfBirth', label: 'Date of Birth', type: 'date' },
+    { name: 'createdBy', label: 'Created By (User ID)', type: 'text', disabled: true },
   ];
+
   // Submit handler to process form data
   const handleSubmit: (formData: Record<string, unknown>) => Promise<void> = async (formData) => {
     try {
@@ -38,23 +36,37 @@ const CreateUser: React.FC = () => {
 
       // Map formData to IUserModel
       const user: IUserModel = {
-        fullName: formData.fullName as string,
+        id: '',
+        firstName: formData.firstName as string,
+        lastName: formData.lastName as string,
         email: formData.email as string,
         bio: formData.bio as string,
-        isAdmin: formData.isAdmin as boolean,
-        userName: '',
-        id: '',
+        profilePicture: formData.profilePicture as string,
+        remark: formData.remark as string,
+        isDeleted: formData.isDeleted as boolean,
+        isAdmin: formData.isAdmin === 'true',
+        isActive: formData.isActive as boolean,
+        dateOfBirth: formData.dateOfBirth as string,
+        createdBy: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
       };
 
-      // Call createUser API (assuming it's a promise-based function)
-      await createUser(user);
-      console.log('User created successfully');
-      navigate('/users');
+      // Call createUser API
+      await createUser(user)
+        .then(() => {
+          console.log('User created successfully');
+          navigate('/users');
+        })
+        .catch((error) => {
+          console.error('Error creating user:', error);
+          setError('Failed to create user. Please try again.');
+        });
+
     } catch (error) {
       console.error('Error creating user:', error);
       setError('Failed to create user. Please try again.');
     }
   };
+
 
   return (
     <Wrapper

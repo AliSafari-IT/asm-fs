@@ -1,7 +1,8 @@
 export interface IUserModel {
   id: string;                  // Unique identifier for the user
   email: string;               // Email address of the user
-  fullName: string;            // Full name of the user
+  firstName: string;           // first name of the user
+  lastName: string;            // last name of the user
   bio?: string;                // Optional biography of the user
   isAdmin: boolean;            // Admin status of the user
   userName?: string;           // Optional username
@@ -16,4 +17,6 @@ export interface IUserModel {
   deletedBy?: string;          // Optional ID of the user who deleted this user
   isActive?: boolean;          // Indicates if the user is active
   dateOfBirth?: string;        // Optional date of birth
+  remark?: string;             // Optional remark
+  
 }

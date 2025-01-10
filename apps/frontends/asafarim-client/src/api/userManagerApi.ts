@@ -1,3 +1,4 @@
+import { IUserModel } from '@/interfaces';
 import axios from 'axios';
 
 const api = axios.create({
@@ -8,7 +9,7 @@ const api = axios.create({
 });
 
 // Create User
-export const createUser = async (userData: { fullName: string, isAdmin: boolean }) => {
+export const createUser = async (userData: IUserModel) => {
     const response = await api.post('/users', userData);
     return response.data;
 };
