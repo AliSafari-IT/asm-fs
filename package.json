@@ -24,7 +24,11 @@
     "test:frontend": "yarn workspace @asm-fs/asafarim-client test",
     "test": "yarn test:backend && yarn test:frontend",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
-    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
+    "runWebapi": "dotnet run --project E:/asm-fs/apps/backends/WebApi",
+    "watchWebapi": "dotnet watch --project E:/asm-fs/apps/backends/WebApi",
+    "runClient": "yarn workspace @asm-fs/asafarim-client start",
+    "runServer": "yarn workspace @asm-fs/asafarim-server start"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
