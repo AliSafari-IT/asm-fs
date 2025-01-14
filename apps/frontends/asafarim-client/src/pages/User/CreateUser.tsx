@@ -20,7 +20,7 @@ const CreateUser: React.FC = () => {
     { name: 'lastName', label: 'Last Name', type: 'text', placeholder: 'Enter last name', required: true },
     { name: 'email', label: 'Email', type: 'email', placeholder: 'Enter email address', required: true },
     { name: 'bio', label: 'Bio', type: 'textarea', placeholder: 'Enter a short bio' },
-    { name: 'profilePicture', label: 'Profile Picture URL', type: 'url', placeholder: 'Enter profile picture URL' },
+    { name: 'profilePicture', label: 'Profile Picture URL', type: 'text', placeholder: 'Enter profile picture URL' },
     { name: 'remark', label: 'Remark', type: 'text', placeholder: 'Enter a remark' },
     { name: 'isDeleted', label: 'Is Deleted', type: 'checkbox', disabled: true },
     { name: 'isAdmin', label: 'Is Admin', type: 'radio', options: [{ value: 'true', label: 'Yes' }, { value: 'false', label: 'No' }], required: true },

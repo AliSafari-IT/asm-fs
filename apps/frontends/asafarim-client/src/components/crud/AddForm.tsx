@@ -47,7 +47,7 @@ const AddForm: React.FC<AddFormProps> = ({ entityName, fields, submitHandler, on
     };
 
     return (
-            <form onSubmit={handleSubmit} className="add-entity-form" autoComplete='on' >
+            <form onSubmit={handleSubmit} className="add-entity-form" >
                 {fields.map(field => (
                     <div key={field.name}>
                         {field.label && <label>{field.label}:</label>}
